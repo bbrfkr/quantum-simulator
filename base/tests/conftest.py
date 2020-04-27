@@ -135,14 +135,20 @@ def observable(valid_observed_value, observe_basis):
 def dict_for_test_expected_value(request):
     return request.param
 
+
 # 観測結果をテストするための観測量、観測対象Qubit
 @pytest.fixture(
     params=[
         {
             "observable": Observable(
-                100.0, -100.0, ObserveBasis(Qubit(sqrt(0.5) + 0j, sqrt(0.5) + 0j), Qubit(sqrt(0.5) + 0j, - sqrt(0.5) + 0j))
+                100.0,
+                -100.0,
+                ObserveBasis(
+                    Qubit(sqrt(0.5) + 0j, sqrt(0.5) + 0j),
+                    Qubit(sqrt(0.5) + 0j, -sqrt(0.5) + 0j),
+                ),
             ),
-            "qubit": Qubit(1 + 0j, 0j)
+            "qubit": Qubit(1 + 0j, 0j),
         }
     ]
 )

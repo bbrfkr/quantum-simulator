@@ -1,6 +1,7 @@
-import pytest
-from unittest.mock import patch
 import random
+from unittest.mock import patch
+
+import pytest
 
 from base.conf import approx_digit
 from base.error import CannotDistinguishError, NonOrthogonalError
@@ -45,9 +46,7 @@ class TestObservable:
         )
         assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
 
-    def test_observation_for_qubit(
-        self, dict_for_test_observation
-    ):
+    def test_observation_for_qubit(self, dict_for_test_observation):
         """[正常系]: von Neumann観測によるQubitに対する観測"""
         dict_for_test = dict_for_test_observation
 
