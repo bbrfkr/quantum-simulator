@@ -8,3 +8,7 @@ class InitializeError(BaseError):
 
 class NonOrthogonalError(BaseError):
     """非直交エラー"""
+
+
+class CannotDistinguishError(BaseError):
+    """状態識別不能エラー"""

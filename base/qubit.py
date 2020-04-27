@@ -25,11 +25,11 @@ class Qubit:
         return f"{self.amplitudes[0]}|0> + {self.amplitudes[1]}|1>"
 
 
-def inner(qubit_0: Qubit, qubit_1: Qubit):
+def inner(qubit_0: Qubit, qubit_1: Qubit) -> complex:
     """Qubit同士の内積 <qubit_0 | qubit_1>"""
     return np_inner(qubit_0.amplitudes, conjugate(qubit_1.amplitudes))
 
 
-def is_orthogonal(qubit_0: Qubit, qubit_1: Qubit):
+def is_orthogonal(qubit_0: Qubit, qubit_1: Qubit) -> bool:
     """Qubit同士が直交しているか"""
     return round(inner(qubit_0, qubit_1), approx_digit) == 0.0
