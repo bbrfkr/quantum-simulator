@@ -1,10 +1,13 @@
+import numpy as np
+from numpy.linalg import linalg
+
 from base.conf import approx_digit
 from base.error import InitializeError, InvalidSequenceError
-from numpy.linalg import linalg
-import numpy as np
+
 
 class QubitSequence:
     """複数のQubitから成る、Qubitの列"""
+
     def __init__(self, bit_count: int, amplitudes: [complex]):
         # 確率振幅の要素数をチェック
         if len(amplitudes) != 2 ** bit_count:
@@ -18,7 +21,6 @@ class QubitSequence:
         self.bit_count = bit_count
         self.amplitudes = np.array(amplitudes, complex)
 
-
     def __str__(self):
         term = ""
         for index in range(len(self.amplitudes)):
@@ -30,4 +32,3 @@ class QubitSequence:
                 term += " +\n"
 
         return term
-        
