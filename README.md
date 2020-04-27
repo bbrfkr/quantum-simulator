@@ -1,6 +1,6 @@
 # Quantum Simulator by BBRFKR
 
-## Excecute Sample Code!
+## Execute Sample Code!
 
 ```
 python example.py
