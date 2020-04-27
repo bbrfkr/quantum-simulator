@@ -1,6 +1,7 @@
 from base.conf import approx_digit
 from base.error import InitializeError, InvalidSequenceError
 from numpy.linalg import linalg
+import numpy as np
 
 class QubitSequence:
     """複数のQubitから成る、Qubitの列"""
@@ -15,7 +16,7 @@ class QubitSequence:
 
         # 初期化
         self.bit_count = bit_count
-        self.amplitudes = amplitudes
+        self.amplitudes = np.array(amplitudes, complex)
 
 
     def __str__(self):

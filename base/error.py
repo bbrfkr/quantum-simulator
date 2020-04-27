@@ -16,3 +16,7 @@ class CannotDistinguishError(BaseError):
 
 class InvalidSequenceError(BaseError):
     """不正Qubit列エラー"""
+
+
+class IncompatibleDimensionError(BaseError):
+    """操作時次元不整合エラー"""
