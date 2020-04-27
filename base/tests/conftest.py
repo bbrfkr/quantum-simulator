@@ -98,7 +98,38 @@ def observable(valid_observed_value, observe_basis):
             ),
             "qubit": Qubit(sqrt(0.7) + 0j, sqrt(0.3) + 0j),
             "expected_value": 40.0,
-        }
+        },
+        {
+            "observable": Observable(
+                100.0, 50.0, ObserveBasis(Qubit(1 + 0j, 0j), Qubit(0j, 1 + 0j))
+            ),
+            "qubit": Qubit(sqrt(0.7) + 0j, sqrt(0.3) + 0j),
+            "expected_value": 85.0,
+        },
+        {
+            "observable": Observable(
+                1.0,
+                0.0,
+                ObserveBasis(
+                    Qubit(sqrt(0.5) + 0j, sqrt(0.5) + 0j),
+                    Qubit(sqrt(0.5) + 0j, -sqrt(0.5) + 0j),
+                ),
+            ),
+            "qubit": Qubit(0 + 0j, 1 + 0j),
+            "expected_value": 0.5,
+        },
+        {
+            "observable": Observable(
+                2.0,
+                1.0,
+                ObserveBasis(
+                    Qubit(sqrt(0.5) + 0j, sqrt(0.5) + 0j),
+                    Qubit(sqrt(0.5) + 0j, -sqrt(0.5) + 0j),
+                ),
+            ),
+            "qubit": Qubit(0 + 0j, 1 + 0j),
+            "expected_value": 1.5,
+        },
     ]
 )
 def dict_for_test_expected_value(request):

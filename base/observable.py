@@ -1,4 +1,4 @@
-from random import random
+from random import choices
 
 from base.conf import approx_digit
 from base.error import CannotDistinguishError, NonOrthogonalError
@@ -35,7 +35,7 @@ class Observable:
             {"value": observed_value_1, "qubit": basis.qubits[1]},
         ]
 
-    def expected_value(self, target: Qubit):
+    def expected_value(self, target: Qubit) -> float:
         """対象Qubitに対する観測量の期待値を返す"""
         expected_value_0 = (
             self.observed_values[0]["value"]
@@ -47,6 +47,16 @@ class Observable:
         )
         return expected_value_0 + expected_value_1
 
-    def observe(self, target: Qubit):
+    def observe(self, target: Qubit) -> float:
         """観測を実施して観測値を取得し、Qubitを収束させる"""
-        return None
+        observed_probabilities = [
+            abs(inner(self.observed_values[index]["qubit"], target)) ** 2
+            for index in [0, 1]
+        ]
+        observed_result = choices(self.observed_values, observed_probabilities)
+
+        # 観測によるQubitの収束
+        target = observed_result["qubit"]
+
+        # 観測値の返却
+        return observed_result["value"]
