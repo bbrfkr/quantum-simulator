@@ -89,7 +89,7 @@ def observable(valid_observed_value, observe_basis):
     return Observable(valid_observed_value[0], valid_observed_value[1], observe_basis)
 
 
-# 標準基底に対する観測量、観測対象Qubit、期待値の組
+# 期待値をテストするための観測量、観測対象Qubit、期待値の組
 @pytest.fixture(
     params=[
         {
@@ -133,4 +133,18 @@ def observable(valid_observed_value, observe_basis):
     ]
 )
 def dict_for_test_expected_value(request):
+    return request.param
+
+# 観測結果をテストするための観測量、観測対象Qubit
+@pytest.fixture(
+    params=[
+        {
+            "observable": Observable(
+                100.0, -100.0, ObserveBasis(Qubit(sqrt(0.5) + 0j, sqrt(0.5) + 0j), Qubit(sqrt(0.5) + 0j, - sqrt(0.5) + 0j))
+            ),
+            "qubit": Qubit(1 + 0j, 0j)
+        }
+    ]
+)
+def dict_for_test_observation(request):
     return request.param

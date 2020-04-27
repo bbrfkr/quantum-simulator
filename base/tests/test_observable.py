@@ -1,4 +1,6 @@
 import pytest
+from unittest.mock import patch
+import random
 
 from base.conf import approx_digit
 from base.error import CannotDistinguishError, NonOrthogonalError
@@ -36,9 +38,27 @@ class TestObservable:
     def test_expected_value_for_observable_with_standard_basis(
         self, dict_for_test_expected_value
     ):
-        """[正常系]: 標準基底に対する観測量の期待値"""
+        """[正常系]: 観測量の期待値"""
         dict_for_test = dict_for_test_expected_value
         expected_value = dict_for_test["observable"].expected_value(
             dict_for_test["qubit"]
         )
         assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
+
+    def test_observation_for_qubit(
+        self, dict_for_test_observation
+    ):
+        """[正常系]: von Neumann観測によるQubitに対する観測"""
+        dict_for_test = dict_for_test_observation
+
+        # 観測量の第一成分の値と遷移後状態を期待する
+        expected_result = dict_for_test["observable"].observed_values[0]
+
+        # seedを固定してテストを可能にする
+        random.seed(1)
+
+        # 観測実施
+        observed_value = dict_for_test["observable"].observe(dict_for_test["qubit"])
+
+        assert observed_value == expected_result["value"]
+        assert dict_for_test["qubit"].amplitudes == expected_result["qubit"].amplitudes
