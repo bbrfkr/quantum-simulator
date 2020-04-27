@@ -34,11 +34,11 @@ class TestObservable:
             )
 
     def test_expected_value_for_observable_with_standard_basis(
-        self, set_for_test_expected_value
+        self, dict_for_test_expected_value
     ):
         """[正常系]: 標準基底に対する観測量の期待値"""
-        set_for_test = set_for_test_expected_value
-        expected_value = set_for_test["observable"].expected_value(
-            set_for_test["qubit"]
+        dict_for_test = dict_for_test_expected_value
+        expected_value = dict_for_test["observable"].expected_value(
+            dict_for_test["qubit"]
         )
-        assert round(expected_value, approx_digit) == set_for_test["expected_value"]
+        assert round(expected_value, approx_digit) == dict_for_test["expected_value"]

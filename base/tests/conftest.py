@@ -101,5 +101,5 @@ def observable(valid_observed_value, observe_basis):
         }
     ]
 )
-def set_for_test_expected_value(request):
+def dict_for_test_expected_value(request):
     return request.param
