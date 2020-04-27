@@ -14,6 +14,7 @@ pylint = "*"
 
 [packages]
 numpy = "*"
+typing = "*"
 
 [requires]
 python_version = "3.8"

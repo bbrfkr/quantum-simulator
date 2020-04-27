@@ -12,3 +12,7 @@ class NonOrthogonalError(BaseError):
 
 class CannotDistinguishError(BaseError):
     """状態識別不能エラー"""
+
+
+class InvalidSequenceError(BaseError):
+    """不正Qubit列エラー"""

@@ -13,7 +13,7 @@ class Qubit:
 
     def __init__(self, amp_0: complex, amp_1: complex):
         # 近似桁数で丸めても、qubitのノルムが1にならないならエラー
-        if round(linalg.norm([amp_0, amp_1]) - 1, approx_digit) != 0.0:
+        if round(linalg.norm([amp_0, amp_1]) - 1.0, approx_digit) != 0.0:
             raise InitializeError("[ERROR]: Qubitの長さが不正です")
 
         # Qubitを初期化
