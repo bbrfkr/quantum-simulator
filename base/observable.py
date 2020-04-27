@@ -1,6 +1,6 @@
 from base.error import NonOrthogonalError
-from base.qubit import Qubit, is_orthogonal
-
+from base.qubit import Qubit, inner, is_orthogonal
+from random import random
 
 class ObserveBasis:
     """観測基底のクラス"""
@@ -29,7 +29,9 @@ class Observable:
 
     def expected_value(self, target: Qubit):
         """対象Qubitに対する観測量の期待値を返す"""
-        return None
+        expected_value_0 = self.observed_values[0]["value"] * abs(inner(self.observed_values[0]["qubit"], target)) ** 2
+        expected_value_1 = self.observed_values[1]["value"] * abs(inner(self.observed_values[1]["qubit"], target)) ** 2
+        return expected_value_0 + expected_value_1
 
     def observe(self, target: Qubit):
         """観測を実施して観測値を取得し、Qubitを収束させる"""
