@@ -16,8 +16,13 @@ from base.qubit import Qubit
         [sqrt(0.4) + 0j, sqrt(0.6) * 1j],
     ]
 )
-def valid_qubit(request):
+def valid_qubit_amp(request):
     return request.param
+
+
+@pytest.fixture()
+def valid_qubit(valid_qubit_amp):
+    return Qubit(valid_qubit_amp[0], valid_qubit_amp[1])
 
 
 # 不正なqubitのfixture
@@ -30,7 +35,7 @@ def valid_qubit(request):
         [sqrt(0.6) * 1j, sqrt(0.6) * 1j],
     ]
 )
-def invalid_qubit(request):
+def invalid_qubit_amp(request):
     return request.param
 
 
@@ -60,19 +65,41 @@ def non_orthogonal_qubits(request):
     return qubits
 
 
-# 標準観測基底のfixture
+# 観測基底のfixture
 @pytest.fixture()
-def standard_basis():
-    return ObserveBasis(Qubit(1 + 0j, 0j), Qubit(0j, 1 + 0j))
+def observe_basis(orthogonal_qubits):
+    return ObserveBasis(orthogonal_qubits[0], orthogonal_qubits[1])
 
 
-# 標準射影観測量のfixture
+# 妥当な観測値のfixture
+@pytest.fixture(params=[[100.0, -100.0], [100.0, 50.0], [1.0, 0.0], [0.0, 1.0]])
+def valid_observed_value(request):
+    return request.param
+
+
+# 不正な観測値のfixture
+@pytest.fixture(params=[[0.0, 0.0], [100.0, 100.0], [1.0, 1.0], [-50.0, -50.0]])
+def invalid_observed_value(request):
+    return request.param
+
+
+# 観測量のfixture
 @pytest.fixture()
-def standard_projections(standard_basis):
-    return [Observable(1.0, 0.0, standard_basis), Observable(0.0, 1.0, standard_basis)]
+def observable(valid_observed_value, observe_basis):
+    return Observable(valid_observed_value[0], valid_observed_value[1], observe_basis)
 
 
-# 標準基底に対する観測量のfixture
-@pytest.fixture(params=[[100.0, -100.0], [100.0, 50.0]])
-def standard_observable(request, standard_basis):
-    return Observable(request.param[0], request.param[1], standard_basis)
+# 標準基底に対する観測量、観測対象Qubit、期待値の組
+@pytest.fixture(
+    params=[
+        {
+            "observable": Observable(
+                100.0, -100.0, ObserveBasis(Qubit(1 + 0j, 0j), Qubit(0j, 1 + 0j))
+            ),
+            "qubit": Qubit(sqrt(0.7) + 0j, sqrt(0.3) + 0j),
+            "expected_value": 40.0,
+        }
+    ]
+)
+def set_for_test_expected_value(request):
+    return request.param

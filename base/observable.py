@@ -1,6 +1,7 @@
 from random import random
 
-from base.error import NonOrthogonalError
+from base.conf import approx_digit
+from base.error import CannotDistinguishError, NonOrthogonalError
 from base.qubit import Qubit, inner, is_orthogonal
 
 
@@ -8,6 +9,7 @@ class ObserveBasis:
     """観測基底のクラス"""
 
     def __init__(self, qubit_0: Qubit, qubit_1: Qubit):
+        # 観測基底を構成するQubit同士は直交していなければならない
         if not is_orthogonal(qubit_0, qubit_1):
             raise NonOrthogonalError("[ERROR]: 観測基底が直交しません")
 
@@ -23,6 +25,10 @@ class Observable:
     def __init__(
         self, observed_value_0: float, observed_value_1: float, basis: ObserveBasis
     ):
+        # 観測量は状態を識別しなければならないため、同じ観測値を与えてはならない
+        if round(observed_value_0 - observed_value_1, approx_digit) == 0.0:
+            raise CannotDistinguishError("[ERROR]: この観測量は状態を識別することができません")
+
         # 観測値と観測対象のQubit
         self.observed_values = [
             {"value": observed_value_0, "qubit": basis.qubits[0]},

@@ -6,23 +6,21 @@ from base.qubit import Qubit, inner, is_orthogonal
 
 
 class TestQubit:
-    def test_valid_qubit_input(self, valid_qubit):
+    def test_valid_qubit_input(self, valid_qubit_amp):
         """[正常系]: Qubit生成"""
-        qubit = Qubit(valid_qubit[0], valid_qubit[1])
-        assert qubit.amplitudes[0] == valid_qubit[0]
-        assert qubit.amplitudes[1] == valid_qubit[1]
+        qubit = Qubit(valid_qubit_amp[0], valid_qubit_amp[1])
+        assert qubit.amplitudes[0] == valid_qubit_amp[0]
+        assert qubit.amplitudes[1] == valid_qubit_amp[1]
 
-    def test_invalid_qubit_input(self, invalid_qubit):
+    def test_invalid_qubit_input(self, invalid_qubit_amp):
         """[異常系]: 不正なQubitパラメータ"""
         with pytest.raises(InitializeError):
-            Qubit(invalid_qubit[0], invalid_qubit[1])
+            Qubit(invalid_qubit_amp[0], invalid_qubit_amp[1])
 
     def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
         """[正常系]: 直交したQubit同士の内積"""
         assert is_orthogonal(orthogonal_qubits[0], orthogonal_qubits[1])
 
     def test_one_inner_product_of_qubits(self, valid_qubit):
-
-        qubit_0 = Qubit(valid_qubit[0], valid_qubit[1])
-        qubit_1 = Qubit(valid_qubit[0], valid_qubit[1])
-        assert round(inner(qubit_0, qubit_1), approx_digit) == 1.0
+        """[正常系]: 長さが1のQubitに対する内積"""
+        assert round(inner(valid_qubit, valid_qubit), approx_digit) == 1.0
