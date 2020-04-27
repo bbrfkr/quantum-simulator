@@ -53,10 +53,10 @@ class Observable:
             abs(inner(self.observed_values[index]["qubit"], target)) ** 2
             for index in [0, 1]
         ]
-        observed_result = choices(self.observed_values, observed_probabilities)
+        observed_result = choices(self.observed_values, observed_probabilities)[0]
 
         # 観測によるQubitの収束
-        target = observed_result["qubit"]
+        target.amplitudes = observed_result["qubit"].amplitudes
 
         # 観測値の返却
         return observed_result["value"]
