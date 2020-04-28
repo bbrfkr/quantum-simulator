@@ -1,0 +1,66 @@
+import numpy as np
+from numpy import conjugate
+from numpy.linalg import linalg
+
+from base.conf import approx_digit
+from base.error import InitializeError
+
+
+class Qubits:
+    """純粋状態の一般的に複数のQubit"""
+
+    def __init__(self, amplitudes: np.array):
+        # 要素が複素数かをチェック
+        if amplitudes.dtype != complex:
+            message = "[ERROR]: 与えられた確率振幅のデータタイプが複素数ではありません"
+            raise InitializeError(message)
+
+        # 与えられた確率振幅の次元がQubitのテンソル積空間の次元かチェック
+        for dim in amplitudes.shape:
+            if dim != 2:
+                message = "[ERROR]: 与えられた確率振幅の次元が不正です"
+                raise InitializeError(message)
+
+        # 確率の総和をチェック
+        if round(linalg.norm(amplitudes) - 1.0, approx_digit) != 0.0:
+            message = "[ERROR]: 確率の総和が1ではありません"
+            raise InitializeError(message)
+
+        # 初期化
+        self.amplitudes = np.array(amplitudes, complex)
+        self.qubit_count = len(self.amplitudes.shape)
+
+    def __str__(self):
+        term = ""
+        array_repl = list(self.amplitudes.flat)
+        for index in range(self.amplitudes.size):
+            vec_repl = format(index, "b").zfill(len(self.amplitudes.shape))
+            term += f"{array_repl[index]}|{vec_repl}>"
+
+            # 最後以外はプラスをつけ、その後改行
+            if index != self.amplitudes.size - 1:
+                term += " +"
+            term += "\n"
+
+        return term
+
+
+def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
+    """二つのQubit群を結合する"""
+    new_amplitudes = np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0)
+    new_qubits = Qubits(new_amplitudes)
+
+    # 元々あったリソースは削除して利用不能にする(コピー不可能性定理)
+    del qubits_0.amplitudes, qubits_1.amplitudes
+
+    return new_qubits
+
+
+def inner(qubits_0: Qubits, qubit_1: Qubits) -> complex:
+    """Qubit同士の内積 <qubit_0 | qubit_1>"""
+    return np.inner(qubits_0.amplitudes.flat, conjugate(qubit_1.amplitudes.flat))
+
+
+def is_orthogonal(qubit_0: Qubits, qubit_1: Qubits) -> bool:
+    """Qubit同士が直交しているか"""
+    return round(inner(qubit_0, qubit_1), approx_digit) == 0.0

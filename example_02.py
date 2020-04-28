@@ -1,25 +1,18 @@
 from math import sqrt
 
-from base.generic_circuit import GenericCircuit
-from base.qubit_sequence import QubitSequence
-from example_data import unitary_01
+import numpy as np
 
-qubits = QubitSequence(
-    3,
-    [
-        sqrt(0.4) + 0j,
-        0j,
-        sqrt(0.125) + 0j,
-        sqrt(0.125) + 0j,
-        sqrt(0.125) + 0j,
-        sqrt(0.125) + 0j,
-        0j,
-        sqrt(0.1) + 0j,
-    ],
-)
-circuit = GenericCircuit(8, unitary_01)
+from base.qubits import Qubits, combine
 
-print(qubits)
-print(circuit)
+# Qubit0: |0>
+qubit0 = Qubits(np.array([1.0 + 0j, 0.0 + 0j]))
 
-print(circuit.operate(qubits))
+# Qubit1: |1>
+qubit1 = Qubits(np.array([0.0 + 0j, 1.0 + 0j]))
+
+# Compund Qubits: |0> otimes |1>
+compound_qubits = combine(qubit0, qubit1)
+print(compound_qubits)
+
+# cannot recycle original qubits
+print(f"{qubit0}{qubit1}")
