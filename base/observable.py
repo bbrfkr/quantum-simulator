@@ -3,7 +3,7 @@ from random import choices
 
 from base.conf import approx_digit
 from base.error import InitializeError
-from base.qubits import Qubits, inner, is_orthogonal
+from base.qubits import Qubits, inner, is_all_orthogonal
 
 
 class ObserveBasis:
@@ -11,13 +11,8 @@ class ObserveBasis:
 
     def __init__(self, qubits_group: [Qubits]):
         # 観測基底を構成するQubit群同士は互いに直交していなければならない
-        len_qubits_group = len(qubits_group)
-        for index_0 in range(ceil(len_qubits_group / 2)):
-            for index_1 in range(len_qubits_group - index_0 - 1):
-                if not is_orthogonal(
-                    qubits_group[index_0], qubits_group[len_qubits_group - index_1 - 1]
-                ):
-                    raise InitializeError("[ERROR]: 観測基底が直交しません")
+        if not is_all_orthogonal(qubits_group):
+            raise InitializeError("[ERROR]: 観測基底が直交しません")
 
         # 観測基底を構成するqubit列を初期化
         self.qubits_group = qubits_group
@@ -29,7 +24,7 @@ class ObserveBasis:
 #     def __init__(
 #         self, observed_value_0: float, observed_value_1: float, basis: ObserveBasis
 #     ):
-#         # 観測量は状態を識別しなければならないため、同じ観測値を与えてはならない
+#         # 観測量は状態を識別しなければならないため、を与えてはならない
 #         if round(observed_value_0 - observed_value_1, approx_digit) == 0.0:
 #             raise InitializeError("[ERROR]: この観測量は状態を識別することができません")
 

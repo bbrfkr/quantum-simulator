@@ -7,6 +7,14 @@ class InitializeError(BaseError):
     """初期化エラー"""
 
 
+class QubitCountNotMatchError(BaseError):
+    """演算するQubit群同士のQubit数が一致しないエラー"""
+
+
+class NoQubitsInput(BaseError):
+    """Qubit群の未入力時エラー"""
+
+
 # 観測量に対するエラー
 class NonOrthogonalError(BaseError):
     """非直交エラー"""

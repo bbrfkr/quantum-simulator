@@ -72,7 +72,7 @@ def non_orthogonal_qubits(request):
     return qubits
 
 
-# 妥当な複数qubitに対する確率振幅のfixture
+# 妥当なQubit群に対する確率振幅のfixture
 # 2粒子: |00>
 # 3粒子: |010>
 # 4粒子: |1001>
@@ -89,7 +89,7 @@ def valid_qubits_amp(request):
     return request.param
 
 
-# 妥当な単一qubitのfixture
+# 妥当なQubit群のfixture
 @pytest.fixture()
 def valid_qubits(valid_qubits_amp):
     amplitudes = np.array(valid_qubits_amp)
@@ -135,7 +135,7 @@ def dict_test_for_combine(request):
     return test_dict
 
 
-# 直交する複数qubit同士のfixture
+# 直交する二つのQubit群同士のfixture
 # test1: <1+|0+>
 # test2: <0+|0->
 @pytest.fixture(
@@ -150,15 +150,15 @@ def dict_test_for_combine(request):
         ],
     ]
 )
-def orthogonal_multiple_qubits(request):
+def orthogonal_two_qubits_groups(request):
     amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
-# 直交しない複数qubit同士のfixture
-# test1: <1+|-+>
-# test2: <01|0->
+# 直交しない二つのQubit群のfixture
+# test1: {|-+>, |1+>} (<1+|-+>)
+# test2: {|0->, |01>} (<01|0->)
 @pytest.fixture(
     params=[
         [
@@ -166,16 +166,64 @@ def orthogonal_multiple_qubits(request):
             [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
         ],
         [[[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
+    ]
+)
+def non_orthogonal_two_qubits_groups(request):
+    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    return qubits
+
+
+# 異なるQubit数の二つのQubit群のfixture
+# test1: <1|0+>
+# test2: <0+|0>
+@pytest.fixture(
+    params=[
+        [
+            [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
+        ],
+        [[[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]], [1j, 0j]],
+    ]
+)
+def not_match_counts_two_qubits_groups(request):
+    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    return qubits
+
+
+# 互いに直交する二つより多いQubit群同士のfixture
+# test1: {|00>, |01>, |10>, |11>}
+@pytest.fixture(
+    params=[
+        [
+            [[1 + 0j, 0j], [0j, 0j]],
+            [[0j, 1 + 0j], [0j, 0j]],
+            [[0j, 0j], [1 + 0j, 0j]],
+            [[0j, 0j], [0j, 1 + 0j]],
+        ]
+    ]
+)
+def orthogonal_multiple_qubits_groups(request):
+    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    return qubits
+
+
+# 互いに直交しない二つより多いQubit群同士のfixture
+# test1: {|00>, |01>, |10>, |11>, |00>}
+@pytest.fixture(
+    params=[
         [
             [[1 + 0j, 0j], [0j, 0j]],
             [[0j, 1 + 0j], [0j, 0j]],
             [[0j, 0j], [1 + 0j, 0j]],
             [[0j, 0j], [0j, 1 + 0j]],
             [[1 + 0j, 0j], [0j, 0j]],
-        ],
+        ]
     ]
 )
-def non_orthogonal_multiple_qubits(request):
+def non_orthogonal_multiple_qubits_groups(request):
     amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits

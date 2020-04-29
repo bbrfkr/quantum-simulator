@@ -1,9 +1,11 @@
+from math import ceil
+
 import numpy as np
 from numpy import conjugate
 from numpy.linalg import linalg
 
 from base.conf import approx_digit
-from base.error import InitializeError
+from base.error import InitializeError, NoQubitsInput, QubitCountNotMatchError
 
 
 class Qubits:
@@ -56,11 +58,38 @@ def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
     return new_qubits
 
 
-def inner(qubits_0: Qubits, qubit_1: Qubits) -> complex:
-    """Qubit同士の内積 <qubit_0 | qubit_1>"""
-    return np.inner(qubits_0.amplitudes.flat, conjugate(qubit_1.amplitudes.flat))
+def inner(qubits_0: Qubits, qubits_1: Qubits) -> complex:
+    """Qubit群同士の内積 <qubit_0 | qubit_1>"""
+    # 内積をとるQubit群同士のQubit数が一致してなければエラー
+    if qubits_0.qubit_count != qubits_1.qubit_count:
+        message = "[ERROR]: 対象Qubit群同士のQubit数が一致しません"
+        raise QubitCountNotMatchError(message)
+
+    return np.inner(qubits_0.amplitudes.flat, conjugate(qubits_1.amplitudes.flat))
 
 
-def is_orthogonal(qubit_0: Qubits, qubit_1: Qubits) -> bool:
-    """Qubit同士が直交しているか"""
-    return round(inner(qubit_0, qubit_1), approx_digit) == 0.0
+def is_orthogonal(qubits_0: Qubits, qubits_1: Qubits) -> bool:
+    """二つのQubit群同士が直交しているか"""
+    return round(inner(qubits_0, qubits_1), approx_digit) == 0.0
+
+
+def is_all_orthogonal(qubits_group: [Qubits]) -> bool:
+    """Qubit群同士が互い直交しているか"""
+    len_qubits_group = len(qubits_group)
+    # Qubit群が一つも入力されない時はエラー
+    if len_qubits_group == 0:
+        message = "[ERROR]: 与えられたリストにQubit群が見つかりません"
+        raise NoQubitsInput(message)
+
+    # Qubit群が一つだけ与えられた時は明らかに互いに直交
+    if len_qubits_group == 1:
+        return True
+
+    # Qubit群が二つ以上与えられた場合
+    for index_0 in range(ceil(len_qubits_group / 2)):
+        for index_1 in range(len_qubits_group - index_0 - 1):
+            if not is_orthogonal(
+                qubits_group[index_0], qubits_group[len_qubits_group - index_1 - 1]
+            ):
+                return False
+            return True
