@@ -3,7 +3,7 @@ from math import sqrt
 import numpy as np
 import pytest
 
-from base.qubits import Qubits
+from src.base.qubits import Qubits
 
 
 # 妥当な単一qubitに対する確率振幅のfixture

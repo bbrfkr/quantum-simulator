@@ -6,7 +6,7 @@ from .error import InitializeError
 from .qubits import Qubits, inner, is_all_orthogonal
 
 
-class ObserveBasis:
+class ObservedBasis:
     """観測基底のクラス"""
 
     def __init__(self, qubits_group: [Qubits]):
@@ -22,7 +22,7 @@ class ObserveBasis:
 #     """観測量のクラス"""
 
 #     def __init__(
-#         self, observed_value_0: float, observed_value_1: float, basis: ObserveBasis
+#         self, observed_values: [float], observed_basis: ObserveBasis
 #     ):
 #         # 観測量は状態を識別しなければならないため、を与えてはならない
 #         if round(observed_value_0 - observed_value_1, approx_digit) == 0.0:

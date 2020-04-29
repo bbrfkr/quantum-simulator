@@ -3,29 +3,29 @@ from unittest.mock import patch
 
 import pytest
 
-from base.conf import approx_digit
-from base.error import InitializeError
-from base.observable import ObserveBasis
-from base.qubits import Qubits
+from src.base.conf import approx_digit
+from src.base.error import InitializeError
+from src.base.observable import ObservedBasis
+from src.base.qubits import Qubits
 
 
 class TestObserveBasis:
     # 単一Qubitに対する観測基底のテスト
     def test_valid_observe_basis(self, orthogonal_qubits):
         """[正常系]: 直交した単一Qubit同士で構成する観測基底"""
-        observe_basis = ObserveBasis(orthogonal_qubits)
+        observe_basis = ObservedBasis(orthogonal_qubits)
         assert observe_basis.qubits_group == orthogonal_qubits
 
     def test_invalid_observe_basis(self, non_orthogonal_qubits):
         """[異常系]: 直交しない単一Qubit同士で観測基底を構成時、エラーとなること"""
         with pytest.raises(InitializeError) as error:
-            ObserveBasis(non_orthogonal_qubits)
+            ObservedBasis(non_orthogonal_qubits)
         assert "観測基底が直交しません" in str(error.value)
 
     # Qubit群に対する観測基底のテスト
     def test_valid_observe_basis_with_multiple_qubits(self, orthogonal_multiple_qubits_groups):
         """[正常系]: 直交したQubit群同士で構成する観測基底"""
-        observe_basis = ObserveBasis(orthogonal_multiple_qubits_groups)
+        observe_basis = ObservedBasis(orthogonal_multiple_qubits_groups)
         assert observe_basis.qubits_group == orthogonal_multiple_qubits_groups
 
     def test_invalid_observe_basis_with_non_orthogonal_multiple_qubits(
@@ -33,7 +33,7 @@ class TestObserveBasis:
     ):
         """[異常系]: 直交しないQubit群同士で観測基底を構成時、エラーとなること"""
         with pytest.raises(InitializeError) as error:
-            ObserveBasis(non_orthogonal_multiple_qubits_groups)
+            ObservedBasis(non_orthogonal_multiple_qubits_groups)
         assert "観測基底が直交しません" in str(error.value)
 
 
