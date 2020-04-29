@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from base.conf import approx_digit
-from base.error import InitializeError, NoQubitsInput, QubitCountNotMatchError
+from base.error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
 from base.qubits import (Qubits, combine, inner, is_all_orthogonal,
                          is_orthogonal)
 
@@ -89,7 +89,7 @@ class TestQubits:
 
     def test_check_of_orthogonality_for_empty_set(self):
         """[異常系]: 空集合に対する直交性のテスト"""
-        with pytest.raises(NoQubitsInput):
+        with pytest.raises(NoQubitsInputError):
             is_all_orthogonal([])
 
     def test_check_of_orthogonality_for_unit_set(self, valid_qubits):

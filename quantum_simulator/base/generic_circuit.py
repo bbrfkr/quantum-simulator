@@ -3,9 +3,9 @@ from numpy import identity
 from numpy import matrix as mat
 from numpy import ndarray, subtract
 
-from base.conf import approx_digit
-from base.error import IncompatibleDimensionError, InitializeError
-from base.qubit_sequence import QubitSequence
+from .conf import approx_digit
+from .error import IncompatibleDimensionError, InitializeError
+from .qubit_sequence import QubitSequence
 
 
 class GenericCircuit:

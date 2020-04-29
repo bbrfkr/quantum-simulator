@@ -11,7 +11,7 @@ class QubitCountNotMatchError(BaseError):
     """演算するQubit群同士のQubit数が一致しないエラー"""
 
 
-class NoQubitsInput(BaseError):
+class NoQubitsInputError(BaseError):
     """Qubit群の未入力時エラー"""
 
 

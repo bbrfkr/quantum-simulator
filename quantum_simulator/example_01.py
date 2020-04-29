@@ -1,7 +1,7 @@
 from math import sqrt
 
-from base.observable import Observable, ObserveBasis
-from base.qubit import Qubit
+from .base.observable import Observable, ObserveBasis
+from .base.qubits import Qubits
 
 # plus-minus 観測基底の定義 (|+>, |->)
 sign_basis = ObserveBasis(

@@ -1,9 +1,9 @@
 from math import ceil
 from random import choices
 
-from base.conf import approx_digit
-from base.error import InitializeError
-from base.qubits import Qubits, inner, is_all_orthogonal
+from .conf import approx_digit
+from .error import InitializeError
+from .qubits import Qubits, inner, is_all_orthogonal
 
 
 class ObserveBasis:

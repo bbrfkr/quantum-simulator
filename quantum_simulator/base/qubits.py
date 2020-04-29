@@ -4,8 +4,8 @@ import numpy as np
 from numpy import conjugate
 from numpy.linalg import linalg
 
-from base.conf import approx_digit
-from base.error import InitializeError, NoQubitsInput, QubitCountNotMatchError
+from .conf import approx_digit
+from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
 
 
 class Qubits:
@@ -79,7 +79,7 @@ def is_all_orthogonal(qubits_group: [Qubits]) -> bool:
     # Qubit群が一つも入力されない時はエラー
     if len_qubits_group == 0:
         message = "[ERROR]: 与えられたリストにQubit群が見つかりません"
-        raise NoQubitsInput(message)
+        raise NoQubitsInputError(message)
 
     # Qubit群が一つだけ与えられた時は明らかに互いに直交
     if len_qubits_group == 1:
