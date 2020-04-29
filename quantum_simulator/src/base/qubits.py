@@ -11,11 +11,8 @@ from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
 class Qubits:
     """純粋状態の一般的に複数のQubit"""
 
-    def __init__(self, amplitudes: np.array):
-        # 要素が複素数かをチェック
-        if amplitudes.dtype != complex:
-            message = "[ERROR]: 与えられた確率振幅のデータタイプが複素数ではありません"
-            raise InitializeError(message)
+    def __init__(self, amplitudes: list):
+        amplitudes = np.array(amplitudes, dtype=complex)
 
         # 与えられた確率振幅の次元がQubitのテンソル積空間の次元かチェック
         for dim in amplitudes.shape:
@@ -29,22 +26,38 @@ class Qubits:
             raise InitializeError(message)
 
         # 初期化
-        self.amplitudes = np.array(amplitudes, complex)
+        self.amplitudes = amplitudes
         self.qubit_count = len(self.amplitudes.shape)
+        self.vector = self.amplitudes.reshape(self.amplitudes.size)
 
     def __str__(self):
+        """Qubitsのベクトル表現を出力"""
+        return str(self.vector)
+
+    def print_array(self):
+        """Qubitsのndarray表現を出力"""
+        print(self.amplitudes)
+
+    def dirac_notation(self):
+        """QubitsのDirac表記を出力"""
         term = ""
         array_repl = list(self.amplitudes.flat)
         for index in range(self.amplitudes.size):
             vec_repl = format(index, "b").zfill(len(self.amplitudes.shape))
             term += f"{array_repl[index]}|{vec_repl}>"
 
-            # 最後以外はプラスをつけ、その後改行
+            # 最後以外はプラスと改行をつける
             if index != self.amplitudes.size - 1:
-                term += " +"
-            term += "\n"
+                term += " +\n"
 
-        return term
+        print(term)
+
+
+    def projection(self) -> np.ndarray:
+        """Qubit群に対応する射影作用素を返す"""
+        projection = np.multiply.outer(self.amplitudes, np.conjugate(self.amplitudes))
+        return projection
+
 
 
 def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:

@@ -2,16 +2,17 @@ import numpy as np
 import pytest
 
 from src.base.conf import approx_digit
-from src.base.error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
+from src.base.error import (InitializeError, NoQubitsInputError,
+                            QubitCountNotMatchError)
 from src.base.qubits import (Qubits, combine, inner, is_all_orthogonal,
-                         is_orthogonal)
+                             is_orthogonal)
 
 
 class TestQubits:
     # 単一Qubitに対するテスト
     def test_valid_qubit_input(self, valid_qubit_amp):
         """[正常系]: 単一Qubit生成"""
-        amplitudes = np.array(valid_qubit_amp)
+        amplitudes = valid_qubit_amp
         qubit = Qubits(amplitudes)
         assert np.all(qubit.amplitudes == amplitudes)
         assert qubit.qubit_count == 1
@@ -19,7 +20,7 @@ class TestQubits:
     def test_invalid_qubit_input(self, invalid_qubit_amp):
         """[異常系]: 不正な単一Qubitパラメータ"""
         with pytest.raises(InitializeError):
-            amplitudes = np.array(invalid_qubit_amp)
+            amplitudes = invalid_qubit_amp
             Qubits(amplitudes)
 
     def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
@@ -37,10 +38,10 @@ class TestQubits:
     # Qubit群に対するテスト
     def test_valid_qubits_input(self, valid_qubits_amp):
         """[正常系]: Qubit群生成"""
-        amplitudes = np.array(valid_qubits_amp)
+        amplitudes = valid_qubits_amp
         qubit = Qubits(amplitudes)
         assert np.all(qubit.amplitudes == amplitudes)
-        assert qubit.qubit_count == len(amplitudes.shape)
+        assert qubit.qubit_count == len(np.array(amplitudes).shape)
 
     def test_combine_qubits(self, dict_test_for_combine):
         """[正常系]: Qubit群同士の結合"""

@@ -1,11 +1,12 @@
 import random
 from unittest.mock import patch
 
+import numpy as np
 import pytest
 
 from src.base.conf import approx_digit
 from src.base.error import InitializeError
-from src.base.observable import ObservedBasis
+from src.base.observable import Observable, ObservedBasis
 from src.base.qubits import Qubits
 
 
@@ -23,7 +24,9 @@ class TestObserveBasis:
         assert "観測基底が直交しません" in str(error.value)
 
     # Qubit群に対する観測基底のテスト
-    def test_valid_observe_basis_with_multiple_qubits(self, orthogonal_multiple_qubits_groups):
+    def test_valid_observe_basis_with_multiple_qubits(
+        self, orthogonal_multiple_qubits_groups
+    ):
         """[正常系]: 直交したQubit群同士で構成する観測基底"""
         observe_basis = ObservedBasis(orthogonal_multiple_qubits_groups)
         assert observe_basis.qubits_group == orthogonal_multiple_qubits_groups
@@ -37,20 +40,45 @@ class TestObserveBasis:
         assert "観測基底が直交しません" in str(error.value)
 
 
-# class TestObservable:
-#     def test_valid_observable(self, valid_observed_value, observe_basis):
-#         """[正常系]: 状態識別可能な観測量"""
-#         observable = Observable(
-#             valid_observed_value[0], valid_observed_value[1], observe_basis
-#         )
-#         assert observable.observed_values[0] != observable.observed_values[1]
+class TestObservable:
+    def test_valid_observable_for_one_qubit(
+        self, valid_observed_values, observed_basis
+    ):
+        """[正常系]: 単一Qubit系に対する妥当な観測量"""
+        observable = Observable(valid_observed_values, observed_basis)
+        for index in range(len(valid_observed_values)):
+            assert observable.elements[index]["value"] == valid_observed_values[index]
+            assert np.all(
+                observable.elements[index]["qubits"].amplitudes
+                == observed_basis.qubits_group[index].amplitudes
+            )
 
-#     def test_invalid_observable(self, invalid_observed_value, observe_basis):
-#         """[異常系]: 状態識別不能な観測量を構成時、エラーとなること"""
-#         with pytest.raises(CannotDistinguishError):
-#             Observable(
-#                 invalid_observed_value[0], invalid_observed_value[1], observe_basis
-#             )
+    def test_invalid_observable_for_one_qubit(
+        self, invalid_observed_values, observed_basis
+    ):
+        """[異常系]: 単一Qubit系に対する妥当でない観測量を構成時、エラーとなること"""
+        with pytest.raises(InitializeError):
+            Observable(invalid_observed_values, observed_basis)
+
+    def test_valid_observable_for_multiple_qubit(
+        self, valid_observed_values, observed_basis
+    ):
+        """[正常系]: 単一Qubit系に対する妥当な観測量"""
+        observable = Observable(valid_observed_values, observed_basis)
+        for index in range(len(valid_observed_values)):
+            assert observable.elements[index]["value"] == valid_observed_values[index]
+            assert np.all(
+                observable.elements[index]["qubits"].amplitudes
+                == observed_basis.qubits_group[index].amplitudes
+            )
+
+    def test_invalid_observable_for_multiple_qubit(
+        self, invalid_observed_values, observed_basis
+    ):
+        """[異常系]: 単一Qubit系に対する妥当でない観測量を構成時、エラーとなること"""
+        with pytest.raises(InitializeError):
+            Observable(invalid_observed_values, observed_basis)
+
 
 #     def test_expected_value_for_observable_with_standard_basis(
 #         self, dict_for_test_expected_value

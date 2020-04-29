@@ -3,6 +3,7 @@ from math import sqrt
 import numpy as np
 import pytest
 
+from src.base.observable import Observable, ObservedBasis
 from src.base.qubits import Qubits
 
 
@@ -23,7 +24,7 @@ def valid_qubit_amp(request):
 # 妥当な単一qubitのfixture
 @pytest.fixture()
 def valid_qubit(valid_qubit_amp):
-    amplitudes = np.array(valid_qubit_amp)
+    amplitudes = valid_qubit_amp
     return Qubits(amplitudes)
 
 
@@ -53,7 +54,7 @@ def invalid_qubit_amp(request):
     ]
 )
 def orthogonal_qubits(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
@@ -67,7 +68,7 @@ def orthogonal_qubits(request):
     ]
 )
 def non_orthogonal_qubits(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
@@ -92,7 +93,7 @@ def valid_qubits_amp(request):
 # 妥当なQubit群のfixture
 @pytest.fixture()
 def valid_qubits(valid_qubits_amp):
-    amplitudes = np.array(valid_qubits_amp)
+    amplitudes = valid_qubits_amp
     return Qubits(amplitudes)
 
 
@@ -128,7 +129,7 @@ def valid_qubits(valid_qubits_amp):
 def dict_test_for_combine(request):
     test_dict = {
         "qubits_group": [
-            Qubits(np.array(amplitudes)) for amplitudes in request.param["qubits_group"]
+            Qubits(amplitudes) for amplitudes in request.param["qubits_group"]
         ],
         "result": request.param["result"],
     }
@@ -151,7 +152,7 @@ def dict_test_for_combine(request):
     ]
 )
 def orthogonal_two_qubits_groups(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
@@ -169,7 +170,7 @@ def orthogonal_two_qubits_groups(request):
     ]
 )
 def non_orthogonal_two_qubits_groups(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
@@ -187,7 +188,7 @@ def non_orthogonal_two_qubits_groups(request):
     ]
 )
 def not_match_counts_two_qubits_groups(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
@@ -205,7 +206,7 @@ def not_match_counts_two_qubits_groups(request):
     ]
 )
 def orthogonal_multiple_qubits_groups(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
@@ -224,27 +225,29 @@ def orthogonal_multiple_qubits_groups(request):
     ]
 )
 def non_orthogonal_multiple_qubits_groups(request):
-    amplitudes_list = [np.array(amplitudes) for amplitudes in request.param]
+    amplitudes_list = [amplitudes for amplitudes in request.param]
     qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
-# # 観測基底のfixture
-# @pytest.fixture()
-# def observe_basis(orthogonal_qubits):
-#     return ObserveBasis(orthogonal_qubits)
+# 単一Qubit系に対する観測基底のfixture
+@pytest.fixture()
+def observed_basis(orthogonal_qubits):
+    return ObservedBasis(orthogonal_qubits)
 
 
-# # 妥当な観測値のfixture
-# @pytest.fixture(params=[[100.0, -100.0], [100.0, 50.0], [1.0, 0.0], [0.0, 1.0]])
-# def valid_observed_value(request):
-#     return request.param
+# 単一Qubit系に対する妥当な観測値のfixture
+@pytest.fixture(
+    params=[[100.0, -100.0], [100.0, 50.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]
+)
+def valid_observed_values(request):
+    return request.param
 
 
-# # 不正な観測値のfixture
-# @pytest.fixture(params=[[0.0, 0.0], [100.0, 100.0], [1.0, 1.0], [-50.0, -50.0]])
-# def invalid_observed_value(request):
-#     return request.param
+# 単一Qubit系に対する不正な観測値のfixture
+@pytest.fixture(params=[[], [100.0, -100.0, 1.0]])
+def invalid_observed_values(request):
+    return request.param
 
 
 # # 観測量のfixture

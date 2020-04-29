@@ -1,23 +1,50 @@
+import os
+import sys
 from math import sqrt
 
-from .base.observable import Observable, ObserveBasis
-from .base.qubits import Qubits
-
-# plus-minus 観測基底の定義 (|+>, |->)
-sign_basis = ObserveBasis(
-    Qubit(sqrt(0.5) + 0j, sqrt(0.5) + 0j), Qubit(sqrt(0.5) + 0j, -sqrt(0.5) + 0j)
+sys.path.append(
+    os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../src/")
 )
 
-# plus-minus 観測基底を用いた観測 (|+> -> 100, |-> -> -100)
-observable = Observable(100, -100, sign_basis)
+import numpy as np
 
-# 観測対象Qubit
-target = Qubit(1 + 0j, 0j)
+from base.observable import Observable, ObservedBasis
+from base.qubits import Qubits
 
-print(f"pre-observed state: {target}")
+base = [0.0, 0.0, 0.0, 0.0]
+basis = []
+for index in range(4):
+    np_base = base.copy()
+    np_base[index] = 1.0
+    np_base = np.array(np_base)
+    np_base = np_base.reshape(2, 2)
+    basis.append(list(np_base))
 
-# 観測実行
-observed_value = observable.observe(target)
+qubits_group = [Qubits(basis[index]) for index in range(4)]
+observed_basis = ObservedBasis(qubits_group)
+observable = Observable([1.0, 2.0, 3.0, 4.0], observed_basis)
 
-print(f"observed value: {observed_value}")
-print(f"post-observed state: {target}")
+target_qubits = Qubits([[sqrt(0.25), sqrt(0.25)], [sqrt(0.25), sqrt(0.25)]])
+print("target qubits - dirac notation")
+target_qubits.dirac_notation()
+print()
+print("target qubits - vector notation")
+print(target_qubits)
+print()
+print("target qubits - array notation")
+target_qubits.print_array()
+print()
+print("observable - matrix notation")
+print(observable)
+print()
+print("observable - array notation")
+observable.print_array()
+print()
+print("expected value of observation")
+print(observable.expected_value(target_qubits))
+print()
+print("observed value")
+print(observable.observe(target_qubits))
+print()
+print("post qubits - dirac notation")
+target_qubits.dirac_notation()
