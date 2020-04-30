@@ -2,8 +2,10 @@ import numpy as np
 import pytest
 
 from src.base.conf import approx_digit
-from src.base.error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
-from src.base.qubits import Qubits, combine, inner, is_all_orthogonal, is_orthogonal
+from src.base.error import (InitializeError, NoQubitsInputError,
+                            QubitCountNotMatchError)
+from src.base.qubits import (Qubits, combine, inner, is_all_orthogonal,
+                             is_orthogonal)
 
 
 class TestQubits:

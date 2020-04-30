@@ -5,12 +5,8 @@ from numpy import conjugate
 from numpy.linalg import linalg
 
 from .conf import approx_digit
-from .error import (
-    InitializeError,
-    NoQubitsInputError,
-    QubitCountNotMatchError,
-    ReductionError,
-)
+from .error import (InitializeError, NoQubitsInputError,
+                    QubitCountNotMatchError, ReductionError)
 
 
 class Qubits:
@@ -115,7 +111,5 @@ def reduction(density: np.ndarray, target: int) -> np.ndarray:
         message = "[ERROR]: このQubit系はこれ以上縮約できません"
         raise ReductionError(message)
     return np.trace(
-        density,
-        axis1=qubit_count - 1 - target,
-        axis2=(2 * qubit_count - 1 - target),
+        density, axis1=qubit_count - 1 - target, axis2=(2 * qubit_count - 1 - target),
     )
