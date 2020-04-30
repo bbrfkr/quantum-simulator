@@ -6,7 +6,7 @@ import pytest
 
 from src.base.conf import approx_digit
 from src.base.error import InitializeError
-from src.base.observable import Observable, ObservedBasis
+from src.base.observable import Observable, ObservedBasis, combine
 from src.base.qubits import Qubits
 
 
@@ -61,47 +61,106 @@ class TestObservable:
             Observable(invalid_observed_values, observed_basis)
 
     def test_valid_observable_for_multiple_qubit(
-        self, valid_observed_values, observed_basis
+        self, valid_multi_particles_observed_values, multi_particles_observed_basis
     ):
         """[正常系]: 単一Qubit系に対する妥当な観測量"""
-        observable = Observable(valid_observed_values, observed_basis)
-        for index in range(len(valid_observed_values)):
-            assert observable.elements[index]["value"] == valid_observed_values[index]
+        observable = Observable(
+            valid_multi_particles_observed_values, multi_particles_observed_basis
+        )
+        for index in range(len(valid_multi_particles_observed_values)):
+            assert (
+                observable.elements[index]["value"]
+                == valid_multi_particles_observed_values[index]
+            )
             assert np.all(
                 observable.elements[index]["qubits"].amplitudes
-                == observed_basis.qubits_group[index].amplitudes
+                == multi_particles_observed_basis.qubits_group[index].amplitudes
             )
 
     def test_invalid_observable_for_multiple_qubit(
-        self, invalid_observed_values, observed_basis
+        self, invalid_multi_particles_observed_values, multi_particles_observed_basis
     ):
         """[異常系]: 単一Qubit系に対する妥当でない観測量を構成時、エラーとなること"""
         with pytest.raises(InitializeError):
-            Observable(invalid_observed_values, observed_basis)
+            Observable(
+                invalid_multi_particles_observed_values, multi_particles_observed_basis
+            )
 
+    def test_expected_value_for_observable_with_one_qubit(
+        self, dict_for_test_expected_value
+    ):
+        """[正常系]: 単一Qubitに対する観測量の期待値"""
+        dict_for_test = dict_for_test_expected_value
+        expected_value = dict_for_test["observable"].expected_value(
+            dict_for_test["qubit"]
+        )
+        assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
 
-#     def test_expected_value_for_observable_with_standard_basis(
-#         self, dict_for_test_expected_value
-#     ):
-#         """[正常系]: 観測量の期待値"""
-#         dict_for_test = dict_for_test_expected_value
-#         expected_value = dict_for_test["observable"].expected_value(
-#             dict_for_test["qubit"]
-#         )
-#         assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
+    def test_observation_for_one_qubit(self, dict_for_test_observation):
+        """[正常系]: von Neumann観測による単一Qubitに対する観測"""
+        dict_for_test = dict_for_test_observation
 
-#     def test_observation_for_qubit(self, dict_for_test_observation):
-#         """[正常系]: von Neumann観測によるQubitに対する観測"""
-#         dict_for_test = dict_for_test_observation
+        # 観測量の第一成分の値と遷移後状態を期待する
+        expected_result = dict_for_test["observable"].elements[0]
 
-#         # 観測量の第一成分の値と遷移後状態を期待する
-#         expected_result = dict_for_test["observable"].observed_values[0]
+        # seedを固定してテストを可能にする
+        random.seed(dict_for_test["randomize_seed"])
 
-#         # seedを固定してテストを可能にする
-#         random.seed(1)
+        # 観測実施
+        observed_value = dict_for_test["observable"].observe(dict_for_test["qubit"])
 
-#         # 観測実施
-#         observed_value = dict_for_test["observable"].observe(dict_for_test["qubit"])
+        assert observed_value == expected_result["value"]
+        assert np.all(
+            np.round(
+                dict_for_test["qubit"].amplitudes - expected_result["qubits"].amplitudes
+            )
+            == 0.0
+        )
 
-#         assert observed_value == expected_result["value"]
-#         assert dict_for_test["qubit"].amplitudes == expected_result["qubit"].amplitudes
+    def test_expected_value_for_observable_with_multiple_qubit(
+        self, dict_for_test_expected_value_with_compound_observable
+    ):
+        """[正常系]: 3粒子Qubit系に対する観測量の期待値"""
+        dict_for_test = dict_for_test_expected_value_with_compound_observable
+        expected_value = dict_for_test["observable"].expected_value(
+            dict_for_test["qubits"]
+        )
+        assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
+
+    def test_observation_for_multiple_qubit(
+        self, dict_for_test_observation_with_compound_observable
+    ):
+        """[正常系]: von Neumann観測による3粒子Qubit系に対する観測"""
+        dict_for_test = dict_for_test_observation_with_compound_observable
+
+        # 観測量の第一成分の値と遷移後状態を期待する
+        expected_result = dict_for_test["observable"].elements[0]
+
+        # seedを固定してテストを可能にする
+        random.seed(dict_for_test["randomize_seed"])
+
+        # 観測実施
+        observed_value = dict_for_test["observable"].observe(dict_for_test["qubits"])
+
+        assert observed_value == expected_result["value"]
+        assert np.all(
+            np.round(
+                dict_for_test["qubits"].amplitudes
+                - expected_result["qubits"].amplitudes
+            )
+            == 0.0
+        )
+
+    def test_combine_observables(self, dict_for_test_combine_observables):
+        """[正常系]: 2粒子Qubit系に対する観測量同士の結合"""
+        dict_for_test = dict_for_test_combine_observables
+        combined_observable = combine(
+            dict_for_test["observable_group"][0], dict_for_test["observable_group"][1]
+        )
+
+        assert np.all(
+            np.round(
+                combined_observable.matrix - np.array(dict_for_test["expected_matrix"])
+            )
+            == 0.0
+        )

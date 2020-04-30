@@ -2,10 +2,8 @@ import numpy as np
 import pytest
 
 from src.base.conf import approx_digit
-from src.base.error import (InitializeError, NoQubitsInputError,
-                            QubitCountNotMatchError)
-from src.base.qubits import (Qubits, combine, inner, is_all_orthogonal,
-                             is_orthogonal)
+from src.base.error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
+from src.base.qubits import Qubits, combine, inner, is_all_orthogonal, is_orthogonal
 
 
 class TestQubits:
@@ -34,6 +32,17 @@ class TestQubits:
     def test_one_inner_product_of_qubits(self, valid_qubit):
         """[正常系]: 長さが1の単一Qubitに対する内積"""
         assert round(inner(valid_qubit, valid_qubit) - 1.0, approx_digit) == 0.0
+
+    def test_projection_of_one_qubit(self, proj_for_valid_qubit):
+        """[正常系]: 単一Qubitに対する射影作用素"""
+        assert np.all(
+            np.round(
+                proj_for_valid_qubit["qubit"].projection()
+                - np.array(proj_for_valid_qubit["projection"]),
+                approx_digit,
+            )
+            == 0.0
+        )
 
     # Qubit群に対するテスト
     def test_valid_qubits_input(self, valid_qubits_amp):
@@ -108,3 +117,14 @@ class TestQubits:
     ):
         """[正常系]: 互いに直交しない二つ以上のQubit群に対する直交性のテスト"""
         assert not is_all_orthogonal(non_orthogonal_multiple_qubits_groups)
+
+    def test_projection_of_multiple_qubits(self, proj_for_valid_qubits):
+        """[正常系]: 単一Qubitに対する射影作用素"""
+        assert np.all(
+            np.round(
+                proj_for_valid_qubits["qubits"].projection()
+                - np.array(proj_for_valid_qubits["projection"]),
+                approx_digit,
+            )
+            == 0.0
+        )

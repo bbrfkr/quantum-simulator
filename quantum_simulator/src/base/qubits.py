@@ -5,7 +5,12 @@ from numpy import conjugate
 from numpy.linalg import linalg
 
 from .conf import approx_digit
-from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
+from .error import (
+    InitializeError,
+    NoQubitsInputError,
+    QubitCountNotMatchError,
+    ReductionError,
+)
 
 
 class Qubits:
@@ -52,21 +57,16 @@ class Qubits:
 
         print(term)
 
-
     def projection(self) -> np.ndarray:
         """Qubit群に対応する射影作用素を返す"""
         projection = np.multiply.outer(self.amplitudes, np.conjugate(self.amplitudes))
         return projection
 
 
-
 def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
     """二つのQubit群を結合する"""
     new_amplitudes = np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0)
     new_qubits = Qubits(new_amplitudes)
-
-    # 元々あったリソースは削除して利用不能にする(コピー不可能性定理)
-    del qubits_0.amplitudes, qubits_1.amplitudes
 
     return new_qubits
 
@@ -106,3 +106,16 @@ def is_all_orthogonal(qubits_group: [Qubits]) -> bool:
             ):
                 return False
             return True
+
+
+def reduction(density: np.ndarray, target: int) -> np.ndarray:
+    """target番目のQubitを縮約した、局所Qubit群に対応する密度行列を返す"""
+    qubit_count = int(len(density.shape) / 2)
+    if qubit_count == 1:
+        message = "[ERROR]: このQubit系はこれ以上縮約できません"
+        raise ReductionError(message)
+    return np.trace(
+        density,
+        axis1=qubit_count - 1 - target,
+        axis2=(2 * qubit_count - 1 - target),
+    )

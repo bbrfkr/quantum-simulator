@@ -36,6 +36,9 @@ class Observable:
             message = "[ERROR]: 観測値の個数と観測基底を構成するQubit群の個数が一致しません"
             raise InitializeError(message)
 
+        self.observed_values = observed_values
+        self.observed_basis = observed_basis
+
         # 観測値と観測対象のQubit
         self.elements = [
             {
@@ -45,7 +48,7 @@ class Observable:
             for index in range(len_observed_values)
         ]
 
-        # 観測量の表現行列の生成
+        # 観測量のndarrayの生成
         elements_arrays = [
             self.elements[index]["value"]
             * np.multiply.outer(
@@ -62,10 +65,10 @@ class Observable:
 
         # 表現行列を導出する
         matrix_dim = int(sqrt(self.array.size))
-        matrix_shape = (matrix_dim, matrix_dim)
 
-        self.matrix_shape = matrix_shape
-        self.matrix = self.array.reshape(matrix_shape)
+        self.matrix_dim = matrix_dim
+        self.matrix_shape = (self.matrix_dim, self.matrix_dim)
+        self.matrix = self.array.reshape(self.matrix_shape)
 
     def __str__(self):
         """観測量の二次元行列表現を出力"""
@@ -113,8 +116,37 @@ class Observable:
         # 観測によるQubitの収束 - 射影の適用と規格化
         post_vector = np.dot(proj_matrix, target_vector)
         norm_post_vector = np.linalg.norm(post_vector)
-        normalized_post_vector = ((1.0 / norm_post_vector) * post_vector).reshape(target.amplitudes.shape)
+        normalized_post_vector = ((1.0 / norm_post_vector) * post_vector).reshape(
+            target.amplitudes.shape
+        )
         target.amplitudes = normalized_post_vector
 
         # 観測値の返却
         return observed_result["value"]
+
+
+def combine_basis(basis_0: ObservedBasis, basis_1: ObservedBasis) -> ObservedBasis:
+    """二つの観測基底から合成系の観測基底を作る"""
+    new_observed_basis = ObservedBasis(
+        [
+            Qubits(np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0))
+            for qubits_0 in basis_0.qubits_group
+            for qubits_1 in basis_1.qubits_group
+        ]
+    )
+    return new_observed_basis
+
+
+def combine(observable_0: Observable, observable_1: Observable) -> Observable:
+    """二つの観測量から合成系の観測量を作る"""
+    new_observed_values = [
+        element_0["value"] * element_1["value"]
+        for element_0 in observable_0.elements
+        for element_1 in observable_1.elements
+    ]
+    new_observed_basis = combine_basis(
+        observable_0.observed_basis, observable_1.observed_basis
+    )
+
+    new_observable = Observable(new_observed_values, new_observed_basis)
+    return new_observable

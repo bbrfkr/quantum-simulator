@@ -14,6 +14,10 @@ class NoQubitsInputError(BaseError):
     """Qubit群の未入力時エラー"""
 
 
-# 量子回路に対するエラー
+class ReductionError(BaseError):
+    """縮約時エラー"""
+
+
+# 状態変換に対するエラー
 class IncompatibleDimensionError(BaseError):
     """操作時次元不整合エラー"""
