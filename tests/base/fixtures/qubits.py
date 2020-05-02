@@ -279,8 +279,8 @@ def non_orthogonal_two_qubits_groups(request):
 
 @pytest.fixture(
     params=[
-        [[[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]], [0j, 1.0 + 0j],],
-        [[1.0 + 0j, 0j], [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],],
+        [[[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]], [0j, 1.0 + 0j]],
+        [[1.0 + 0j, 0j], [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]],
     ]
 )
 def not_match_counts_two_qubits_groups(request):

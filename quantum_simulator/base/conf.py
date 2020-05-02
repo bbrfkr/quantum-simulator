@@ -1,2 +1,6 @@
+"""
+baseパッケージ内で利用する定数群
+"""
+
 # 計算時の近似桁数
-approx_digit = 5
+APPROX_DIGIT = 5

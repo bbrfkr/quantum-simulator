@@ -1,17 +1,23 @@
-from math import ceil, sqrt
+"""
+観測量に関するクラス群
+"""
+
+from math import sqrt
 from random import choices
+from typing import List
 
 import numpy as np
 
-from .conf import approx_digit
+from quantum_simulator.base.typing import ObservableElements
+
 from .error import InitializeError
 from .qubits import Qubits, inner, is_all_orthogonal
 
 
-class ObservedBasis:
+class ObservedBasis:  # pylint: disable=too-few-public-methods
     """観測基底のクラス"""
 
-    def __init__(self, qubits_group: [Qubits]):
+    def __init__(self, qubits_group: List[Qubits]):
         # 観測基底を構成するQubit群同士は互いに直交していなければならない
         if not is_all_orthogonal(qubits_group):
             message = "[ERROR]: 観測基底が直交しません"
@@ -26,10 +32,14 @@ class ObservedBasis:
         self.qubits_group = qubits_group
 
 
-class Observable:
+class Observable:  # pylint: disable=too-few-public-methods
     """観測量のクラス"""
 
-    def __init__(self, observed_values: [float], observed_basis: ObservedBasis):
+    elements: ObservableElements
+    observed_values: List[float]
+    observed_basis: ObservedBasis
+
+    def __init__(self, observed_values: List[float], observed_basis: ObservedBasis):
         # 観測値の組と観測基底を構成するQubit群の個数が一致していなければエラー
         len_observed_values = len(observed_values)
         if len_observed_values != len(observed_basis.qubits_group):
@@ -58,7 +68,7 @@ class Observable:
             for index in range(len_observed_values)
         ]
         array = elements_arrays[-1]
-        for index in range(len_observed_values - 1):
+        for index in range(len_observed_values - 1):  # pylint: disable=R0801
             array = np.add(array, elements_arrays[index])
 
         self.array = array
@@ -80,7 +90,7 @@ class Observable:
 
     def expected_value(self, target: Qubits) -> float:
         """対象Qubit群に対する観測量の期待値を返す"""
-        expected_value = 0
+        expected_value = 0.0
         for element in self.elements:
             expected_value += (
                 element["value"] * abs(inner(element["qubits"], target)) ** 2

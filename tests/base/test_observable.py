@@ -1,14 +1,11 @@
 import random
-from unittest.mock import patch
 
 import numpy as np
 import pytest
 
-from quantum_simulator.base.conf import approx_digit
+from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.observable import (Observable, ObservedBasis,
-                                               combine)
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.observable import Observable, ObservedBasis, combine
 
 
 class TestObservedBasis:
@@ -99,7 +96,7 @@ class TestObservable:
         expected_value = dict_for_test["observable"].expected_value(
             dict_for_test["qubit"]
         )
-        assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
+        assert round(expected_value, APPROX_DIGIT) == dict_for_test["expected_value"]
 
     def test_observation_for_one_qubit(self, dict_for_test_observation):
         """[正常系]: von Neumann観測による単一Qubitに対する観測"""
@@ -130,7 +127,7 @@ class TestObservable:
         expected_value = dict_for_test["observable"].expected_value(
             dict_for_test["qubits"]
         )
-        assert round(expected_value, approx_digit) == dict_for_test["expected_value"]
+        assert round(expected_value, APPROX_DIGIT) == dict_for_test["expected_value"]
 
     def test_observation_for_multiple_qubit(
         self, dict_for_test_observation_with_compound_observable

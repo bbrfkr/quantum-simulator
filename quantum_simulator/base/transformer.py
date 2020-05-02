@@ -1,3 +1,7 @@
+"""
+状態変換を行うクラス群
+"""
+
 from math import sqrt
 
 import numpy as np
@@ -60,7 +64,7 @@ class UnitaryTransformer:
         )
 
 
-def combine(
+def combine(  # pylint: disable=C0330
     unitary_0: UnitaryTransformer, unitary_1: UnitaryTransformer
 ) -> UnitaryTransformer:
     """二つのユニタリ変換から合成系のユニタリ変換を作る"""

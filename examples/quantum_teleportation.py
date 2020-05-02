@@ -4,9 +4,6 @@
 
 from math import sqrt
 
-import numpy as np
-from numpy import linalg
-
 from quantum_simulator.base import observable, qubits, transformer
 from quantum_simulator.base.observable import Observable, ObservedBasis
 from quantum_simulator.base.qubits import Qubits

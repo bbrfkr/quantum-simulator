@@ -2,7 +2,7 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.observable import Observable, ObservedBasis
+from quantum_simulator.base.observable import ObservedBasis
 from quantum_simulator.base.qubits import Qubits
 from quantum_simulator.base.transformer import UnitaryTransformer
 
@@ -42,15 +42,15 @@ def invalid_observed_basis_for_unitary(request):
     params=[
         {
             "unitary": UnitaryTransformer(
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j]),]),
-                ObservedBasis([Qubits([0j, 1 + 0j]), Qubits([1 + 0j, 0j]),]),
+                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
+                ObservedBasis([Qubits([0j, 1 + 0j]), Qubits([1 + 0j, 0j])]),
             ),
             "target": Qubits([1 + 0j, 0j]),
             "expected_qubits": Qubits([0j, 1 + 0j]),
         },
         {
             "unitary": UnitaryTransformer(
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j]),]),
+                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
                 ObservedBasis(
                     [
                         Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
@@ -97,8 +97,8 @@ def dict_for_test_operation_of_unitary(request):
         {
             "unitaries": [
                 UnitaryTransformer(
-                    ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j]),]),
-                    ObservedBasis([Qubits([0j, 1 + 0j]), Qubits([1 + 0j, 0j]),]),
+                    ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
+                    ObservedBasis([Qubits([0j, 1 + 0j]), Qubits([1 + 0j, 0j])]),
                 ),
                 UnitaryTransformer(
                     ObservedBasis(
@@ -106,7 +106,7 @@ def dict_for_test_operation_of_unitary(request):
                             Qubits([[1 + 0j, 0j], [0j, 0j]]),
                             Qubits([[0j, 1 + 0j], [0j, 0j]]),
                             Qubits([[0j, 0j], [1 + 0j, 0j]]),
-                            Qubits([[0j, 0j], [0j + 1, 0j]]),
+                            Qubits([[0j, 0j], [0j, 1 + 0j]]),
                         ]
                     ),
                     ObservedBasis(

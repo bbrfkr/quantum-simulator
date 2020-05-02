@@ -1,11 +1,19 @@
 import numpy as np
 import pytest
 
-from quantum_simulator.base.conf import approx_digit
-from quantum_simulator.base.error import (InitializeError, NoQubitsInputError,
-                                          QubitCountNotMatchError)
-from quantum_simulator.base.qubits import (Qubits, combine, inner,
-                                           is_all_orthogonal, is_orthogonal)
+from quantum_simulator.base.conf import APPROX_DIGIT
+from quantum_simulator.base.error import (
+    InitializeError,
+    NoQubitsInputError,
+    QubitCountNotMatchError,
+)
+from quantum_simulator.base.qubits import (
+    Qubits,
+    combine,
+    inner,
+    is_all_orthogonal,
+    is_orthogonal,
+)
 
 
 class TestQubits:
@@ -35,7 +43,7 @@ class TestQubits:
 
     def test_one_inner_product_of_qubits(self, valid_qubit):
         """[正常系]: 長さが1の単一Qubitに対する内積"""
-        assert round(inner(valid_qubit, valid_qubit) - 1.0, approx_digit) == 0.0
+        assert round(inner(valid_qubit, valid_qubit) - 1.0, APPROX_DIGIT) == 0.0
 
     def test_projection_of_one_qubit(self, proj_for_valid_qubit):
         """[正常系]: 単一Qubitに対する射影作用素"""
@@ -43,7 +51,7 @@ class TestQubits:
             np.round(
                 proj_for_valid_qubit["qubit"].projection()
                 - np.array(proj_for_valid_qubit["projection"]),
-                approx_digit,
+                APPROX_DIGIT,
             )
             == 0.0
         )
@@ -62,7 +70,7 @@ class TestQubits:
         combined_qubits = combine(qubits_group[0], qubits_group[1])
         expected_result = np.array(dict_test_for_combine["result"])
         assert np.all(
-            np.round(abs(combined_qubits.amplitudes - expected_result), approx_digit)
+            np.round(abs(combined_qubits.amplitudes - expected_result), APPROX_DIGIT)
             == 0.0
         )
 
@@ -71,7 +79,7 @@ class TestQubits:
         assert (
             round(
                 inner(orthogonal_two_qubits_groups[0], orthogonal_two_qubits_groups[1]),
-                approx_digit,
+                APPROX_DIGIT,
             )
             == 0.0
         )
@@ -81,7 +89,7 @@ class TestQubits:
 
     def test_one_inner_product_of_two_qubits(self, valid_qubits):
         """[正常系]: 長さが1のQubit群に対する内積"""
-        assert round(inner(valid_qubits, valid_qubits) - 1.0, approx_digit) == 0.0
+        assert round(inner(valid_qubits, valid_qubits) - 1.0, APPROX_DIGIT) == 0.0
 
     def test_non_zero_inner_product_of_two_qubits(
         self, non_orthogonal_two_qubits_groups
@@ -128,7 +136,7 @@ class TestQubits:
             np.round(
                 proj_for_valid_qubits["qubits"].projection()
                 - np.array(proj_for_valid_qubits["projection"]),
-                approx_digit,
+                APPROX_DIGIT,
             )
             == 0.0
         )

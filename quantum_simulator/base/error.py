@@ -1,3 +1,8 @@
+"""
+baseパッケージ内のエラークラス
+"""
+
+
 class BaseError(Exception):
     """基底例外クラス"""
 
@@ -18,6 +23,5 @@ class ReductionError(BaseError):
     """縮約時エラー"""
 
 
-# 状態変換に対するエラー
 class IncompatibleDimensionError(BaseError):
     """操作時次元不整合エラー"""

@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from quantum_simulator.base import transformer
-from quantum_simulator.base.conf import approx_digit
+from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import InitializeError
 from quantum_simulator.base.transformer import UnitaryTransformer
 
@@ -34,7 +34,7 @@ class TestUnitaryTransformer:
             np.round(
                 dict_for_test["target"].amplitudes
                 - dict_for_test["expected_qubits"].amplitudes,
-                approx_digit,
+                APPROX_DIGIT,
             )
             == 0.0
         )
@@ -51,7 +51,7 @@ class TestUnitaryTransformer:
                     - dict_for_test["expected_unitary"]
                     .pre_basis.qubits_group[index]
                     .amplitudes,
-                    approx_digit,
+                    APPROX_DIGIT,
                 )
                 == 0.0
             )
@@ -62,7 +62,7 @@ class TestUnitaryTransformer:
                     - dict_for_test["expected_unitary"]
                     .post_basis.qubits_group[index]
                     .amplitudes,
-                    approx_digit,
+                    APPROX_DIGIT,
                 )
                 == 0.0
             )
