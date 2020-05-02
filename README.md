@@ -1,7 +1,7 @@
-# Quantum Simulator by BBRFKR
+# 量子コンピューティング シミュレータ by BBRFKR
 
-## Execute Sample Code!
+## 量子テレポーテーションのシミュレーション
 
 ```
-python example.py
+python examples/quantum_teleportation.py
 ```
