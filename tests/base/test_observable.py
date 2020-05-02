@@ -4,13 +4,16 @@ from unittest.mock import patch
 import numpy as np
 import pytest
 
-from src.base.conf import approx_digit
-from src.base.error import InitializeError
-from src.base.observable import Observable, ObservedBasis, combine
-from src.base.qubits import Qubits
+from quantum_simulator.base.conf import approx_digit
+from quantum_simulator.base.error import InitializeError
+from quantum_simulator.base.observable import (Observable, ObservedBasis,
+                                               combine)
+from quantum_simulator.base.qubits import Qubits
 
 
-class TestObserveBasis:
+class TestObservedBasis:
+    """ObservedBasisクラスと付随するメソッドのテスト"""
+
     # 単一Qubitに対する観測基底のテスト
     def test_valid_observe_basis(self, orthogonal_qubits):
         """[正常系]: 直交した単一Qubit同士で構成する観測基底"""
@@ -41,6 +44,8 @@ class TestObserveBasis:
 
 
 class TestObservable:
+    """Observableクラスと付随するメソッドのテスト"""
+
     def test_valid_observable_for_one_qubit(
         self, valid_observed_values, observed_basis
     ):

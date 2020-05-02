@@ -7,10 +7,10 @@ from math import sqrt
 import numpy as np
 from numpy import linalg
 
-from quantum_simulator.src.base import observable, qubits, transformer
-from quantum_simulator.src.base.observable import Observable, ObservedBasis
-from quantum_simulator.src.base.qubits import Qubits, reduction
-from quantum_simulator.src.base.transformer import UnitaryTransformer
+from quantum_simulator.base import observable, qubits, transformer
+from quantum_simulator.base.observable import Observable, ObservedBasis
+from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.transformer import UnitaryTransformer
 
 # 初期状態の確率振幅
 alpha = sqrt(0.3) + 0j
@@ -109,16 +109,3 @@ whole_unitaries[int_observed_value].operate(whole_qubits)
 print("##### ユニタリ変換後の全系のベクトル #####")
 whole_qubits.dirac_notation()
 print()
-
-print("##### 最終的にBobが得られたQubitの密度行列(出力) #####")
-output_density = reduction(reduction(whole_qubits.projection(), 0), 0)
-print(output_density)
-print()
-
-print("##### 出力された密度行列の固有値と固有ベクトル #####")
-eigen_result = linalg.eig(reduction(reduction(whole_qubits.projection(), 0), 0))
-print("固有値")
-print(eigen_result[0])
-print()
-print("固有ベクトル")
-print(eigen_result[1])

@@ -1,14 +1,16 @@
 import numpy as np
 import pytest
 
-from src.base.conf import approx_digit
-from src.base.error import (InitializeError, NoQubitsInputError,
-                            QubitCountNotMatchError)
-from src.base.qubits import (Qubits, combine, inner, is_all_orthogonal,
-                             is_orthogonal)
+from quantum_simulator.base.conf import approx_digit
+from quantum_simulator.base.error import (InitializeError, NoQubitsInputError,
+                                          QubitCountNotMatchError)
+from quantum_simulator.base.qubits import (Qubits, combine, inner,
+                                           is_all_orthogonal, is_orthogonal)
 
 
 class TestQubits:
+    """Qubitsクラスと付随するメソッドのテスト"""
+
     # 単一Qubitに対するテスト
     def test_valid_qubit_input(self, valid_qubit_amp):
         """[正常系]: 単一Qubit生成"""

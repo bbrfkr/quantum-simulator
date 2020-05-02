@@ -104,12 +104,12 @@ def is_all_orthogonal(qubits_group: [Qubits]) -> bool:
             return True
 
 
-def reduction(density: np.ndarray, target: int) -> np.ndarray:
-    """target番目のQubitを縮約した、局所Qubit群に対応する密度行列を返す"""
-    qubit_count = int(len(density.shape) / 2)
-    if qubit_count == 1:
-        message = "[ERROR]: このQubit系はこれ以上縮約できません"
-        raise ReductionError(message)
-    return np.trace(
-        density, axis1=qubit_count - 1 - target, axis2=(2 * qubit_count - 1 - target),
-    )
+# def reduction(density: np.ndarray, target: int) -> np.ndarray:
+#     """target番目のQubitを縮約した、局所Qubit群に対応する密度行列を返す"""
+#     qubit_count = int(len(density.shape) / 2)
+#     if qubit_count == 1:
+#         message = "[ERROR]: このQubit系はこれ以上縮約できません"
+#         raise ReductionError(message)
+#     return np.trace(
+#         density, axis1=qubit_count - 1 - target, axis2=(2 * qubit_count - 1 - target),
+#     )
