@@ -29,9 +29,9 @@ jobs:
         poetry install     
     - name: static analysis
       run: |
-        poetry run flake8 .
-        poetry run black --check .
-        poetry run mypy .
+        poetry run flake8 quantum_simulator
+        poetry run black --check quantum_simulator
+        poetry run mypy quantum_simulator
     - name: Test with pytest
       run: |
-        poetry run pytest -v
+        poetry run pytest -v tests

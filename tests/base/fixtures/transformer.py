@@ -106,7 +106,7 @@ def dict_for_test_operation_of_unitary(request):
                             Qubits([[1 + 0j, 0j], [0j, 0j]]),
                             Qubits([[0j, 1 + 0j], [0j, 0j]]),
                             Qubits([[0j, 0j], [1 + 0j, 0j]]),
-                            Qubits([[0j, 0j], [0j + 1, 0j]]),
+                            Qubits([[0j, 0j], [0j, 1 + 0j]]),
                         ]
                     ),
                     ObservedBasis(

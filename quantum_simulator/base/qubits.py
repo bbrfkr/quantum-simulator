@@ -1,19 +1,23 @@
+"""
+Qubit系の定義
+"""
+
 from math import ceil
+from typing import List
 
 import numpy as np
 from numpy import conjugate
 from numpy.linalg import linalg
 
-from .conf import approx_digit
-from .error import (InitializeError, NoQubitsInputError,
-                    QubitCountNotMatchError, ReductionError)
+from .conf import APPROX_DIGIT
+from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
 
 
 class Qubits:
     """純粋状態の一般的に複数のQubit"""
 
-    def __init__(self, amplitudes: list):
-        amplitudes = np.array(amplitudes, dtype=complex)
+    def __init__(self, amps: list):
+        amplitudes = np.array(amps, dtype=complex)
 
         # 与えられた確率振幅の次元がQubitのテンソル積空間の次元かチェック
         for dim in amplitudes.shape:
@@ -22,7 +26,7 @@ class Qubits:
                 raise InitializeError(message)
 
         # 確率の総和をチェック
-        if round(linalg.norm(amplitudes) - 1.0, approx_digit) != 0.0:
+        if round(linalg.norm(amplitudes) - 1.0, APPROX_DIGIT) != 0.0:
             message = "[ERROR]: 確率の総和が1ではありません"
             raise InitializeError(message)
 
@@ -79,10 +83,10 @@ def inner(qubits_0: Qubits, qubits_1: Qubits) -> complex:
 
 def is_orthogonal(qubits_0: Qubits, qubits_1: Qubits) -> bool:
     """二つのQubit群同士が直交しているか"""
-    return round(inner(qubits_0, qubits_1), approx_digit) == 0.0
+    return np.round(inner(qubits_0, qubits_1), APPROX_DIGIT) == 0.0
 
 
-def is_all_orthogonal(qubits_group: [Qubits]) -> bool:
+def is_all_orthogonal(qubits_group: List[Qubits]) -> bool:
     """Qubit群同士が互い直交しているか"""
     len_qubits_group = len(qubits_group)
     # Qubit群が一つも入力されない時はエラー
@@ -101,7 +105,8 @@ def is_all_orthogonal(qubits_group: [Qubits]) -> bool:
                 qubits_group[index_0], qubits_group[len_qubits_group - index_1 - 1]
             ):
                 return False
-            return True
+
+    return True
 
 
 # def reduction(density: np.ndarray, target: int) -> np.ndarray:
