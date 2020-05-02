@@ -166,7 +166,7 @@ def dict_for_test_expected_value(request):
         {
             "observable": Observable(
                 [10.0, 0.0],
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j]),]),
+                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
             ),
             "qubit": Qubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
             "randomize_seed": 1,

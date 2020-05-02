@@ -2,10 +2,18 @@ import numpy as np
 import pytest
 
 from quantum_simulator.base.conf import APPROX_DIGIT
-from quantum_simulator.base.error import (InitializeError, NoQubitsInputError,
-                                          QubitCountNotMatchError)
-from quantum_simulator.base.qubits import (Qubits, combine, inner,
-                                           is_all_orthogonal, is_orthogonal)
+from quantum_simulator.base.error import (
+    InitializeError,
+    NoQubitsInputError,
+    QubitCountNotMatchError,
+)
+from quantum_simulator.base.qubits import (
+    Qubits,
+    combine,
+    inner,
+    is_all_orthogonal,
+    is_orthogonal,
+)
 
 
 class TestQubits:

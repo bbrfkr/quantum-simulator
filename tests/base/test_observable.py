@@ -1,14 +1,11 @@
 import random
-from unittest.mock import patch
 
 import numpy as np
 import pytest
 
 from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.observable import (Observable, ObservedBasis,
-                                               combine)
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.observable import Observable, ObservedBasis, combine
 
 
 class TestObservedBasis:
