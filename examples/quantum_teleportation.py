@@ -7,7 +7,10 @@ from math import sqrt
 from quantum_simulator.base import observable, pure_qubits, transformer
 from quantum_simulator.base.observable import Observable, ObservedBasis
 from quantum_simulator.base.pure_qubits import PureQubits
+from quantum_simulator.base.qubits import Qubits, reduction
 from quantum_simulator.base.transformer import UnitaryTransformer
+
+import numpy as np
 
 # 初期状態の確率振幅
 alpha = sqrt(0.3) + 0j
@@ -105,6 +108,13 @@ print()
 # ユニタリ変換の適用
 whole_unitaries[int_observed_value].operate(whole_qubits)
 
-print("##### ユニタリ変換後の全系のベクトル #####")
-whole_qubits.dirac_notation()
+print("##### Bobに送信されたユニタリ変換後のQubit #####")
+print("### Matrix表示 ###")
+density = Qubits(density_array=whole_qubits.projection)
+for index in range(2)[::-1]:
+    density = reduction(density, index)
+print(density.matrix)
+print()
+print("### Dirac表記表示 ###")
+density.eigen_states[1].dirac_notation()
 print()
