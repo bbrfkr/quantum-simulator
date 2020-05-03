@@ -79,7 +79,7 @@ def non_orthogonal_qubits(request):
         [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
     ]
 )
-def valid_qubits_amp(request):
+def valid_pure_qubits_amp(request):
     """
     妥当なQubit群に対する確率振幅のfixture
     2粒子: |00>
@@ -91,9 +91,9 @@ def valid_qubits_amp(request):
 
 
 @pytest.fixture()
-def valid_qubits(valid_qubits_amp):
+def valid_qubits(valid_pure_qubits_amp):
     """妥当なQubit群のfixture"""
-    amplitudes = valid_qubits_amp
+    amplitudes = valid_pure_qubits_amp
     return PureQubits(amplitudes)
 
 
@@ -246,7 +246,7 @@ def dict_test_for_combine(request):
         ],
     ]
 )
-def orthogonal_two_qubits_groups(request):
+def orthogonal_two_pure_qubits_groups(request):
     """
     直交する二つのQubit群同士のfixture
     test1: |0+>, |1+>
@@ -266,7 +266,7 @@ def orthogonal_two_qubits_groups(request):
         [[[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
     ]
 )
-def non_orthogonal_two_qubits_groups(request):
+def non_orthogonal_two_pure_qubits_groups(request):
     """
     直交しない二つのQubit群のfixture
     test1: {|-+>, |1+>} (<1+|-+>)
@@ -283,7 +283,7 @@ def non_orthogonal_two_qubits_groups(request):
         [[1.0 + 0j, 0j], [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]],
     ]
 )
-def not_match_counts_two_qubits_groups(request):
+def not_match_counts_two_pure_qubits_groups(request):
     """
     異なるQubit数の二つのQubit群のfixture
     test1: |0+>, |1>
@@ -304,7 +304,7 @@ def not_match_counts_two_qubits_groups(request):
         ]
     ]
 )
-def orthogonal_multiple_qubits_groups(request):
+def orthogonal_multiple_pure_qubits_groups(request):
     """
     互いに直交する二つより多いQubit群同士のfixture
     test1: {|00>, |01>, |10>, |11>}
@@ -325,7 +325,7 @@ def orthogonal_multiple_qubits_groups(request):
         ]
     ]
 )
-def non_orthogonal_multiple_qubits_groups(request):
+def non_orthogonal_multiple_pure_qubits_groups(request):
     """
     互いに直交しない二つより多いQubit群同士のfixture
     test1: {|00>, |01>, |10>, |11>, |00>}

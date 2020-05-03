@@ -106,16 +106,18 @@ class Observable:  # pylint: disable=too-few-public-methods
         observed_result = choices(self.elements, observed_probabilities)[0]
 
         # 観測値によって識別されたPureQubitsを選択する
-        observed_qubits_group = []
+        observed_pure_qubits_group = []
         for element in self.elements:
             if observed_result["value"] == element["value"]:
-                observed_qubits_group.append(element["qubits"])
+                observed_pure_qubits_group.append(element["qubits"])
 
         # 選択されたPureQubits群で射影作用素を作る
-        len_observed_qubits_group = len(observed_qubits_group)
-        projection = observed_qubits_group[-1].projection
-        for index in range(len_observed_qubits_group - 1):
-            projection = np.add(projection, observed_qubits_group[index].projection)
+        len_observed_pure_qubits_group = len(observed_pure_qubits_group)
+        projection = observed_pure_qubits_group[-1].projection
+        for index in range(len_observed_pure_qubits_group - 1):
+            projection = np.add(
+                projection, observed_pure_qubits_group[index].projection
+            )
 
         # 射影作用素とQubit群をそれぞれ二次元行列、ベクトルに変換
         matrix_dim = target.amplitudes.size

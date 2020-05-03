@@ -96,21 +96,21 @@ def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
 
 def is_all_orthogonal(qubits_group: List[PureQubits]) -> bool:
     """複数のPureQubits同士が互い直交しているか"""
-    len_qubits_group = len(qubits_group)
+    len_pure_qubits_group = len(qubits_group)
     # PureQubitsが一つも入力されない時はエラー
-    if len_qubits_group == 0:
+    if len_pure_qubits_group == 0:
         message = "[ERROR]: 与えられたリストにPureQubitsが見つかりません"
         raise NoQubitsInputError(message)
 
     # PureQubitsが一つだけ与えられた時は明らかに互いに直交
-    if len_qubits_group == 1:
+    if len_pure_qubits_group == 1:
         return True
 
     # PureQubitsが二つ以上与えられた場合
-    for index_0 in range(ceil(len_qubits_group / 2)):
-        for index_1 in range(len_qubits_group - index_0 - 1):
+    for index_0 in range(ceil(len_pure_qubits_group / 2)):
+        for index_1 in range(len_pure_qubits_group - index_0 - 1):
             if not is_orthogonal(
-                qubits_group[index_0], qubits_group[len_qubits_group - index_1 - 1]
+                qubits_group[index_0], qubits_group[len_pure_qubits_group - index_1 - 1]
             ):
                 return False
 

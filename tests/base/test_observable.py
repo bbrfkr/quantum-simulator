@@ -25,18 +25,18 @@ class TestObservedBasis:
 
     # Qubit群に対する観測基底のテスト
     def test_valid_observe_basis_with_multiple_qubits(
-        self, orthogonal_multiple_qubits_groups
+        self, orthogonal_multiple_pure_qubits_groups
     ):
         """[正常系]: 直交したQubit群同士で構成する観測基底"""
-        observe_basis = ObservedBasis(orthogonal_multiple_qubits_groups)
-        assert observe_basis.qubits_group == orthogonal_multiple_qubits_groups
+        observe_basis = ObservedBasis(orthogonal_multiple_pure_qubits_groups)
+        assert observe_basis.qubits_group == orthogonal_multiple_pure_qubits_groups
 
     def test_invalid_observe_basis_with_non_orthogonal_multiple_qubits(
-        self, non_orthogonal_multiple_qubits_groups
+        self, non_orthogonal_multiple_pure_qubits_groups
     ):
         """[異常系]: 直交しないQubit群同士で観測基底を構成時、エラーとなること"""
         with pytest.raises(InitializeError) as error:
-            ObservedBasis(non_orthogonal_multiple_qubits_groups)
+            ObservedBasis(non_orthogonal_multiple_pure_qubits_groups)
         assert "観測基底が直交しません" in str(error.value)
 
 
