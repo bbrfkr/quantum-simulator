@@ -8,10 +8,9 @@ from typing import List
 
 import numpy as np
 
-from .typing import ObservableElements
-
 from .error import InitializeError
 from .pure_qubits import PureQubits, inner, is_all_orthogonal
+from .typing import ObservableElements
 
 
 class ObservedBasis:  # pylint: disable=too-few-public-methods

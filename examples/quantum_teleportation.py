@@ -37,7 +37,9 @@ whole_qubits.dirac_notation()
 print()
 
 # 恒等観測量(作用素)の定義
-standard_basis_2x2 = ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])])
+standard_basis_2x2 = ObservedBasis(
+    [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+)
 identity_observable = Observable([1, 1], standard_basis_2x2)
 
 # Bell基底によるAlice側の観測量を定義

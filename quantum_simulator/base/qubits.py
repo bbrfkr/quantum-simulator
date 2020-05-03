@@ -2,12 +2,15 @@
 一般的なQubit系の定義
 """
 
-from typing import overload, List
-from quantum_simulator.base.pure_qubits import PureQubits, is_all_orthogonal
-from quantum_simulator.base.error import InitializeError
+from typing import List, overload
+
 import numpy as np
 from numpy import linalg as la
+
 from quantum_simulator.base.conf import APPROX_DIGIT
+from quantum_simulator.base.error import InitializeError
+from quantum_simulator.base.pure_qubits import PureQubits, is_all_orthogonal
+
 
 def eig_for_density(matrix: np.array, qubit_shape: tuple) -> ([complex], [PureQubits]):
     eigen_values, eigen_states = la.eig(matrix)
@@ -22,8 +25,10 @@ def eig_for_density(matrix: np.array, qubit_shape: tuple) -> ([complex], [PureQu
 
     return (eigen_values, eigen_states)
 
+
 class Qubits:
     """一般的に複数かつ混合状態のQubit"""
+
     @overload
     def __init__(self, density_array: list):
         array = None
@@ -61,7 +66,11 @@ class Qubits:
         # 行列の時のチェック
         else:
             # 縦横の次元が一致しないか、与えられた行列がベクトルであったときはエラー
-            if (tmp_array.shape[0] != tmp_array.shape[1]) and tmp_array.shape[0] < 2 and tmp_array.shape[1] < 2:
+            if (
+                (tmp_array.shape[0] != tmp_array.shape[1])
+                and tmp_array.shape[0] < 2
+                and tmp_array.shape[1] < 2
+            ):
                 raise InitializeError(message)
             else:
                 tmp_dim = tmp_array.shape[0]
@@ -69,7 +78,7 @@ class Qubits:
                 # 行列の次元が2の累乗にならない場合はエラー
                 # この時点でQubit数もカウントしておく
                 tmp_qubit_count = 0
-                while(tmp_dim % 2 != 1):
+                while tmp_dim % 2 != 1:
                     if tmp_dim % 2 != 0:
                         raise InitializeError(message)
                     tmp_qubit_count += 1
@@ -78,7 +87,7 @@ class Qubits:
                 qubit_count = tmp_qubit_count
                 matrix_dim = tmp_array.shape[0]
             matrix = tmp_array
-            
+
             # ndarrayのshapeを求める
             array_shape = (2 for index in range(2 * qubit_count))
             array = matrix.reshape(array_shape)
@@ -95,14 +104,13 @@ class Qubits:
         self.matrix = matrix
         self.qubit_count = qubits_count
 
-
     def __init__(self, probabilities: List[float], qubits: List[PureQubits]):
         last_qubit = qubits[-1]
         qubits_count = len(qubits)
 
         # Qubitの数同士が一致しないとエラー
         for index in range(qubits_count - 1):
-            if  qubits[index].qubit_count != last_qubit.qubit_count:
+            if qubits[index].qubit_count != last_qubit.qubit_count:
                 message = "[ERROR]: 与えられたQubit群のQubitの数が一致しません"
                 raise InitializeError(message)
 
@@ -125,7 +133,12 @@ class Qubits:
             raise InitializeError(message)
 
         # ndarray表現と行列表現を算出
-        array = np.add([probabilities[index] * qubits[index].amplitudes for index in range(qubits_count)])
+        array = np.add(
+            [
+                probabilities[index] * qubits[index].amplitudes
+                for index in range(qubits_count)
+            ]
+        )
         matrix_dim = last_qubit.matrix_dim
         matrix = array.reshape(matrix_dim, matrix_dim)
 
@@ -146,8 +159,8 @@ class Qubits:
                     eigen_values[index] == 0.0 + 0j
                 else:
                     eigen_values[index] == complex(probabilities_array[index])
-            eigen_states = qubits 
-        
+            eigen_states = qubits
+
         # 初期化
         self.eigen_values = eigen_values
         self.eigen_states = eigen_states
