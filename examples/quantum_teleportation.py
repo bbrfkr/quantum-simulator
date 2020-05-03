@@ -11,8 +11,8 @@ from quantum_simulator.base.qubits import Qubits, reduction
 from quantum_simulator.base.transformer import UnitaryTransformer
 
 # 初期状態の確率振幅
-alpha = sqrt(0.3) + 0j
-beta = sqrt(0.7) + 0j
+alpha = sqrt(0.7) + 0j
+beta = sqrt(0.3) + 0j
 
 # 転送したい初期状態を定義
 initial_state = PureQubits([alpha, beta])
@@ -114,5 +114,7 @@ for index in range(2)[::-1]:
 print(density.matrix)
 print()
 print("### Dirac表記表示 ###")
-density.eigen_states[1].dirac_notation()
+for index in range(1):
+    if density.eigen_values[index] == 1.0 + 0j:
+        density.eigen_states[index].dirac_notation()
 print()
