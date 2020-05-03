@@ -8,22 +8,22 @@ from typing import List
 
 import numpy as np
 
-from quantum_simulator.base.typing import ObservableElements
+from .typing import ObservableElements
 
 from .error import InitializeError
-from .qubits import Qubits, inner, is_all_orthogonal
+from .pure_qubits import PureQubits, inner, is_all_orthogonal
 
 
 class ObservedBasis:  # pylint: disable=too-few-public-methods
     """観測基底のクラス"""
 
-    def __init__(self, qubits_group: List[Qubits]):
+    def __init__(self, qubits_group: List[PureQubits]):
         # 観測基底を構成するQubit群同士は互いに直交していなければならない
         if not is_all_orthogonal(qubits_group):
             message = "[ERROR]: 観測基底が直交しません"
             raise InitializeError(message)
 
-        # 観測基底はQubitsの要素数と同じだけ指定されていなければならない
+        # 観測基底はPureQubitsの要素数と同じだけ指定されていなければならない
         if len(qubits_group) != qubits_group[0].amplitudes.size:
             message = "[ERROR]: 観測基底を構成するQubitの数が不足しています"
             raise InitializeError(message)
@@ -88,7 +88,7 @@ class Observable:  # pylint: disable=too-few-public-methods
         """観測量のndarray表現を出力"""
         print(str(self.array))
 
-    def expected_value(self, target: Qubits) -> float:
+    def expected_value(self, target: PureQubits) -> float:
         """対象Qubit群に対する観測量の期待値を返す"""
         expected_value = 0.0
         for element in self.elements:
@@ -98,25 +98,25 @@ class Observable:  # pylint: disable=too-few-public-methods
 
         return expected_value
 
-    def observe(self, target: Qubits) -> float:
-        """観測を実施して観測値を取得し、Qubits群を収束させる"""
+    def observe(self, target: PureQubits) -> float:
+        """観測を実施して観測値を取得し、PureQubits群を収束させる"""
         observed_probabilities = [
             abs(inner(self.elements[index]["qubits"], target)) ** 2
             for index in range(len(self.elements))
         ]
         observed_result = choices(self.elements, observed_probabilities)[0]
 
-        # 観測値によって識別されたQubitsを選択する
+        # 観測値によって識別されたPureQubitsを選択する
         observed_qubits_group = []
         for element in self.elements:
             if observed_result["value"] == element["value"]:
                 observed_qubits_group.append(element["qubits"])
 
-        # 選択されたQubits群で射影作用素を作る
+        # 選択されたPureQubits群で射影作用素を作る
         len_observed_qubits_group = len(observed_qubits_group)
-        projection = observed_qubits_group[-1].projection()
+        projection = observed_qubits_group[-1].projection
         for index in range(len_observed_qubits_group - 1):
-            projection = np.add(projection, observed_qubits_group[index].projection())
+            projection = np.add(projection, observed_qubits_group[index].projection)
 
         # 射影作用素とQubit群をそれぞれ二次元行列、ベクトルに変換
         matrix_dim = target.amplitudes.size
@@ -139,7 +139,7 @@ def combine_basis(basis_0: ObservedBasis, basis_1: ObservedBasis) -> ObservedBas
     """二つの観測基底から合成系の観測基底を作る"""
     new_observed_basis = ObservedBasis(
         [
-            Qubits(np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0))
+            PureQubits(np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0))
             for qubits_0 in basis_0.qubits_group
             for qubits_1 in basis_1.qubits_group
         ]

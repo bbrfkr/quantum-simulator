@@ -3,7 +3,7 @@ from math import sqrt
 import pytest
 
 from quantum_simulator.base.observable import ObservedBasis
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.pure_qubits import PureQubits
 from quantum_simulator.base.transformer import UnitaryTransformer
 
 
@@ -17,18 +17,18 @@ def valid_observed_basis_for_unitary(multi_particles_observed_basis):
     params=[
         [
             [
-                Qubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                Qubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                Qubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
-                Qubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
-                Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-                Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
-                Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
+                PureQubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                PureQubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                PureQubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
+                PureQubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
+                PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
+                PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
+                PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
             ],
             [
-                Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                Qubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
             ],
         ],
     ]
@@ -42,48 +42,48 @@ def invalid_observed_basis_for_unitary(request):
     params=[
         {
             "unitary": UnitaryTransformer(
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
-                ObservedBasis([Qubits([0j, 1 + 0j]), Qubits([1 + 0j, 0j])]),
+                ObservedBasis([PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])]),
+                ObservedBasis([PureQubits([0j, 1 + 0j]), PureQubits([1 + 0j, 0j])]),
             ),
-            "target": Qubits([1 + 0j, 0j]),
-            "expected_qubits": Qubits([0j, 1 + 0j]),
+            "target": PureQubits([1 + 0j, 0j]),
+            "expected_qubits": PureQubits([0j, 1 + 0j]),
         },
         {
             "unitary": UnitaryTransformer(
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
+                ObservedBasis([PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])]),
                 ObservedBasis(
                     [
-                        Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                        Qubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
                     ]
                 ),
             ),
-            "target": Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-            "expected_qubits": Qubits([1 + 0j, 0j]),
+            "target": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+            "expected_qubits": PureQubits([1 + 0j, 0j]),
         },
         {
             "unitary": UnitaryTransformer(
                 ObservedBasis(
                     [
-                        Qubits([[1 + 0j, 0j], [0j, 0j]]),
-                        Qubits([[0j, 1 + 0j], [0j, 0j]]),
-                        Qubits([[0j, 0j], [1 + 0j, 0j]]),
-                        Qubits([[0j, 0j], [0j + 1, 0j]]),
+                        PureQubits([[1 + 0j, 0j], [0j, 0j]]),
+                        PureQubits([[0j, 1 + 0j], [0j, 0j]]),
+                        PureQubits([[0j, 0j], [1 + 0j, 0j]]),
+                        PureQubits([[0j, 0j], [0j + 1, 0j]]),
                     ]
                 ),
                 ObservedBasis(
                     [
-                        Qubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
-                        Qubits([[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]),
-                        Qubits([[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]),
-                        Qubits([[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]),
+                        PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
+                        PureQubits([[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]),
+                        PureQubits([[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]),
+                        PureQubits([[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]),
                     ]
                 ),
             ),
-            "target": Qubits(
+            "target": PureQubits(
                 [[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]]
             ),
-            "expected_qubits": Qubits([[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]),
+            "expected_qubits": PureQubits([[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]),
         },
     ]
 )
@@ -97,24 +97,24 @@ def dict_for_test_operation_of_unitary(request):
         {
             "unitaries": [
                 UnitaryTransformer(
-                    ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
-                    ObservedBasis([Qubits([0j, 1 + 0j]), Qubits([1 + 0j, 0j])]),
+                    ObservedBasis([PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])]),
+                    ObservedBasis([PureQubits([0j, 1 + 0j]), PureQubits([1 + 0j, 0j])]),
                 ),
                 UnitaryTransformer(
                     ObservedBasis(
                         [
-                            Qubits([[1 + 0j, 0j], [0j, 0j]]),
-                            Qubits([[0j, 1 + 0j], [0j, 0j]]),
-                            Qubits([[0j, 0j], [1 + 0j, 0j]]),
-                            Qubits([[0j, 0j], [0j, 1 + 0j]]),
+                            PureQubits([[1 + 0j, 0j], [0j, 0j]]),
+                            PureQubits([[0j, 1 + 0j], [0j, 0j]]),
+                            PureQubits([[0j, 0j], [1 + 0j, 0j]]),
+                            PureQubits([[0j, 0j], [0j, 1 + 0j]]),
                         ]
                     ),
                     ObservedBasis(
                         [
-                            Qubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
-                            Qubits([[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]),
-                            Qubits([[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]),
-                            Qubits([[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]),
+                            PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
+                            PureQubits([[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]),
+                            PureQubits([[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]),
+                            PureQubits([[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]),
                         ]
                     ),
                 ),
@@ -122,61 +122,61 @@ def dict_for_test_operation_of_unitary(request):
             "expected_unitary": UnitaryTransformer(
                 ObservedBasis(
                     [
-                        Qubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
+                        PureQubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
                     ]
                 ),
                 ObservedBasis(
                     [
-                        Qubits(
+                        PureQubits(
                             [
                                 [[0j, 0j], [0j, 0j]],
                                 [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[0j, 0j], [0j, 0j]],
                                 [[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[0j, 0j], [0j, 0j]],
                                 [[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[0j, 0j], [0j, 0j]],
                                 [[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
                                 [[0j, 0j], [0j, 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]],
                                 [[0j, 0j], [0j, 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]],
                                 [[0j, 0j], [0j, 0j]],
                             ]
                         ),
-                        Qubits(
+                        PureQubits(
                             [
                                 [[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]],
                                 [[0j, 0j], [0j, 0j]],
