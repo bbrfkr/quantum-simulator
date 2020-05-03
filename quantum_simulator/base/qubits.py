@@ -2,7 +2,7 @@
 一般的なQubit系の定義
 """
 
-from typing import List, Tuple, Type
+from typing import List, Tuple
 
 import numpy as np
 from numpy import linalg as la
