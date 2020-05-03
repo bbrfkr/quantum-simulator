@@ -7,8 +7,8 @@ from quantum_simulator.base.error import (
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.qubits import (
-    Qubits,
+from quantum_simulator.base.pure_qubits import (
+    PureQubits,
     combine,
     inner,
     is_all_orthogonal,
@@ -16,14 +16,14 @@ from quantum_simulator.base.qubits import (
 )
 
 
-class TestQubits:
-    """Qubitsクラスと付随するメソッドのテスト"""
+class TestPureQubits:
+    """PureQubitsクラスと付随するメソッドのテスト"""
 
     # 単一Qubitに対するテスト
     def test_valid_qubit_input(self, valid_qubit_amp):
         """[正常系]: 単一Qubit生成"""
         amplitudes = valid_qubit_amp
-        qubit = Qubits(amplitudes)
+        qubit = PureQubits(amplitudes)
         assert np.all(qubit.amplitudes == amplitudes)
         assert qubit.qubit_count == 1
 
@@ -31,7 +31,7 @@ class TestQubits:
         """[異常系]: 不正な単一Qubitパラメータ"""
         with pytest.raises(InitializeError):
             amplitudes = invalid_qubit_amp
-            Qubits(amplitudes)
+            PureQubits(amplitudes)
 
     def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
         """[正常系]: 直交した単一Qubit同士の内積"""
@@ -49,7 +49,7 @@ class TestQubits:
         """[正常系]: 単一Qubitに対する射影作用素"""
         assert np.all(
             np.round(
-                proj_for_valid_qubit["qubit"].projection()
+                proj_for_valid_qubit["qubit"].projection
                 - np.array(proj_for_valid_qubit["projection"]),
                 APPROX_DIGIT,
             )
@@ -60,7 +60,7 @@ class TestQubits:
     def test_valid_qubits_input(self, valid_qubits_amp):
         """[正常系]: Qubit群生成"""
         amplitudes = valid_qubits_amp
-        qubit = Qubits(amplitudes)
+        qubit = PureQubits(amplitudes)
         assert np.all(qubit.amplitudes == amplitudes)
         assert qubit.qubit_count == len(np.array(amplitudes).shape)
 
@@ -134,7 +134,7 @@ class TestQubits:
         """[正常系]: 単一Qubitに対する射影作用素"""
         assert np.all(
             np.round(
-                proj_for_valid_qubits["qubits"].projection()
+                proj_for_valid_qubits["qubits"].projection
                 - np.array(proj_for_valid_qubits["projection"]),
                 APPROX_DIGIT,
             )

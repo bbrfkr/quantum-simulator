@@ -8,7 +8,7 @@ import numpy as np
 
 from .error import IncompatibleDimensionError, InitializeError
 from .observable import ObservedBasis, combine_basis
-from .qubits import Qubits
+from .pure_qubits import PureQubits
 
 
 class UnitaryTransformer:
@@ -53,7 +53,7 @@ class UnitaryTransformer:
         """ユニタリ変換のndarray表現を出力"""
         print(str(self.array))
 
-    def operate(self, qubits: Qubits):
+    def operate(self, qubits: PureQubits):
         """ユニタリ変換によるQubit群の操作"""
         if self.matrix_dim != qubits.amplitudes.size:
             message = "[ERROR]: 変換対象のQubit数が不正です"

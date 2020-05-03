@@ -2,7 +2,7 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.pure_qubits import PureQubits
 
 
 @pytest.fixture(
@@ -23,7 +23,7 @@ def valid_qubit_amp(request):
 def valid_qubit(valid_qubit_amp):
     """妥当な単一qubitのfixture"""
     amplitudes = valid_qubit_amp
-    return Qubits(amplitudes)
+    return PureQubits(amplitudes)
 
 
 @pytest.fixture(
@@ -53,7 +53,7 @@ def invalid_qubit_amp(request):
 def orthogonal_qubits(request):
     """直交する単一qubit同士のfixture"""
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
@@ -67,7 +67,7 @@ def orthogonal_qubits(request):
 def non_orthogonal_qubits(request):
     """直交しない単一qubit同士のfixture"""
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
@@ -94,17 +94,17 @@ def valid_qubits_amp(request):
 def valid_qubits(valid_qubits_amp):
     """妥当なQubit群のfixture"""
     amplitudes = valid_qubits_amp
-    return Qubits(amplitudes)
+    return PureQubits(amplitudes)
 
 
 @pytest.fixture(
     params=[
         {
-            "qubit": Qubits([1.0 + 0j, 0.0 + 0j]),
+            "qubit": PureQubits([1.0 + 0j, 0.0 + 0j]),
             "projection": [[1.0 + 0j, 0j], [0j, 0j]],
         },
         {
-            "qubit": Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+            "qubit": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
             "projection": [[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]],
         },
     ]
@@ -117,14 +117,14 @@ def proj_for_valid_qubit(request):
 @pytest.fixture(
     params=[
         {
-            "qubits": Qubits([[1 + 0j, 0j], [0j, 0j]]),
+            "qubits": PureQubits([[1 + 0j, 0j], [0j, 0j]]),
             "projection": [
                 [[[1 + 0j, 0j], [0j, 0j]], [[0 + 0j, 0j], [0j, 0j]]],
                 [[[0j, 0j], [0j, 0j]], [[0 + 0j, 0j], [0j, 0j]]],
             ],
         },
         {
-            "qubits": Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+            "qubits": PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
             "projection": [
                 [
                     [
@@ -149,7 +149,7 @@ def proj_for_valid_qubit(request):
             ],
         },
         {
-            "qubits": Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
+            "qubits": PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
             "projection": [
                 [
                     [
@@ -174,7 +174,7 @@ def proj_for_valid_qubit(request):
             ],
         },
         {
-            "qubits": Qubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
+            "qubits": PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
             "projection": [
                 [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
                 [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
@@ -227,7 +227,7 @@ def dict_test_for_combine(request):
     """
     test_dict = {
         "qubits_group": [
-            Qubits(amplitudes) for amplitudes in request.param["qubits_group"]
+            PureQubits(amplitudes) for amplitudes in request.param["qubits_group"]
         ],
         "result": request.param["result"],
     }
@@ -253,7 +253,7 @@ def orthogonal_two_qubits_groups(request):
     test2: |0->, |0+>
     """
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
@@ -273,7 +273,7 @@ def non_orthogonal_two_qubits_groups(request):
     test2: {|0->, |01>} (<01|0->)
     """
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
@@ -290,7 +290,7 @@ def not_match_counts_two_qubits_groups(request):
     test2: |0>, |0+>
     """
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
@@ -310,7 +310,7 @@ def orthogonal_multiple_qubits_groups(request):
     test1: {|00>, |01>, |10>, |11>}
     """
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits
 
 
@@ -331,5 +331,5 @@ def non_orthogonal_multiple_qubits_groups(request):
     test1: {|00>, |01>, |10>, |11>, |00>}
     """
     amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
+    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
     return qubits

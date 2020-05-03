@@ -3,7 +3,7 @@ from math import sqrt
 import pytest
 
 from quantum_simulator.base.observable import Observable, ObservedBasis
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.pure_qubits import PureQubits
 
 
 @pytest.fixture()
@@ -29,38 +29,38 @@ def invalid_observed_values(request):
 @pytest.fixture(
     params=[
         [
-            Qubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-            Qubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-            Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-            Qubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
-            Qubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
-            Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-            Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
-            Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
+            PureQubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+            PureQubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+            PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+            PureQubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
+            PureQubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
+            PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
+            PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
+            PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
         ],
         [
-            Qubits(
+            PureQubits(
                 [[[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]], [[0j, 0j], [0j, 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]], [[0j, 0j], [0j, 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[0j, 0j], [0j, 0j]], [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[0j, 0j], [0j, 0j]], [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[0j, 0j], [0j, 0j]], [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]]]
             ),
-            Qubits(
+            PureQubits(
                 [[[0j, 0j], [0j, 0j]], [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]]]
             ),
         ],
@@ -102,17 +102,17 @@ def observable(valid_observed_value, observe_basis):
         {
             "observable": Observable(
                 [100.0, -100.0],
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
+                ObservedBasis([PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])]),
             ),
-            "qubit": Qubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
+            "qubit": PureQubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
             "expected_value": 40.0,
         },
         {
             "observable": Observable(
                 [100.0, 50.0],
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
+                ObservedBasis([PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])]),
             ),
-            "qubit": Qubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
+            "qubit": PureQubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
             "expected_value": 85.0,
         },
         {
@@ -120,12 +120,12 @@ def observable(valid_observed_value, observe_basis):
                 [1.0, 0.0],
                 ObservedBasis(
                     [
-                        Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                        Qubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
                     ]
                 ),
             ),
-            "qubit": Qubits([0 + 0j, 1 + 0j]),
+            "qubit": PureQubits([0 + 0j, 1 + 0j]),
             "expected_value": 0.5,
         },
         {
@@ -133,12 +133,12 @@ def observable(valid_observed_value, observe_basis):
                 [2.0, 1.0],
                 ObservedBasis(
                     [
-                        Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                        Qubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
                     ]
                 ),
             ),
-            "qubit": Qubits([0 + 0j, 1 + 0j]),
+            "qubit": PureQubits([0 + 0j, 1 + 0j]),
             "expected_value": 1.5,
         },
     ]
@@ -155,20 +155,20 @@ def dict_for_test_expected_value(request):
                 [100.0, -100.0],
                 ObservedBasis(
                     [
-                        Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                        Qubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                        PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
                     ]
                 ),
             ),
-            "qubit": Qubits([1 + 0j, 0j]),
+            "qubit": PureQubits([1 + 0j, 0j]),
             "randomize_seed": 1,
         },
         {
             "observable": Observable(
                 [10.0, 0.0],
-                ObservedBasis([Qubits([1 + 0j, 0j]), Qubits([0j, 1 + 0j])]),
+                ObservedBasis([PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])]),
             ),
-            "qubit": Qubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
+            "qubit": PureQubits([sqrt(0.7) + 0j, sqrt(0.3) + 0j]),
             "randomize_seed": 1,
         },
     ]
@@ -195,18 +195,18 @@ def compound_observable(
                 [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
                 ObservedBasis(
                     [
-                        Qubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
+                        PureQubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
                     ]
                 ),
             ),
-            "qubits": Qubits(
+            "qubits": PureQubits(
                 [
                     [[0j, sqrt(0.25) + 0j], [0j, 0j]],
                     [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.25) + 0j]],
@@ -217,7 +217,7 @@ def compound_observable(
     ]
 )
 def dict_for_test_expected_value_with_compound_observable(request):
-    """3粒子Qubit系に対する観測量、観測対象Qubits、期待値の組のfixture"""
+    """3粒子Qubit系に対する観測量、観測対象PureQubits、期待値の組のfixture"""
     return request.param
 
 
@@ -228,18 +228,18 @@ def dict_for_test_expected_value_with_compound_observable(request):
                 [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
                 ObservedBasis(
                     [
-                        Qubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
-                        Qubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
+                        PureQubits([[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 1 + 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 1 + 0j]], [[0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[1 + 0j, 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [1 + 0j, 0j]]]),
+                        PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1 + 0j]]]),
                     ]
                 ),
             ),
-            "qubits": Qubits(
+            "qubits": PureQubits(
                 [
                     [[sqrt(0.25) + 0j, 0j], [0j, 0j]],
                     [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.25) + 0j]],
@@ -250,7 +250,7 @@ def dict_for_test_expected_value_with_compound_observable(request):
     ]
 )
 def dict_for_test_observation_with_compound_observable(request):
-    """3粒子Qubit系Qubitに対する観測量、観測対象Qubits、ランダムシードのfixture"""
+    """3粒子Qubit系Qubitに対する観測量、観測対象PureQubits、ランダムシードのfixture"""
     return request.param
 
 
@@ -262,10 +262,10 @@ def dict_for_test_observation_with_compound_observable(request):
                     [1, 2, 3, 4],
                     ObservedBasis(
                         [
-                            Qubits([[1 + 0j, 0j], [0j, 0j]]),
-                            Qubits([[0j, 1 + 0j], [0j, 0j]]),
-                            Qubits([[0j, 0j], [1 + 0j, 0j]]),
-                            Qubits([[0j, 0j], [0j, 1 + 0j]]),
+                            PureQubits([[1 + 0j, 0j], [0j, 0j]]),
+                            PureQubits([[0j, 1 + 0j], [0j, 0j]]),
+                            PureQubits([[0j, 0j], [1 + 0j, 0j]]),
+                            PureQubits([[0j, 0j], [0j, 1 + 0j]]),
                         ]
                     ),
                 ),
@@ -273,10 +273,10 @@ def dict_for_test_observation_with_compound_observable(request):
                     [100, -100, 1000, -1000],
                     ObservedBasis(
                         [
-                            Qubits([[1 + 0j, 0j], [0j, 0j]]),
-                            Qubits([[0j, 1 + 0j], [0j, 0j]]),
-                            Qubits([[0j, 0j], [1 + 0j, 0j]]),
-                            Qubits([[0j, 0j], [0j, 1 + 0j]]),
+                            PureQubits([[1 + 0j, 0j], [0j, 0j]]),
+                            PureQubits([[0j, 1 + 0j], [0j, 0j]]),
+                            PureQubits([[0j, 0j], [1 + 0j, 0j]]),
+                            PureQubits([[0j, 0j], [0j, 1 + 0j]]),
                         ]
                     ),
                 ),
