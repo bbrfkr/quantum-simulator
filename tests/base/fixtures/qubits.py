@@ -24,16 +24,44 @@ from quantum_simulator.base.pure_qubits import PureQubits
         {
             "probabilities": [0.01, 0.03, 0.06, 0.12, 0.15, 0.18, 0.21, 0.24],
             "pure_qubits": [
-                PureQubits([[[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]),
-                PureQubits([[[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]),
-                PureQubits([[[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                PureQubits([[[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-                PureQubits([[[0j, 0j], [0j, 0j]], [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]]),
-                PureQubits([[[0j, 0j], [0j, 0j]], [[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]]),
-                PureQubits([[[0j, 0j], [0j, 0j]], [[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]]),
-                PureQubits([[[0j, 0j], [0j, 0j]], [[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]]),
+                PureQubits(
+                    [[[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]
+                ),
+                PureQubits(
+                    [
+                        [[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]],
+                        [[0j, 0j], [0j, 0j]],
+                    ]
+                ),
+                PureQubits(
+                    [[[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]], [[0j, 0j], [0j, 0j]]]
+                ),
+                PureQubits(
+                    [
+                        [[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]],
+                        [[0j, 0j], [0j, 0j]],
+                    ]
+                ),
+                PureQubits(
+                    [[[0j, 0j], [0j, 0j]], [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]]
+                ),
+                PureQubits(
+                    [
+                        [[0j, 0j], [0j, 0j]],
+                        [[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]],
+                    ]
+                ),
+                PureQubits(
+                    [[[0j, 0j], [0j, 0j]], [[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]]
+                ),
+                PureQubits(
+                    [
+                        [[0j, 0j], [0j, 0j]],
+                        [[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]],
+                    ]
+                ),
             ],
-        }
+        },
     ]
 )
 def valid_orthogonal_non_degrated_qubit_list(request):
@@ -47,17 +75,21 @@ def valid_orthogonal_non_degrated_qubit_list(request):
             "probabilities": [1.0],
             "pure_qubits": [PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j])],
         },
-        {
-            "probabilities": [1.0],
-            "pure_qubits": [PureQubits([0j, 1 + 0j])],
-        },
+        {"probabilities": [1.0], "pure_qubits": [PureQubits([0j, 1 + 0j])]},
         {
             "probabilities": [0.7, 0.3],
             "pure_qubits": [
-                PureQubits([[[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]),
-                PureQubits([[[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]),
+                PureQubits(
+                    [[[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]], [[0j, 0j], [0j, 0j]]]
+                ),
+                PureQubits(
+                    [
+                        [[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]],
+                        [[0j, 0j], [0j, 0j]],
+                    ]
+                ),
             ],
-        }
+        },
     ]
 )
 def valid_orthogonal_degrated_qubit_list(request):

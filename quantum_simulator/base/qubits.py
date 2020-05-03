@@ -16,8 +16,8 @@ def eig_for_density(
     matrix: np.array, qubit_shape: tuple
 ) -> Tuple[List[complex], List[PureQubits]]:
     tmp_eigen_values, tmp_eigen_states = LA.eig(matrix)
-    eigen_values = [] # type: List[complex]
-    eigen_states = [] # type: List[PureQubits]
+    eigen_values = []  # type: List[complex]
+    eigen_states = []  # type: List[PureQubits]
     for index in range(len(tmp_eigen_values)):
         # 固有値は0または1に近い値は丸める
         rounded_value = np.round(tmp_eigen_values[index], APPROX_DIGIT)
@@ -28,7 +28,7 @@ def eig_for_density(
         else:
             eigen_values.append(complex(tmp_eigen_values[index]))
         # 固有ベクトルはPureQubits化
-        eigen_states.append(PureQubits(tmp_eigen_states[:,index].reshape(qubit_shape)))
+        eigen_states.append(PureQubits(tmp_eigen_states[:, index].reshape(qubit_shape)))
 
     return (eigen_values, eigen_states)
 
@@ -192,9 +192,7 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
 
     axis1 = target_qubits.qubit_count - 1 - target_particle
     axis2 = 2 * target_qubits.qubit_count - 1 - target_particle
-    reduced_array = np.trace(
-        target_qubits.array, axis1=axis1, axis2=axis2,
-    )
+    reduced_array = np.trace(target_qubits.array, axis1=axis1, axis2=axis2,)
 
     return Qubits(density_array=reduced_array)
 

@@ -10,8 +10,6 @@ from quantum_simulator.base.pure_qubits import PureQubits
 from quantum_simulator.base.qubits import Qubits, reduction
 from quantum_simulator.base.transformer import UnitaryTransformer
 
-import numpy as np
-
 # 初期状態の確率振幅
 alpha = sqrt(0.3) + 0j
 beta = sqrt(0.7) + 0j
