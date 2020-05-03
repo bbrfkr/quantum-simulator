@@ -7,6 +7,7 @@ from random import choices
 from typing import List
 
 import numpy as np
+from numpy import linalg as LA
 
 from .error import InitializeError
 from .pure_qubits import PureQubits, inner, is_all_orthogonal
@@ -73,10 +74,10 @@ class Observable:  # pylint: disable=too-few-public-methods
         self.array = array
 
         # 表現行列を導出する
-        matrix_dim = int(sqrt(self.array.size))
+        matrix_rank = int(sqrt(self.array.size))
 
-        self.matrix_dim = matrix_dim
-        self.matrix_shape = (self.matrix_dim, self.matrix_dim)
+        self.matrix_rank = matrix_rank
+        self.matrix_shape = (self.matrix_rank, self.matrix_rank)
         self.matrix = self.array.reshape(self.matrix_shape)
 
     def __str__(self):
@@ -120,13 +121,13 @@ class Observable:  # pylint: disable=too-few-public-methods
             )
 
         # 射影作用素とQubit群をそれぞれ二次元行列、ベクトルに変換
-        matrix_dim = target.amplitudes.size
-        proj_matrix = projection.reshape(matrix_dim, matrix_dim)
+        matrix_rank = target.amplitudes.size
+        proj_matrix = projection.reshape(matrix_rank, matrix_rank)
         target_vector = target.amplitudes.reshape(target.amplitudes.size)
 
         # 観測によるQubitの収束 - 射影の適用と規格化
         post_vector = np.dot(proj_matrix, target_vector)
-        norm_post_vector = np.linalg.norm(post_vector)
+        norm_post_vector = LA.norm(post_vector)
         normalized_post_vector = ((1.0 / norm_post_vector) * post_vector).reshape(
             target.amplitudes.shape
         )

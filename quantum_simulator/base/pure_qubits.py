@@ -7,7 +7,7 @@ from typing import List
 
 import numpy as np
 from numpy import conjugate
-from numpy.linalg import linalg
+from numpy.linalg import linalg as LA
 
 from .conf import APPROX_DIGIT
 from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
@@ -26,7 +26,7 @@ class PureQubits:
                 raise InitializeError(message)
 
         # 確率の総和をチェック
-        if np.round(linalg.norm(amplitudes) - 1.0, APPROX_DIGIT) != 0.0:
+        if np.round(LA.norm(amplitudes) - 1.0, APPROX_DIGIT) != 0.0:
             message = "[ERROR]: 確率の総和が1ではありません"
             raise InitializeError(message)
 
@@ -37,8 +37,8 @@ class PureQubits:
         projection = np.multiply.outer(amplitudes, np.conjugate(amplitudes))
 
         # 射影作用素に対応する行列を求める
-        matrix_dim = 2 ** qubit_count
-        matrix = projection.reshape(matrix_dim, matrix_dim)
+        matrix_rank = 2 ** qubit_count
+        matrix = projection.reshape(matrix_rank, matrix_rank)
 
         # 初期化
         self.amplitudes = amplitudes
@@ -46,7 +46,7 @@ class PureQubits:
         self.vector = self.amplitudes.reshape(self.amplitudes.size)
         self.projection = projection
         self.matrix = matrix
-        self.matrix_dim = matrix_dim
+        self.matrix_rank = matrix_rank
 
     def __str__(self):
         """PureQubitsのベクトル表現を出力"""

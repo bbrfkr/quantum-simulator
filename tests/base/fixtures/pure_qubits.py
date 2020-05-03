@@ -14,15 +14,15 @@ from quantum_simulator.base.pure_qubits import PureQubits
         [sqrt(0.4) + 0j, sqrt(0.6) * 1j],
     ]
 )
-def valid_qubit_amp(request):
+def valid_pure_qubit_amp(request):
     """妥当な単一qubitに対する確率振幅のfixture"""
     return request.param
 
 
 @pytest.fixture()
-def valid_qubit(valid_qubit_amp):
+def valid_qubit(valid_pure_qubits_amp):
     """妥当な単一qubitのfixture"""
-    amplitudes = valid_qubit_amp
+    amplitudes = valid_pure_qubits_amp
     return PureQubits(amplitudes)
 
 
@@ -38,7 +38,7 @@ def valid_qubit(valid_qubit_amp):
         [],
     ]
 )
-def invalid_qubit_amp(request):
+def invalid_pure_qubits_amp(request):
     """不正な単一qubitに対する確率振幅のfixture"""
     return request.param
 

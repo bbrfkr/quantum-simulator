@@ -39,10 +39,10 @@ class UnitaryTransformer:
         self.array = array
 
         # 表現行列を導出する
-        matrix_dim = int(sqrt(self.array.size))
+        matrix_rank = int(sqrt(self.array.size))
 
-        self.matrix_dim = matrix_dim
-        self.matrix_shape = (self.matrix_dim, self.matrix_dim)
+        self.matrix_rank = matrix_rank
+        self.matrix_shape = (self.matrix_rank, self.matrix_rank)
         self.matrix = self.array.reshape(self.matrix_shape)
 
     def __str__(self):
@@ -55,7 +55,7 @@ class UnitaryTransformer:
 
     def operate(self, qubits: PureQubits):
         """ユニタリ変換によるQubit群の操作"""
-        if self.matrix_dim != qubits.amplitudes.size:
+        if self.matrix_rank != qubits.amplitudes.size:
             message = "[ERROR]: 変換対象のQubit数が不正です"
             raise IncompatibleDimensionError(message)
 

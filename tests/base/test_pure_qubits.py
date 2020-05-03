@@ -20,17 +20,17 @@ class TestPureQubits:
     """PureQubitsクラスと付随するメソッドのテスト"""
 
     # 単一Qubitに対するテスト
-    def test_valid_qubit_input(self, valid_qubit_amp):
+    def test_valid_pure_qubit_input(self, valid_pure_qubit_amp):
         """[正常系]: 単一Qubit生成"""
-        amplitudes = valid_qubit_amp
+        amplitudes = valid_pure_qubit_amp
         qubit = PureQubits(amplitudes)
         assert np.all(qubit.amplitudes == amplitudes)
         assert qubit.qubit_count == 1
 
-    def test_invalid_qubit_input(self, invalid_qubit_amp):
+    def test_invalid_pure_qubits_input(self, invalid_pure_qubits_amp):
         """[異常系]: 不正な単一Qubitパラメータ"""
         with pytest.raises(InitializeError):
-            amplitudes = invalid_qubit_amp
+            amplitudes = invalid_pure_qubits_amp
             PureQubits(amplitudes)
 
     def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
