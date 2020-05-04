@@ -116,11 +116,15 @@ class Observable:  # pylint: disable=too-few-public-methods
         len_observed_pure_qubits_group = len(observed_pure_qubits_group)
         projection = observed_pure_qubits_group[-1].projection
         for index in range(len_observed_pure_qubits_group - 1):
-            projection = np.add(projection, observed_pure_qubits_group[index].projection)
+            projection = np.add(
+                projection, observed_pure_qubits_group[index].projection
+            )
 
         # 射影作用素とQubit群をそれぞれ二次元行列、ベクトルに変換
         projection_matrix_dim = target.array.size
-        projection_matrix = projection.reshape(projection_matrix_dim, projection_matrix_dim)
+        projection_matrix = projection.reshape(
+            projection_matrix_dim, projection_matrix_dim
+        )
         target_vector = target.array.reshape(target.array.size)
 
         # 観測によるQubitの収束 - 射影の適用と規格化

@@ -38,7 +38,9 @@ class PureQubits:
 
         # 射影作用素に対応する行列を求める
         projection_matrix_dim = 2 ** qubit_count
-        projection_matrix = projection.reshape(projection_matrix_dim, projection_matrix_dim)
+        projection_matrix = projection.reshape(
+            projection_matrix_dim, projection_matrix_dim
+        )
 
         # 初期化
         self.array = array
