@@ -16,10 +16,12 @@ def eig_for_density(
     matrix: np.array, qubit_shape: tuple
 ) -> Tuple[List[complex], List[PureQubits]]:
     """密度行列から固有値、固有状態を導出する"""
+
     tmp_eigen_values, tmp_eigen_states = LA.eig(matrix)
     eigen_values = []  # type: List[complex]
     eigen_states = []  # type: List[PureQubits]
     for index in range(len(tmp_eigen_values)):
+
         # 固有値は0または1に近い値は丸める
         rounded_value = np.round(tmp_eigen_values[index], APPROX_DIGIT)
         if np.equal(rounded_value, 1.0 + 0j):
@@ -28,6 +30,7 @@ def eig_for_density(
             eigen_values.append(0.0 + 0j)
         else:
             eigen_values.append(complex(tmp_eigen_values[index]))
+
         # 固有ベクトルはPureQubits化
         eigen_states.append(PureQubits(tmp_eigen_states[:, index].reshape(qubit_shape)))
 
@@ -44,6 +47,7 @@ class Qubits:
         matrix_dim = None
         eigen_values = None
         eigen_states = None
+        probabilities_array = None
 
         # 確率分布とPureQubits列の候補が与えられた時
         if probabilities is not None and qubits is not None:
@@ -63,19 +67,6 @@ class Qubits:
                 message = "[ERROR]: 与えられたQubit群の数と確率の数が一致しません"
                 raise InitializeError(message)
 
-            probabilities_array = np.array(probabilities)
-
-            # 確率の総和が1でないとエラー
-            total_probabilities = np.round(np.sum(probabilities_array), APPROX_DIGIT)
-            if total_probabilities != 1.0 + 0j:
-                message = "[ERROR]: 与えられた確率の総和が1となりません"
-                raise InitializeError(message)
-
-            # 確率として負の値を指定していた場合にもエラー
-            if np.any(probabilities_array < 0):
-                message = "[ERROR]: 値が負の確率が存在します"
-                raise InitializeError(message)
-
             # ndarray表現と行列表現を算出
             list_arrays = [
                 probabilities[index] * qubits[index].projection
@@ -90,11 +81,13 @@ class Qubits:
 
             eigen_values = []  # type: List[complex]
             eigen_states = []  # type: List[PureQubits]
+
             # まだShatten分解されていない場合はShatten分解を実施
             if (matrix_dim != qubits_count) or (not is_all_orthogonal(qubits)):
                 result_eig = eig_for_density(matrix, last_qubit.array.shape)
                 eigen_values = result_eig[0]
                 eigen_states = result_eig[1]
+
             # 既にShatten分解されている場合は固有値の丸めのみ実施
             else:
                 for index in range(len(probabilities)):
@@ -109,11 +102,11 @@ class Qubits:
 
         # 密度行列候補が与えられた時
         elif density_array is not None:
-            tmp_array = np.array(density_array)
+            tmp_array = np.array(density_array, dtype=complex)
 
             # Qubitに対するndarrayもしくは行列になっているかチェック
             len_tmp_array_shape = len(tmp_array.shape)
-            message = "[ERROR]: 与えられたlistは密度行列に対応しません"
+            message = "[ERROR]: 与えられたlistはQubit系の密度行列に対応しません"
 
             # ndarrayの時のチェック
             if len_tmp_array_shape != 2:
@@ -129,6 +122,11 @@ class Qubits:
                         if shape_element != 2:
                             raise InitializeError(message)
                 array = tmp_array
+
+                # shapeの要素数が2の倍数でないときは、行列に対応させられないためエラー
+                if len_tmp_array_shape % 2 != 0:
+                    raise InitializeError(message)
+
                 qubit_count = int(len_tmp_array_shape / 2)
                 matrix_dim = 2 ** qubit_count
                 matrix_shape = (matrix_dim, matrix_dim)
@@ -139,22 +137,24 @@ class Qubits:
                 # 縦横の次元が一致しないか、与えられた行列がベクトルであったときはエラー
                 if (
                     (tmp_array.shape[0] != tmp_array.shape[1])
-                    and tmp_array.shape[0] < 2
-                    and tmp_array.shape[1] < 2
+                    or tmp_array.shape[0] < 2
+                    or tmp_array.shape[1] < 2
                 ):
                     raise InitializeError(message)
 
                 else:
                     tmp_dim = tmp_array.shape[0]
+                    tmp_qubit_count = 0
 
                     # 行列の次元が2の累乗にならない場合はエラー
                     # この時点でQubit数もカウントしておく
-                    tmp_qubit_count = 0
-                    while tmp_dim % 2 != 1:
+                    while True:
                         if tmp_dim % 2 != 0:
                             raise InitializeError(message)
                         tmp_qubit_count += 1
                         tmp_dim /= 2
+                        if tmp_dim % 2 == 1:
+                            break
 
                     qubit_count = int(tmp_qubit_count)
                     matrix_dim = tmp_array.shape[0]
@@ -174,6 +174,19 @@ class Qubits:
         # 必須パラメータの指定なしの場合、エラー
         else:
             message = "[ERROR]: 確率のリストとPureQubitsのリスト、もしくは密度行列のndarrayが必須です"
+            raise InitializeError(message)
+
+        probabilities_array = np.array(eigen_values, dtype=complex)
+
+        # 確率(固有値)の総和が1でないとエラー
+        total_probabilities = np.round(np.sum(probabilities_array), APPROX_DIGIT)
+        if total_probabilities != 1.0 + 0j:
+            message = "[ERROR]: 与えられた確率の総和が1となりません"
+            raise InitializeError(message)
+
+        # 確率として負の値を指定していた場合にもエラー
+        if np.any(np.real(probabilities_array) < 0):
+            message = "[ERROR]: 値が負の確率が存在します"
             raise InitializeError(message)
 
         # 初期化
