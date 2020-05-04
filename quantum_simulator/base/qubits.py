@@ -15,6 +15,7 @@ from quantum_simulator.base.pure_qubits import PureQubits, is_all_orthogonal
 def eig_for_density(
     matrix: np.array, qubit_shape: tuple
 ) -> Tuple[List[complex], List[PureQubits]]:
+    """密度行列から固有値、固有状態を導出する"""
     tmp_eigen_values, tmp_eigen_states = LA.eig(matrix)
     eigen_values = []  # type: List[complex]
     eigen_states = []  # type: List[PureQubits]
@@ -40,7 +41,7 @@ class Qubits:
         array = None
         qubit_count = None
         matrix = None
-        matrix_rank = None
+        matrix_dim = None
         eigen_values = None
         eigen_states = None
 
@@ -80,16 +81,16 @@ class Qubits:
             ]
             array = list_arrays[-1]
             for index in range(len(list_arrays) - 1):
-                np.add(array, list_arrays[index])
+                array = np.add(array, list_arrays[index])
 
-            matrix_rank = last_qubit.matrix_rank
-            matrix = array.reshape(matrix_rank, matrix_rank)
+            matrix_dim = last_qubit.projection_matrix_dim
+            matrix = array.reshape(matrix_dim, matrix_dim)
 
             eigen_values = []  # type: List[complex]
             eigen_states = []  # type: List[PureQubits]
             # まだShatten分解されていない場合はShatten分解を実施
-            if (matrix_rank != qubits_count) or (not is_all_orthogonal(qubits)):
-                result_eig = eig_for_density(matrix, last_qubit.amplitudes.shape)
+            if (matrix_dim != qubits_count) or (not is_all_orthogonal(qubits)):
+                result_eig = eig_for_density(matrix, last_qubit.array.shape)
                 eigen_values = result_eig[0]
                 eigen_states = result_eig[1]
             # 既にShatten分解されている場合は固有値の丸めのみ実施
@@ -177,9 +178,17 @@ class Qubits:
         self.eigen_values = eigen_values
         self.eigen_states = eigen_states
         self.array = array
-        self.matrix_rank = matrix_rank
+        self.matrix_dim = matrix_dim
         self.matrix = matrix
         self.qubit_count = qubit_count
+
+    def __str__(self):
+        """Qubitsの行列表現を出力"""
+        return str(self.matrix)
+
+    def print_array(self):
+        """Qubitsのndarray表現を出力"""
+        print(self.array)
 
 
 def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:

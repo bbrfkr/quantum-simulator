@@ -22,16 +22,16 @@ class TestPureQubits:
     # 単一Qubitに対するテスト
     def test_valid_pure_qubit_input(self, valid_pure_qubit_amp):
         """[正常系]: 単一Qubit生成"""
-        amplitudes = valid_pure_qubit_amp
-        qubit = PureQubits(amplitudes)
-        assert np.all(qubit.amplitudes == amplitudes)
+        array = valid_pure_qubit_amp
+        qubit = PureQubits(array)
+        assert np.all(qubit.array == array)
         assert qubit.qubit_count == 1
 
     def test_invalid_pure_qubits_input(self, invalid_pure_qubits_amp):
         """[異常系]: 不正な単一Qubitパラメータ"""
         with pytest.raises(InitializeError):
-            amplitudes = invalid_pure_qubits_amp
-            PureQubits(amplitudes)
+            array = invalid_pure_qubits_amp
+            PureQubits(array)
 
     def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
         """[正常系]: 直交した単一Qubit同士の内積"""
@@ -45,7 +45,7 @@ class TestPureQubits:
         """[正常系]: 長さが1の単一Qubitに対する内積"""
         assert round(inner(valid_qubit, valid_qubit) - 1.0, APPROX_DIGIT) == 0.0
 
-    def test_projection_of_one_qubit(self, proj_for_valid_qubit):
+    def test_matrix_of_one_qubit(self, proj_for_valid_qubit):
         """[正常系]: 単一Qubitに対する射影作用素"""
         assert np.all(
             np.round(
@@ -59,10 +59,10 @@ class TestPureQubits:
     # Qubit群に対するテスト
     def test_valid_pure_qubits_input(self, valid_pure_qubits_amp):
         """[正常系]: Qubit群生成"""
-        amplitudes = valid_pure_qubits_amp
-        qubit = PureQubits(amplitudes)
-        assert np.all(qubit.amplitudes == amplitudes)
-        assert qubit.qubit_count == len(np.array(amplitudes).shape)
+        array = valid_pure_qubits_amp
+        qubit = PureQubits(array)
+        assert np.all(qubit.array == array)
+        assert qubit.qubit_count == len(np.array(array).shape)
 
     def test_combine_qubits(self, dict_test_for_combine):
         """[正常系]: Qubit群同士の結合"""
@@ -70,8 +70,7 @@ class TestPureQubits:
         combined_qubits = combine(qubits_group[0], qubits_group[1])
         expected_result = np.array(dict_test_for_combine["result"])
         assert np.all(
-            np.round(abs(combined_qubits.amplitudes - expected_result), APPROX_DIGIT)
-            == 0.0
+            np.round(abs(combined_qubits.array - expected_result), APPROX_DIGIT) == 0.0
         )
 
     def test_zero_inner_product_of_two_qubits(self, orthogonal_two_pure_qubits_groups):
@@ -134,7 +133,7 @@ class TestPureQubits:
         """[正常系]: 互いに直交しない二つ以上のQubit群に対する直交性のテスト"""
         assert not is_all_orthogonal(non_orthogonal_multiple_pure_qubits_groups)
 
-    def test_projection_of_multiple_qubits(self, proj_for_valid_qubits):
+    def test_matrix_of_multiple_qubits(self, proj_for_valid_qubits):
         """[正常系]: 単一Qubitに対する射影作用素"""
         assert np.all(
             np.round(

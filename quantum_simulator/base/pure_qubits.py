@@ -16,37 +16,37 @@ from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
 class PureQubits:
     """純粋状態の一般的に複数のQubit"""
 
-    def __init__(self, amps: list):
-        amplitudes = np.array(amps, dtype=complex)
+    def __init__(self, amplitudes: list):
+        array = np.array(amplitudes, dtype=complex)
 
         # 与えられた確率振幅の次元がQubitのテンソル積空間の次元かチェック
-        for dim in amplitudes.shape:
+        for dim in array.shape:
             if dim != 2:
                 message = "[ERROR]: 与えられた確率振幅の次元が不正です"
                 raise InitializeError(message)
 
         # 確率の総和をチェック
-        if np.round(LA.norm(amplitudes) - 1.0, APPROX_DIGIT) != 0.0:
+        if np.round(LA.norm(array) - 1.0, APPROX_DIGIT) != 0.0:
             message = "[ERROR]: 確率の総和が1ではありません"
             raise InitializeError(message)
 
         # 内包するQubit数を計算
-        qubit_count = len(amplitudes.shape)
+        qubit_count = len(array.shape)
 
         # 射影作用素を導出
-        projection = np.multiply.outer(amplitudes, np.conjugate(amplitudes))
+        projection = np.multiply.outer(array, np.conjugate(array))
 
         # 射影作用素に対応する行列を求める
-        matrix_rank = 2 ** qubit_count
-        matrix = projection.reshape(matrix_rank, matrix_rank)
+        projection_matrix_dim = 2 ** qubit_count
+        projection_matrix = projection.reshape(projection_matrix_dim, projection_matrix_dim)
 
         # 初期化
-        self.amplitudes = amplitudes
+        self.array = array
         self.qubit_count = qubit_count
-        self.vector = self.amplitudes.reshape(self.amplitudes.size)
+        self.vector = self.array.reshape(self.array.size)
         self.projection = projection
-        self.matrix = matrix
-        self.matrix_rank = matrix_rank
+        self.projection_matrix = projection_matrix
+        self.projection_matrix_dim = projection_matrix_dim
 
     def __str__(self):
         """PureQubitsのベクトル表現を出力"""
@@ -54,18 +54,26 @@ class PureQubits:
 
     def print_array(self):
         """PureQubitsのndarray表現を出力"""
-        print(self.amplitudes)
+        print(self.array)
+
+    def print_projection_matrix(self):
+        """PureQubitsの射影行列を出力"""
+        print(self.projection_matrix)
+
+    def print_projection(self):
+        """PureQubitsの射影行列に対するndarray表現を出力"""
+        print(self.projection)
 
     def dirac_notation(self):
         """PureQubitsのDirac表記を出力"""
         term = ""
-        array_repl = list(self.amplitudes.flat)
-        for index in range(self.amplitudes.size):
-            vec_repl = format(index, "b").zfill(len(self.amplitudes.shape))
+        array_repl = list(self.array.flat)
+        for index in range(self.array.size):
+            vec_repl = format(index, "b").zfill(len(self.array.shape))
             term += f"{array_repl[index]}|{vec_repl}>"
 
             # 最後以外はプラスと改行をつける
-            if index != self.amplitudes.size - 1:
+            if index != self.array.size - 1:
                 term += " +\n"
 
         print(term)
@@ -73,8 +81,8 @@ class PureQubits:
 
 def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     """二つのPureQubitsを結合する"""
-    new_amplitudes = np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0)
-    new_qubits = PureQubits(new_amplitudes)
+    new_array = np.tensordot(qubits_0.array, qubits_1.array, 0)
+    new_qubits = PureQubits(new_array)
 
     return new_qubits
 
@@ -86,7 +94,7 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
         message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
         raise QubitCountNotMatchError(message)
 
-    return np.inner(qubits_0.amplitudes.flat, conjugate(qubits_1.amplitudes.flat))
+    return np.inner(qubits_0.array.flat, conjugate(qubits_1.array.flat))
 
 
 def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:

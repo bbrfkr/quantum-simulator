@@ -24,7 +24,7 @@ class ObservedBasis:  # pylint: disable=too-few-public-methods
             raise InitializeError(message)
 
         # 観測基底はPureQubitsの要素数と同じだけ指定されていなければならない
-        if len(qubits_group) != qubits_group[0].amplitudes.size:
+        if len(qubits_group) != qubits_group[0].array.size:
             message = "[ERROR]: 観測基底を構成するQubitの数が不足しています"
             raise InitializeError(message)
 
@@ -62,8 +62,8 @@ class Observable:  # pylint: disable=too-few-public-methods
         elements_arrays = [
             self.elements[index]["value"]
             * np.multiply.outer(
-                self.elements[index]["qubits"].amplitudes,
-                np.conjugate(self.elements[index]["qubits"].amplitudes),
+                self.elements[index]["qubits"].array,
+                np.conjugate(self.elements[index]["qubits"].array),
             )
             for index in range(len_observed_values)
         ]
@@ -116,22 +116,20 @@ class Observable:  # pylint: disable=too-few-public-methods
         len_observed_pure_qubits_group = len(observed_pure_qubits_group)
         projection = observed_pure_qubits_group[-1].projection
         for index in range(len_observed_pure_qubits_group - 1):
-            projection = np.add(
-                projection, observed_pure_qubits_group[index].projection
-            )
+            projection = np.add(projection, observed_pure_qubits_group[index].projection)
 
         # 射影作用素とQubit群をそれぞれ二次元行列、ベクトルに変換
-        matrix_rank = target.amplitudes.size
-        proj_matrix = projection.reshape(matrix_rank, matrix_rank)
-        target_vector = target.amplitudes.reshape(target.amplitudes.size)
+        projection_matrix_dim = target.array.size
+        projection_matrix = projection.reshape(projection_matrix_dim, projection_matrix_dim)
+        target_vector = target.array.reshape(target.array.size)
 
         # 観測によるQubitの収束 - 射影の適用と規格化
-        post_vector = np.dot(proj_matrix, target_vector)
+        post_vector = np.dot(projection_matrix, target_vector)
         norm_post_vector = LA.norm(post_vector)
         normalized_post_vector = ((1.0 / norm_post_vector) * post_vector).reshape(
-            target.amplitudes.shape
+            target.array.shape
         )
-        target.amplitudes = normalized_post_vector
+        target.array = normalized_post_vector
 
         # 観測値の返却
         return observed_result["value"]
@@ -141,7 +139,7 @@ def combine_basis(basis_0: ObservedBasis, basis_1: ObservedBasis) -> ObservedBas
     """二つの観測基底から合成系の観測基底を作る"""
     new_observed_basis = ObservedBasis(
         [
-            PureQubits(np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0))
+            PureQubits(np.tensordot(qubits_0.array, qubits_1.array, 0))
             for qubits_0 in basis_0.qubits_group
             for qubits_1 in basis_1.qubits_group
         ]

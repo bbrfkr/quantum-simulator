@@ -15,30 +15,66 @@ class TestQubits:
             Qubits()
         assert "確率のリストとPureQubitsのリスト、もしくは密度行列のndarrayが必須です" in str(error.value)
 
-    def test_valid_qubit_by_list(self, valid_orthogonal_non_degrated_qubit_list):
-        """確率分布リストと純粋状態リストによる妥当・非縮退かつ単一Qubit"""
-        qubit = Qubits(
-            valid_orthogonal_non_degrated_qubit_list["probabilities"],
-            valid_orthogonal_non_degrated_qubit_list["pure_qubits"],
+    def test_valid_non_degrated_qubits_by_list(
+        self, valid_orthogonal_non_degrated_qubits_list
+    ):
+        """確率分布リストと純粋状態リストによる妥当・非縮退のQubits"""
+        qubits = Qubits(
+            valid_orthogonal_non_degrated_qubits_list["probabilities"],
+            valid_orthogonal_non_degrated_qubits_list["pure_qubits"],
         )
         assert np.all(
             np.round(
-                np.array(qubit.eigen_values)
-                - np.array(valid_orthogonal_non_degrated_qubit_list["probabilities"]),
+                np.array(qubits.eigen_values)
+                - np.array(valid_orthogonal_non_degrated_qubits_list["probabilities"]),
                 APPROX_DIGIT,
             )
             == 0.0
         )
-        for index in range(len(qubit.eigen_values)):
+        for index in range(len(qubits.eigen_values)):
             assert np.all(
                 np.round(
-                    np.array(qubit.eigen_states[index].amplitudes)
+                    np.array(qubits.eigen_states[index].array)
                     - np.array(
-                        valid_orthogonal_non_degrated_qubit_list["pure_qubits"][
+                        valid_orthogonal_non_degrated_qubits_list["pure_qubits"][
                             index
-                        ].amplitudes
+                        ].array
                     ),
                     APPROX_DIGIT,
                 )
                 == 0.0
             )
+
+    def test_valid_degrated_qubits_by_list(self, valid_orthogonal_degrated_qubits_list):
+        """確率分布リストと純粋状態リストによる妥当・縮退のQubits"""
+        qubits = Qubits(
+            valid_orthogonal_degrated_qubits_list["probabilities"],
+            valid_orthogonal_degrated_qubits_list["pure_qubits"],
+        )
+        is_passed = False
+        for result_index in range(len(qubits.eigen_values)):
+            for expected_index in range(
+                len(valid_orthogonal_degrated_qubits_list["probabilities"])
+            ):
+                if (
+                    np.round(
+                        qubits.eigen_values[result_index]
+                        - valid_orthogonal_degrated_qubits_list["probabilities"][
+                            expected_index
+                        ],
+                        APPROX_DIGIT,
+                    )
+                    == 0.0
+                ):
+                    if np.all(
+                        np.round(
+                            qubits.eigen_states[result_index].array
+                            - valid_orthogonal_degrated_qubits_list["pure_qubits"][
+                                expected_index
+                            ].array,
+                            APPROX_DIGIT,
+                        )
+                        == 0.0
+                    ):
+                        is_passed = True
+        assert is_passed

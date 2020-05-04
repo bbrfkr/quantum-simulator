@@ -32,8 +32,7 @@ class TestUnitaryTransformer:
         dict_for_test["unitary"].operate(dict_for_test["target"])
         assert np.all(
             np.round(
-                dict_for_test["target"].amplitudes
-                - dict_for_test["expected_qubits"].amplitudes,
+                dict_for_test["target"].array - dict_for_test["expected_qubits"].array,
                 APPROX_DIGIT,
             )
             == 0.0
@@ -47,10 +46,10 @@ class TestUnitaryTransformer:
         for index in range(len(combined_unitary.pre_basis.qubits_group)):
             np.all(
                 np.round(
-                    combined_unitary.pre_basis.qubits_group[index].amplitudes
+                    combined_unitary.pre_basis.qubits_group[index].array
                     - dict_for_test["expected_unitary"]
                     .pre_basis.qubits_group[index]
-                    .amplitudes,
+                    .array,
                     APPROX_DIGIT,
                 )
                 == 0.0
@@ -58,10 +57,10 @@ class TestUnitaryTransformer:
         for index in range(len(combined_unitary.post_basis.qubits_group)):
             np.all(
                 np.round(
-                    combined_unitary.post_basis.qubits_group[index].amplitudes
+                    combined_unitary.post_basis.qubits_group[index].array
                     - dict_for_test["expected_unitary"]
                     .post_basis.qubits_group[index]
-                    .amplitudes,
+                    .array,
                     APPROX_DIGIT,
                 )
                 == 0.0

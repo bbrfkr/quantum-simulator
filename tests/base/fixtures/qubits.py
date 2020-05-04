@@ -64,7 +64,7 @@ from quantum_simulator.base.pure_qubits import PureQubits
         },
     ]
 )
-def valid_orthogonal_non_degrated_qubit_list(request):
+def valid_orthogonal_non_degrated_qubits_list(request):
     """妥当な単一qubitに対する、確率リストと直交しかつ非縮退なPureQubitsリスト"""
     return request.param
 
@@ -92,6 +92,6 @@ def valid_orthogonal_non_degrated_qubit_list(request):
         },
     ]
 )
-def valid_orthogonal_degrated_qubit_list(request):
+def valid_orthogonal_degrated_qubits_list(request):
     """妥当な単一qubitに対する、確率リストと直交しているが縮退しているPureQubitsリスト"""
     return request.param

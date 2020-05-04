@@ -27,8 +27,8 @@ class UnitaryTransformer:
         # 変換のndarrayの生成
         elements_arrays = [
             np.multiply.outer(
-                post_basis.qubits_group[index].amplitudes,
-                np.conjugate(pre_basis.qubits_group[index].amplitudes),
+                post_basis.qubits_group[index].array,
+                np.conjugate(pre_basis.qubits_group[index].array),
             )
             for index in range(len_pre_basis)
         ]
@@ -39,10 +39,10 @@ class UnitaryTransformer:
         self.array = array
 
         # 表現行列を導出する
-        matrix_rank = int(sqrt(self.array.size))
+        matrix_dim = int(sqrt(self.array.size))
 
-        self.matrix_rank = matrix_rank
-        self.matrix_shape = (self.matrix_rank, self.matrix_rank)
+        self.matrix_dim = matrix_dim
+        self.matrix_shape = (self.matrix_dim, self.matrix_dim)
         self.matrix = self.array.reshape(self.matrix_shape)
 
     def __str__(self):
@@ -55,13 +55,11 @@ class UnitaryTransformer:
 
     def operate(self, qubits: PureQubits):
         """ユニタリ変換によるQubit群の操作"""
-        if self.matrix_rank != qubits.amplitudes.size:
+        if self.matrix_dim != qubits.array.size:
             message = "[ERROR]: 変換対象のQubit数が不正です"
             raise IncompatibleDimensionError(message)
 
-        qubits.amplitudes = np.dot(self.matrix, qubits.vector).reshape(
-            qubits.amplitudes.shape
-        )
+        qubits.array = np.dot(self.matrix, qubits.vector).reshape(qubits.array.shape)
 
 
 def combine(  # pylint: disable=C0330

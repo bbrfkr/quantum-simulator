@@ -22,8 +22,8 @@ def valid_pure_qubit_amp(request):
 @pytest.fixture()
 def valid_qubit(valid_pure_qubits_amp):
     """妥当な単一qubitのfixture"""
-    amplitudes = valid_pure_qubits_amp
-    return PureQubits(amplitudes)
+    array = valid_pure_qubits_amp
+    return PureQubits(array)
 
 
 @pytest.fixture(
@@ -52,8 +52,8 @@ def invalid_pure_qubits_amp(request):
 )
 def orthogonal_qubits(request):
     """直交する単一qubit同士のfixture"""
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits
 
 
@@ -66,8 +66,8 @@ def orthogonal_qubits(request):
 )
 def non_orthogonal_qubits(request):
     """直交しない単一qubit同士のfixture"""
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits
 
 
@@ -93,8 +93,8 @@ def valid_pure_qubits_amp(request):
 @pytest.fixture()
 def valid_qubits(valid_pure_qubits_amp):
     """妥当なQubit群のfixture"""
-    amplitudes = valid_pure_qubits_amp
-    return PureQubits(amplitudes)
+    array = valid_pure_qubits_amp
+    return PureQubits(array)
 
 
 @pytest.fixture(
@@ -226,9 +226,7 @@ def dict_test_for_combine(request):
     test3: |0-> x |1> = sqrt(0.5)|001> - sqrt(0.5)|011>
     """
     test_dict = {
-        "qubits_group": [
-            PureQubits(amplitudes) for amplitudes in request.param["qubits_group"]
-        ],
+        "qubits_group": [PureQubits(array) for array in request.param["qubits_group"]],
         "result": request.param["result"],
     }
     return test_dict
@@ -252,8 +250,8 @@ def orthogonal_two_pure_qubits_groups(request):
     test1: |0+>, |1+>
     test2: |0->, |0+>
     """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits
 
 
@@ -272,8 +270,8 @@ def non_orthogonal_two_pure_qubits_groups(request):
     test1: {|-+>, |1+>} (<1+|-+>)
     test2: {|0->, |01>} (<01|0->)
     """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits
 
 
@@ -289,8 +287,8 @@ def not_match_counts_two_pure_qubits_groups(request):
     test1: |0+>, |1>
     test2: |0>, |0+>
     """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits
 
 
@@ -309,8 +307,8 @@ def orthogonal_multiple_pure_qubits_groups(request):
     互いに直交する二つより多いQubit群同士のfixture
     test1: {|00>, |01>, |10>, |11>}
     """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits
 
 
@@ -330,6 +328,6 @@ def non_orthogonal_multiple_pure_qubits_groups(request):
     互いに直交しない二つより多いQubit群同士のfixture
     test1: {|00>, |01>, |10>, |11>, |00>}
     """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [PureQubits(amplitudes) for amplitudes in amplitudes_list]
+    array_list = [array for array in request.param]
+    qubits = [PureQubits(array) for array in array_list]
     return qubits

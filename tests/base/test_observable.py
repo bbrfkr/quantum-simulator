@@ -51,8 +51,8 @@ class TestObservable:
         for index in range(len(valid_observed_values)):
             assert observable.elements[index]["value"] == valid_observed_values[index]
             assert np.all(
-                observable.elements[index]["qubits"].amplitudes
-                == observed_basis.qubits_group[index].amplitudes
+                observable.elements[index]["qubits"].array
+                == observed_basis.qubits_group[index].array
             )
 
     def test_invalid_observable_for_one_qubit(
@@ -75,8 +75,8 @@ class TestObservable:
                 == valid_multi_particles_observed_values[index]
             )
             assert np.all(
-                observable.elements[index]["qubits"].amplitudes
-                == multi_particles_observed_basis.qubits_group[index].amplitudes
+                observable.elements[index]["qubits"].array
+                == multi_particles_observed_basis.qubits_group[index].array
             )
 
     def test_invalid_observable_for_multiple_qubit(
@@ -113,9 +113,7 @@ class TestObservable:
 
         assert observed_value == expected_result["value"]
         assert np.all(
-            np.round(
-                dict_for_test["qubit"].amplitudes - expected_result["qubits"].amplitudes
-            )
+            np.round(dict_for_test["qubit"].array - expected_result["qubits"].array)
             == 0.0
         )
 
@@ -146,10 +144,7 @@ class TestObservable:
 
         assert observed_value == expected_result["value"]
         assert np.all(
-            np.round(
-                dict_for_test["qubits"].amplitudes
-                - expected_result["qubits"].amplitudes
-            )
+            np.round(dict_for_test["qubits"].array - expected_result["qubits"].array)
             == 0.0
         )
 
