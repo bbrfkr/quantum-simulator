@@ -11,6 +11,8 @@ from numpy import linalg as LA
 
 from .error import InitializeError
 from .pure_qubits import PureQubits, inner, is_all_orthogonal
+
+import quantum_simulator.base.pure_qubits as pure_qubits
 from .typing import ObservableElements
 
 
@@ -143,9 +145,9 @@ def combine_basis(basis_0: ObservedBasis, basis_1: ObservedBasis) -> ObservedBas
     """二つの観測基底から合成系の観測基底を作る"""
     new_observed_basis = ObservedBasis(
         [
-            PureQubits(np.tensordot(qubits_0.array, qubits_1.array, 0))
-            for qubits_0 in basis_0.qubits_group
-            for qubits_1 in basis_1.qubits_group
+            pure_qubits.combine(pure_qubits_0, pure_qubits_1)
+            for pure_qubits_0 in basis_0.qubits_group
+            for pure_qubits_1 in basis_1.qubits_group
         ]
     )
     return new_observed_basis

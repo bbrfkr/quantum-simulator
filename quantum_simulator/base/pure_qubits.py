@@ -2,36 +2,53 @@
 純粋状態のQubit系の定義
 """
 
-from math import ceil
-from typing import List
+from math import ceil, sqrt
+from typing import List, Tuple
 
 import numpy as np
 from numpy import conjugate
 from numpy.linalg import linalg as LA
 
-from .conf import APPROX_DIGIT
-from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
+from quantum_simulator.base.conf import APPROX_DIGIT
+from quantum_simulator.base.error import (
+    InitializeError,
+    NoQubitsInputError,
+    QubitCountNotMatchError,
+)
 
 
 class PureQubits:
-    """純粋状態の一般的に複数のQubit"""
+    """
+    一般的に複数かつ純粋状態のQubit群
+      array: ndarray形式のQubits
+
+    """
 
     def __init__(self, amplitudes: list):
-        array = np.array(amplitudes, dtype=complex)
+        """
+        初期化
+          amplitudes: 確率振幅のリスト。ベクトル形式とndarray形式を許容する
+        """
 
-        # 与えられた確率振幅の次元がQubitのテンソル積空間の次元かチェック
-        for dim in array.shape:
-            if dim != 2:
-                message = "[ERROR]: 与えられた確率振幅の次元が不正です"
-                raise InitializeError(message)
-
-        # 確率の総和をチェック
-        if np.round(LA.norm(array) - 1.0, APPROX_DIGIT) != 0.0:
-            message = "[ERROR]: 確率の総和が1ではありません"
+        # Qubit系であるかチェック
+        tmp_array = np.array(amplitudes, dtype=complex)
+        if not is_pure_qubits(tmp_array):
+            message = "[ERROR]: 与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
 
+        # 各Qubit表現形式の導出
+        vector, array = resolve_arrays(tmp_array)
+
         # 内包するQubit数を計算
-        qubit_count = len(array.shape)
+        qubit_count = count_qubits(array)
+
+        ### ここまでリファクタ済み 2020/05/04
+
+
+
+
+
+
 
         # 射影作用素を導出
         projection = np.multiply.outer(array, np.conjugate(array))
@@ -45,7 +62,7 @@ class PureQubits:
         # 初期化
         self.array = array
         self.qubit_count = qubit_count
-        self.vector = self.array.reshape(self.array.size)
+        self.vector = vector
         self.projection = projection
         self.projection_matrix = projection_matrix
         self.projection_matrix_dim = projection_matrix_dim
@@ -79,6 +96,71 @@ class PureQubits:
                 term += " +\n"
 
         print(term)
+
+
+def is_pure_qubits(array: np.array) -> bool:
+    """与えられたarrayがQubit系を表現しているか判定する"""
+
+    # 要素数が2の階乗個であるかチェック
+    size = array.size
+    if size == 0:
+        return False
+
+    while True:
+        if size % 2 != 0:
+            return False
+        size /= 2
+        if size % 2 == 1:
+            break
+
+    # ndarray形式の場合は、shapeの構成要素が全て2であるか
+    # つまり、次元がQubitのテンソル積空間の次元かをチェック
+    if len(array.shape) > 1:
+        for sub_dim in array.shape:
+            if sub_dim != 2:
+                return False
+
+    # 長さが1、つまり確率が1になるかをチェック
+    norm = np.sqrt(np.sum(np.abs(array) ** 2))
+    if np.round(norm - 1.0, APPROX_DIGIT) != 0.0:
+        return False
+
+    return True
+
+
+def count_qubits(pure_qubits: np.array) -> int:
+    """
+    与えられたarrayがQubit系であることを仮定し
+    Qubitの個数を返す
+    """
+    size = pure_qubits.size
+    count = 0
+    while True:
+        size /= 2
+        count += 1
+        if size % 2 == 1:
+            break
+    return count
+
+
+def resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
+    """
+    与えられたarrayがQubit系であることを仮定し、
+    ベクトル表現とndarray表現の組を返す
+    """
+    vector = None
+    array = None
+
+    if len(pure_qubits.shape) == 1:
+        vector = pure_qubits
+        qubit_count = count_qubits(pure_qubits)
+        array_shape = tuple([2 for i in range(qubit_count)])
+        array = pure_qubits.reshape(array_shape)
+    else:
+        array = pure_qubits
+        vector = pure_qubits.reshape(pure_qubits.size)
+
+    return (vector, array)
 
 
 def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:

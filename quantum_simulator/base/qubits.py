@@ -10,6 +10,7 @@ from numpy import linalg as LA
 from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import InitializeError, ReductionError
 from quantum_simulator.base.pure_qubits import PureQubits, is_all_orthogonal
+from quantum_simulator.base import pure_qubits
 
 
 def eig_for_density(
@@ -91,7 +92,7 @@ class Qubits:
             # 既にShatten分解されている場合は固有値の丸めのみ実施
             else:
                 for index in range(len(probabilities)):
-                    rounded_value = round(probabilities[index], APPROX_DIGIT)
+                    rounded_value = np.round(probabilities[index], APPROX_DIGIT)
                     if rounded_value == 1.0:
                         eigen_values.append(1.0 + 0j)
                     elif rounded_value == 0.0:
@@ -214,12 +215,23 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
 
     # TODO target_listの長さや中の値はもっとバリデーションすべき
 
-    axis1 = target_qubits.qubit_count - 1 - target_particle
-    axis2 = 2 * target_qubits.qubit_count - 1 - target_particle
+    axis1 = target_particle
+    axis2 = target_qubits.qubit_count + target_particle
     reduced_array = np.trace(target_qubits.array, axis1=axis1, axis2=axis2,)
 
     return Qubits(density_array=reduced_array)
 
 
 def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
-    return Qubits()
+    probabilities = [
+        eigen_value_0 * eigen_value_1
+        for eigen_value_0 in qubits_0.eigen_values
+        for eigen_value_1 in qubits_1.eigen_values
+    ]
+    eigen_states = [
+        pure_qubits.combine(eigen_state_0, eigen_state_1)
+        for eigen_state_0 in qubits_0.eigen_states
+        for eigen_state_1 in qubits_1.eigen_states
+    ]
+    new_qubits = Qubits(probabilities, eigen_states)
+    return new_qubits
