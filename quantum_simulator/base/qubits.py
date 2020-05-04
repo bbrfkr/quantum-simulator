@@ -56,6 +56,8 @@ class Qubits:
                     message = "[ERROR]: 与えられたQubit群のQubitの数が一致しません"
                     raise InitializeError(message)
 
+            qubit_count = last_qubit.qubit_count
+
             # Qubit群の数と確率の数が一致しないとエラー
             if qubits_count != len(probabilities):
                 message = "[ERROR]: 与えられたQubit群の数と確率の数が一致しません"
@@ -128,8 +130,8 @@ class Qubits:
                             raise InitializeError(message)
                 array = tmp_array
                 qubit_count = int(len_tmp_array_shape / 2)
-                matrix_rank = 2 ** qubit_count
-                matrix_shape = (matrix_rank, matrix_rank)
+                matrix_dim = 2 ** qubit_count
+                matrix_shape = (matrix_dim, matrix_dim)
                 matrix = array.reshape(matrix_shape)
 
             # 行列の時のチェック
@@ -154,8 +156,8 @@ class Qubits:
                         tmp_qubit_count += 1
                         tmp_dim /= 2
 
-                    qubit_count = tmp_qubit_count
-                    matrix_rank = tmp_array.shape[0]
+                    qubit_count = int(tmp_qubit_count)
+                    matrix_dim = tmp_array.shape[0]
 
                 matrix = tmp_array
 
