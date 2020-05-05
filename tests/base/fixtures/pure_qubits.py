@@ -102,12 +102,12 @@ def dict_for_test_count_qubits(request):
 @pytest.fixture(
     params=[
         # 単一Qubit
-        {"target": [1 + 0j, 0j], "vector": [1 + 0j, 0j], "array": [1 + 0j, 0j]},
+        {"target": [1 + 0j, 0j], "vector": [1 + 0j, 0j], "ndarray": [1 + 0j, 0j]},
         # 複数Qubitsかつベクトル形式
         {
             "target": [0j, 0j, 1 + 0j, 0j],
             "vector": [0j, 0j, 1 + 0j, 0j],
-            "array": [[0j, 0j], [1 + 0j, 0j]],
+            "ndarray": [[0j, 0j], [1 + 0j, 0j]],
         },
         {
             "target": [
@@ -130,7 +130,7 @@ def dict_for_test_count_qubits(request):
                 0j,
                 sqrt(0.25) + 0j,
             ],
-            "array": [
+            "ndarray": [
                 [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
                 [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
             ],
@@ -139,7 +139,7 @@ def dict_for_test_count_qubits(request):
         {
             "target": [[0j, 1 + 0j], [0j, 0j]],
             "vector": [0j, 1 + 0j, 0j, 0j],
-            "array": [[0j, 1 + 0j], [0j, 0j]],
+            "ndarray": [[0j, 1 + 0j], [0j, 0j]],
         },
         {
             "target": [
@@ -156,14 +156,14 @@ def dict_for_test_count_qubits(request):
                 0j,
                 sqrt(0.25) + 0j,
             ],
-            "array": [
+            "ndarray": [
                 [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
                 [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
             ],
         },
     ]
 )
-def dict_for_test_resolve_arrays(request):
+def dict_for_test_pure_qubits_resolve_arrays(request):
     """resolve_arraysメソッドテスト用のfixture"""
     return request.param
 
@@ -268,7 +268,7 @@ def dict_for_test_resolve_arrays(request):
         },
     ]
 )
-def dict_for_test_constructor(request):
+def dict_for_test_pure_qubits_constructor(request):
     """resolve_arraysメソッドテスト用のfixture"""
     return request.param
 

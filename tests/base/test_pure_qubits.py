@@ -48,34 +48,39 @@ class TestPureQubits:
         array = np.array(dict_for_test_count_qubits["array"])
         assert count_qubits(array) == dict_for_test_count_qubits["count"]
 
-    def test_for_success_resolve_arrays(self, dict_for_test_resolve_arrays):
+    def test_for_success_resolve_arrays(self, dict_for_test_pure_qubits_resolve_arrays):
         """resolve_arraysメソッドの正常系テスト"""
 
-        target = np.array(dict_for_test_resolve_arrays["target"])
-        vector, array = resolve_arrays(target)
-        expected_vector = np.array(dict_for_test_resolve_arrays["vector"])
-        expected_array = np.array(dict_for_test_resolve_arrays["array"])
+        target = np.array(dict_for_test_pure_qubits_resolve_arrays["target"])
+        vector, ndarray = resolve_arrays(target)
+        expected_vector = np.array(dict_for_test_pure_qubits_resolve_arrays["vector"])
+        expected_ndarray = np.array(dict_for_test_pure_qubits_resolve_arrays["ndarray"])
         assert np.all(vector == expected_vector)
         assert vector.shape == expected_vector.shape
-        assert np.all(array == expected_array)
-        assert array.shape == expected_array.shape
+        assert np.all(ndarray == expected_ndarray)
+        assert ndarray.shape == expected_ndarray.shape
 
-    def test_for_success_constructor(self, dict_for_test_constructor):
+    def test_for_success_constructor(self, dict_for_test_pure_qubits_constructor):
         """
         __init__メソッドの正常系テスト
         """
-        qubits = PureQubits(dict_for_test_constructor["target"])
-        assert allclose(qubits.projection, dict_for_test_constructor["projection"])
+        qubits = PureQubits(dict_for_test_pure_qubits_constructor["target"])
         assert allclose(
-            qubits.projection_matrix, dict_for_test_constructor["projection_matrix"]
+            qubits.projection, dict_for_test_pure_qubits_constructor["projection"]
+        )
+        assert allclose(
+            qubits.projection_matrix,
+            dict_for_test_pure_qubits_constructor["projection_matrix"],
         )
         assert (
             qubits.projection_matrix_dim
-            == dict_for_test_constructor["projection_matrix_dim"]
+            == dict_for_test_pure_qubits_constructor["projection_matrix_dim"]
         )
         with captured_stdout() as stdout:
             qubits.dirac_notation()
-        assert stdout.getvalue() == dict_for_test_constructor["dirac_notation"]
+        assert (
+            stdout.getvalue() == dict_for_test_pure_qubits_constructor["dirac_notation"]
+        )
 
     def test_for_failure_constructor(self, invalid_pure_qubits_amp):
         """
@@ -93,7 +98,7 @@ class TestPureQubits:
         result = combine(target_0, target_1)
 
         expected_result = PureQubits(dict_for_test_combine["result"])
-        assert allclose(result.array, expected_result.array)
+        assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count
         assert allclose(result.projection, expected_result.projection)

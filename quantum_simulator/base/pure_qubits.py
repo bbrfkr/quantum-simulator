@@ -13,13 +13,13 @@ from quantum_simulator.base.error import (
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.utils import isclose
+from quantum_simulator.base.utils import isclose, is_pow2
 
 
 class PureQubits:
     """
     一般的に複数かつ純粋状態のQubit群
-      array: ndarray形式のQubits
+      ndarray: ndarray形式のQubits
       vector: ベクトル形式のQubits
       qubit_count: 内包されているQubitの数
       projection: Qubitに対応する射影のndarray
@@ -30,7 +30,7 @@ class PureQubits:
     def __init__(self, amplitudes: list):
         """
         初期化
-          amplitudes: 確率振幅のリスト。ベクトル形式とndarray形式を許容する
+            amplitudes: 確率振幅のリスト。ベクトル形式とndarray形式を許容する
         """
 
         # Qubit系であるかチェック
@@ -40,13 +40,13 @@ class PureQubits:
             raise InitializeError(message)
 
         # 各Qubit表現形式の導出
-        vector, array = resolve_arrays(tmp_array)
+        vector, ndarray = resolve_arrays(tmp_array)
 
         # 内包するQubit数を計算
-        qubit_count = count_qubits(array)
+        qubit_count = count_qubits(ndarray)
 
         # 射影作用素を導出
-        projection = np.multiply.outer(array, np.conjugate(array))
+        projection = np.multiply.outer(ndarray, np.conjugate(ndarray))
 
         # 射影作用素に対応する行列を導出
         projection_matrix_dim = 2 ** qubit_count
@@ -55,7 +55,7 @@ class PureQubits:
         )
 
         # 初期化
-        self.array = array
+        self.ndarray = ndarray
         self.vector = vector
         self.qubit_count = qubit_count
         self.projection = projection
@@ -66,9 +66,9 @@ class PureQubits:
         """PureQubitsのベクトル表現を出力"""
         return str(self.vector)
 
-    def print_array(self):
+    def print_ndarray(self):
         """PureQubitsのndarray表現を出力"""
-        print(self.array)
+        print(self.ndarray)
 
     def print_projection_matrix(self):
         """PureQubitsの射影行列を出力"""
@@ -96,17 +96,10 @@ class PureQubits:
 def is_pure_qubits(array: np.array) -> bool:
     """与えられたarrayがQubit系を表現しているか判定する"""
 
-    # 要素数が2の階乗個であるかチェック
+    # 要素数が2の累乗個であるかチェック
     size = array.size
-    if size == 0:
+    if not is_pow2(size):
         return False
-
-    while True:
-        if size % 2 != 0:
-            return False
-        size /= 2
-        if size % 2 == 1:
-            break
 
     # ndarray形式の場合は、shapeの構成要素が全て2であるか
     # つまり、次元がQubitのテンソル積空間の次元かをチェック
@@ -144,24 +137,24 @@ def resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
     ベクトル表現とndarray表現の組を返す
     """
     vector = None
-    array = None
+    ndarray = None
 
     if len(pure_qubits.shape) == 1:
         vector = pure_qubits
         qubit_count = count_qubits(pure_qubits)
-        array_shape = tuple([2 for i in range(qubit_count)])
-        array = pure_qubits.reshape(array_shape)
+        ndarray_shape = tuple([2 for i in range(qubit_count)])
+        ndarray = pure_qubits.reshape(ndarray_shape)
     else:
-        array = pure_qubits
+        ndarray = pure_qubits
         vector = pure_qubits.reshape(pure_qubits.size)
 
-    return (vector, array)
+    return (vector, ndarray)
 
 
 def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     """二つのPureQubitsを結合する"""
-    new_array = np.tensordot(qubits_0.array, qubits_1.array, 0)
-    new_qubits = PureQubits(new_array)
+    new_ndarray = np.tensordot(qubits_0.ndarray, qubits_1.ndarray, 0)
+    new_qubits = PureQubits(new_ndarray)
 
     return new_qubits
 
