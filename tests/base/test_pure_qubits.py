@@ -89,15 +89,15 @@ class TestPureQubits:
         with pytest.raises(InitializeError):
             PureQubits(invalid_pure_qubits_amp)
 
-    def test_for_success_combine(self, dict_for_test_combine):
+    def test_for_success_combine(self, dict_for_test_pure_qubits_combine):
         """
         combineメソッドの正常系テスト
         """
-        target_0 = PureQubits(dict_for_test_combine["target_0"])
-        target_1 = PureQubits(dict_for_test_combine["target_1"])
+        target_0 = PureQubits(dict_for_test_pure_qubits_combine["target_0"])
+        target_1 = PureQubits(dict_for_test_pure_qubits_combine["target_1"])
         result = combine(target_0, target_1)
 
-        expected_result = PureQubits(dict_for_test_combine["result"])
+        expected_result = PureQubits(dict_for_test_pure_qubits_combine["result"])
         assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count

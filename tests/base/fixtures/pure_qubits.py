@@ -312,7 +312,7 @@ def dict_for_test_pure_qubits_constructor(request):
         },
     ]
 )
-def dict_for_test_combine(request):
+def dict_for_test_pure_qubits_combine(request):
     """combineメソッドテスト用のfixture"""
     return request.param
 

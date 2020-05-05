@@ -13,6 +13,7 @@ from quantum_simulator.base.error import (
     InvalidProbabilitiesError,
 )
 from quantum_simulator.base.pure_qubits import PureQubits
+from quantum_simulator.base import pure_qubits
 from quantum_simulator.base.utils import is_pow2, around, is_probabilities, isclose
 
 
@@ -186,7 +187,7 @@ def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
 
 
 def create_from_qubits_list(
-    probabilities: List[float], qubits: Union[List[PureQubits], List[Qubits]]
+    probabilities: List[float], qubits_list: List[Union[PureQubits, Qubits]]
 ) -> Qubits:
     """確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する"""
 
@@ -195,7 +196,7 @@ def create_from_qubits_list(
         message = "[ERROR]: 与えられた確率リストは確率分布ではありません"
         raise InvalidProbabilitiesError(message)
 
-    len_qubits_list = len(qubits)
+    len_qubits_list = len(qubits_list)
 
     # 確率リストと純粋状態リストの要素数同士が一致するかチェック
     if len_qubits_list != len(probabilities):
@@ -204,20 +205,19 @@ def create_from_qubits_list(
 
     # 密度行列から再度密度行列を導出する
     density_matrix = None
-    is_target_pure = isinstance(qubits[-1], PureQubits)
 
-    if is_target_pure:
-        density_matrix = probabilities[-1] * qubits[-1].projection_matrix
+    if isinstance(qubits_list[-1], PureQubits):
+        density_matrix = probabilities[-1] * qubits_list[-1].projection_matrix
     else:
-        density_matrix = probabilities[-1] * qubits[-1].matrix
+        density_matrix = probabilities[-1] * qubits_list[-1].matrix
 
     for index in range(len_qubits_list - 1):
         added_matrix = None
 
-        if is_target_pure:
-            added_matrix = probabilities[index] * qubits[index].projection_matrix
+        if isinstance(qubits_list[index], PureQubits):
+            added_matrix = probabilities[index] * qubits_list[index].projection_matrix
         else:
-            added_matrix = probabilities[index] * qubits[index].matrix
+            added_matrix = probabilities[index] * qubits_list[index].matrix
 
         density_matrix = np.add(density_matrix, added_matrix)
 
@@ -240,16 +240,35 @@ def create_from_qubits_list(
 #     return Qubits(density_array=reduced_array)
 
 
-# def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
-#     probabilities = [
-#         eigen_value_0 * eigen_value_1
-#         for eigen_value_0 in qubits_0.eigen_values
-#         for eigen_value_1 in qubits_1.eigen_values
-#     ]
-#     eigen_states = [
-#         pure_qubits.combine(eigen_state_0, eigen_state_1)
-#         for eigen_state_0 in qubits_0.eigen_states
-#         for eigen_state_1 in qubits_1.eigen_states
-#     ]
-#     new_qubits = create_from_distribution(probabilities, eigen_states)
-#     return new_qubits
+def combine(
+    qubit_0: Union[Qubits, PureQubits], qubit_1: Union[Qubits, PureQubits]
+) -> Qubits:
+    """２つのQubit系を結合して新たなQubit系を作る"""
+    # 純粋状態を考慮し、結合する情報を整理
+    eigen_values_0 = None
+    eigen_states_0 = None
+    eigen_values_1 = None
+    eigen_states_1 = None
+
+    if isinstance(qubit_0, PureQubits):
+        eigen_values_0 = [1.0]
+        eigen_states_0 = [qubit_0]
+    if isinstance(qubit_1, PureQubits):
+        eigen_values_1 = [1.0]
+        eigen_states_1 = [qubit_1]
+
+    # 確率分布の結合
+    probabilities = [
+        value_0 * value_1 for value_0 in eigen_values_0 for value_1 in eigen_values_1
+    ]
+
+    # 固有状態の結合
+    eigen_states = [
+        pure_qubits.combine(state_0, state_1)
+        for state_0 in eigen_states_0
+        for state_1 in eigen_states_1
+    ]
+
+    # 新しい状態の生成
+    new_qubits = create_from_qubits_list(probabilities, eigen_states)
+    return new_qubits
