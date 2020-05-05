@@ -375,7 +375,7 @@ def invalid_inner_input_qubits(request):
     ]
 )
 def dict_for_test_valid_inner_input(request):
-    """innerメソッドテスト用の不正なインプットのfixture"""
+    """innerメソッドテスト用の妥当なインプットのfixture"""
     return request.param
 
 
@@ -465,7 +465,7 @@ def dict_for_test_invalid_inner_input(request):
     ]
 )
 def dict_for_test_is_orthogonal(request):
-    """innerメソッドテスト用の不正なインプットのfixture"""
+    """is_orthogonalメソッドテスト用インプットのfixture"""
     return request.param
 
 
@@ -588,5 +588,39 @@ def dict_for_test_is_orthogonal(request):
     ]
 )
 def dict_for_test_all_orthogonal(request):
-    """innerメソッドテスト用の不正なインプットのfixture"""
+    """all_orthogonalメソッドテスト用インプットのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        [
+            PureQubits([0j, 1 + 0j]),
+            PureQubits([1 + 0j, 0j]),
+        ],
+        [
+            PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+            PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+        ],
+    ]
+)
+def dict_for_test_success_onb_constructor(request):
+    """OrthogonalBasisの__init__メソッドテスト用の妥当なインプットのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        [
+            PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+            PureQubits([1 + 0j, 0j]),
+        ],
+        [
+            PureQubits([1 + 0j, 0j]),
+            PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+        ],
+    ]
+)
+def dict_for_test_failure_onb_constructor(request):
+    """OrthogonalBasisの__init__メソッドテスト用の不正なインプットのfixture"""
     return request.param

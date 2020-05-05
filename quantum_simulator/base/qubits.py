@@ -47,14 +47,16 @@ class Qubits:
         # 固有値と固有ベクトルを導出
         eigen_values, eigen_states = resolve_eigen(matrix)
 
-        # 負の固有値の存在をチェック
-        if np.any(around(np.array(eigen_values)) < 0):
-            message = "[ERROR]: 与えられたリストには負の固有値が存在します"
+        # 固有値の虚部の有無をチェックし、floatに変換
+        if np.any(around(np.imag(eigen_values)) != 0j):
+            message = "[ERROR]: 与えられたリストには虚数の固有値が存在します"
             raise InitializeError(message)
 
-        # 固有値の総和(トレース)が1であるかチェック
-        if around(np.sum(np.array(eigen_values))) != 1:
-            message = "[ERROR]: 与えられたリストはトレースが1ではありません"
+        eigen_values = np.real(eigen_values)
+
+        # 固有値全体が確率分布に対応できるかチェック
+        if not is_probabilities(eigen_values):
+            message = "[ERROR]: リストから導出された固有値群は確率分布に対応しません"
             raise InitializeError(message)
 
         # 行列の次元を導出
@@ -253,9 +255,15 @@ def combine(
     if isinstance(qubit_0, PureQubits):
         eigen_values_0 = [1.0]
         eigen_states_0 = [qubit_0]
+    else:
+        eigen_values_0 = qubit_0.eigen_values
+        eigen_states_0 = qubit_0.eigen_states
     if isinstance(qubit_1, PureQubits):
         eigen_values_1 = [1.0]
         eigen_states_1 = [qubit_1]
+    else:
+        eigen_values_1 = qubit_1.eigen_values
+        eigen_states_1 = qubit_1.eigen_states
 
     # 確率分布の結合
     probabilities = [

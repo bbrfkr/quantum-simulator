@@ -9,7 +9,9 @@ from quantum_simulator.base.qubits import (
     combine,
 )
 from quantum_simulator.base.utils import isclose, allclose
-from quantum_simulator.base.error import NotMatchCountError, InvalidProbabilitiesError
+from quantum_simulator.base.error import (
+    NotMatchCountError, InvalidProbabilitiesError, InitializeError
+)
 import pytest
 
 
@@ -107,6 +109,13 @@ class TestQubits:
         assert allclose(matrix.shape, expected_matrix.shape)
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
+
+    def test_for_success_constructor(self):
+        """__init__メソッド 虚数固有値の異常系テスト"""
+        with pytest.raises(InitializeError) as error:
+            target = [[0.5 + 0j, 0j], [0j, 0.5 * 1j]]
+            Qubits(target)
+        assert "与えられたリストには虚数の固有値が存在します" in str(error.value)
 
     def test_for_success_create_from_qubits_list(
         self, dict_for_test_create_from_qubits_list

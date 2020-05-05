@@ -93,6 +93,24 @@ class PureQubits:
         print(notation)
 
 
+class OrthogonalBasis:
+    """
+    互いに直交している複数の純粋状態であるQubit群
+        qubits_list: PureQubitsのリスト
+    """
+
+    def __init__(self, qubits_list: List[PureQubits]):
+        """
+        初期化
+            qubits_list: PureQubitsのリスト
+        """
+        if not all_orthogonal(qubits_list):
+            message = "[ERROR]: 与えられたQubit群のリストは互いに直交しません"
+            raise InitializeError(message)
+
+        self.qubits_list = qubits_list
+
+
 def is_pure_qubits(array: np.array) -> bool:
     """与えられたarrayがQubit系を表現しているか判定する"""
 

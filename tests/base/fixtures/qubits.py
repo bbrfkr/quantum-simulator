@@ -409,6 +409,59 @@ def not_match_count_probabilities_and_qubits_list(request):
             "qubit_count": 2,
             "is_pure": True,
         },
+        {
+            "qubits_list": [
+                PureQubits([1.0 + 0j, 0j]),
+                Qubits(
+                    [
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                        [0j, 0j, 0j, 0j],
+                        [0j, 0j, 0.5 + 0j, 0j],
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j]
+                    ]
+                ),
+            ],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix": [
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 8,
+            "ndarray": [
+                [
+                    [
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+            ],
+            "qubit_count": 3,
+            "is_pure": False,
+        },
     ]
 )
 def dict_for_test_qubits_combine(request):

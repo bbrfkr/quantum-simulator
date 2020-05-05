@@ -17,6 +17,7 @@ from quantum_simulator.base.pure_qubits import (
     is_orthogonal,
     is_pure_qubits,
     resolve_arrays,
+    OrthogonalBasis
 )
 from quantum_simulator.base.utils import allclose, isclose
 
@@ -152,3 +153,29 @@ class TestPureQubits:
         """
         with pytest.raises(NoQubitsInputError):
             all_orthogonal([])
+
+
+class TestOrthogonalBasis:
+    """
+    OrthogonalBasisクラスと付随するメソッドのテスト
+        * 以下のロジックはテストしない
+            * ただ値を代入するだけのロジック
+            * すでにテスト済みの値を代入するロジック
+            * 既存オブジェクトを出力するだけのロジック
+    """
+
+    def test_for_success_onb_constructor(self, dict_for_test_success_onb_constructor):
+        """
+        __init__メソッドの正常系テスト
+        """
+        qubits_list = dict_for_test_success_onb_constructor
+        onb = OrthogonalBasis(qubits_list)
+        assert onb.qubits_list == qubits_list
+
+    def test_for_failure_onb_constructor(self, dict_for_test_failure_onb_constructor):
+        """
+        __init__メソッドの異常系テスト
+        """
+        with pytest.raises(InitializeError):
+            qubits_list = dict_for_test_failure_onb_constructor
+            OrthogonalBasis(qubits_list)
