@@ -1,14 +1,12 @@
 import numpy as np
-import pytest
 
-from quantum_simulator.base.error import InitializeError
 from quantum_simulator.base.qubits import (
     Qubits,
     is_qubits_dim,
     resolve_arrays,
     resolve_eigen,
 )
-from quantum_simulator.base.utils import around, isclose, allclose
+from quantum_simulator.base.utils import isclose, allclose
 
 
 class TestQubits:
@@ -169,7 +167,9 @@ class TestQubits:
     #             if (
     #                 np.round(
     #                     qubits.eigen_values[result_index]
-    #                     - valid_orthogonal_qubits_list["probabilities"][expected_index],
+    #                     - valid_orthogonal_qubits_list[
+    #                           "probabilities"
+    #                       ][expected_index],
     #                     APPROX_DIGIT,
     #                 )
     #                 == 0.0
