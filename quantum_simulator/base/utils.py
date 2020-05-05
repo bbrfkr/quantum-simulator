@@ -3,6 +3,7 @@ baseパッケージ内で利用する定数群
 """
 
 import numpy as np
+from typing import List
 
 # 計算時の近似桁数
 RELATIVE_TOLERANCE = 1.0e-5
@@ -33,3 +34,20 @@ def is_pow2(a: int) -> bool:
 
     # ビットの論理積で計算する
     return not a & (a - 1)
+
+
+def is_probabilities(target_list: List[float]):
+    """与えられたfloatリストが確率分布であるか判定する"""
+
+    total = 0
+    for element in target_list:
+        if element < 0:
+            return False
+        total += element
+        if round(total, AROUNDED_DECIMALS) > 1.0:
+            return False
+
+    if round(total, AROUNDED_DECIMALS) < 1.0:
+        return False
+
+    return True

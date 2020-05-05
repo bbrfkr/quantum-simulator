@@ -19,6 +19,14 @@ class NoQubitsInputError(BaseError):
     """Qubit群の未入力時エラー"""
 
 
+class NotMatchCountError(BaseError):
+    """要素数が一致しないエラー"""
+
+
+class InvalidProbabilitiesError(BaseError):
+    """不正な確率リストエラー"""
+
+
 class ReductionError(BaseError):
     """縮約時エラー"""
 

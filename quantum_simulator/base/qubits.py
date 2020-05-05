@@ -2,22 +2,25 @@
 一般的なQubit系の定義
 """
 
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 from numpy import linalg as LA
 
-from quantum_simulator.base import pure_qubits
-from quantum_simulator.base.error import InitializeError, ReductionError
-from quantum_simulator.base.pure_qubits import PureQubits, all_orthogonal
-from quantum_simulator.base.utils import is_pow2, around
+from quantum_simulator.base.error import (
+    InitializeError,
+    NotMatchCountError,
+    InvalidProbabilitiesError,
+)
+from quantum_simulator.base.pure_qubits import PureQubits
+from quantum_simulator.base.utils import is_pow2, around, is_probabilities, isclose
 
 
 class Qubits:
     """
     一般的に複数かつ混合状態のQubit
-        eigen_values: 固有値
-        eigen_states: 固有状態
+        eigen_values: 固有値のリスト
+        eigen_states: 固有状態のリスト
         ndarray: ndarray形式のQubits
         matrix: 行列形式のQubits
         matrix_dim: 行列形式における行列の次元
@@ -75,26 +78,35 @@ class Qubits:
         """Qubitsのndarray表現を出力"""
         print(self.ndarray)
 
+    def is_pure(self) -> bool:
+        """Qubitsが純粋状態か判定する"""
+        for eigen_value in self.eigen_values:
+            if isclose(eigen_value, 1.0 + 0j):
+                return True
+
+        return False
+
 
 def is_qubits_dim(array: np.array) -> bool:
     """与えられたarrayの形がQubit系を表現しているか判定する"""
 
     # 次元のチェック
-    ## 要素数が2の累乗個であるかチェック
+
+    # 要素数が2の累乗個であるかチェック
     if not is_pow2(array.size):
         return False
 
-    ## array.shapeの要素数をチェック
+    # array.shapeの要素数をチェック
     len_array_shape = len(array.shape)
 
-    ### 2よりも小さい場合、ベクトルであるため、偽
+    # 2よりも小さい場合、ベクトルであるため、偽
     if len_array_shape < 2:
         return False
 
-    ### 2の場合、行列表現とndarray表現の双方の可能性がある
-    ### いずれの場合も、各要素は一致していなければならない
-    ### ndarray表現の場合は(2, 2)、つまり2粒子Qubit系でなくてはならない
-    ### 行列表現の場合は各要素は2の累乗でなければならない
+    # 2の場合、行列表現とndarray表現の双方の可能性がある
+    # いずれの場合も、各要素は一致していなければならない
+    # ndarray表現の場合は(2, 2)、つまり2粒子Qubit系でなくてはならない
+    # 行列表現の場合は各要素は2の累乗でなければならない
     elif len_array_shape == 2:
         if array.shape[0] != array.shape[1]:
             return False
@@ -103,11 +115,11 @@ def is_qubits_dim(array: np.array) -> bool:
             if not is_pow2(element):
                 return False
 
-    ### 2より大きい場合、ndarray表現にのみ対応する
-    ### この場合、最低限以下が満たされていなければならない
-    ### * 要素数が2の倍数であること
-    ### * 各要素が2であること
-    ### (各テンソル空間がC^2であることのチェックに対応)
+    # 2より大きい場合、ndarray表現にのみ対応する
+    # この場合、最低限以下が満たされていなければならない
+    # * 要素数が2の倍数であること
+    # * 各要素が2であること
+    # (各テンソル空間がC^2であることのチェックに対応)
     else:
         if len_array_shape % 2 != 0:
             return False
@@ -173,9 +185,44 @@ def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
     return (eigen_values, eigen_states)
 
 
-# def create_from_distribution(probabilities: List[float], qubits: List[PureQubits]) -> Qubits:
-#     """確率リストと純粋状態リストからQubitsインスタンスを作成する"""
-#     return None
+def create_from_qubits_list(
+    probabilities: List[float], qubits: Union[List[PureQubits], List[Qubits]]
+) -> Qubits:
+    """確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する"""
+
+    # 確率リストが確率分布であるかチェック
+    if not is_probabilities(probabilities):
+        message = "[ERROR]: 与えられた確率リストは確率分布ではありません"
+        raise InvalidProbabilitiesError(message)
+
+    len_qubits_list = len(qubits)
+
+    # 確率リストと純粋状態リストの要素数同士が一致するかチェック
+    if len_qubits_list != len(probabilities):
+        message = "[ERROR]: 与えられた確率リストと純粋状態リストの要素数が一致しません"
+        raise NotMatchCountError(message)
+
+    # 密度行列から再度密度行列を導出する
+    density_matrix = None
+    is_target_pure = isinstance(qubits[-1], PureQubits)
+
+    if is_target_pure:
+        density_matrix = probabilities[-1] * qubits[-1].projection_matrix
+    else:
+        density_matrix = probabilities[-1] * qubits[-1].matrix
+
+    for index in range(len_qubits_list - 1):
+        added_matrix = None
+
+        if is_target_pure:
+            added_matrix = probabilities[index] * qubits[index].projection_matrix
+        else:
+            added_matrix = probabilities[index] * qubits[index].matrix
+
+        density_matrix = np.add(density_matrix, added_matrix)
+
+    qubits = Qubits(density_matrix)
+    return qubits
 
 
 # def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
