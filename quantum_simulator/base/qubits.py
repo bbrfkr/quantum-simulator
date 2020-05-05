@@ -7,10 +7,10 @@ from typing import List, Tuple
 import numpy as np
 from numpy import linalg as LA
 
+from quantum_simulator.base import pure_qubits
 from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import InitializeError, ReductionError
 from quantum_simulator.base.pure_qubits import PureQubits, is_all_orthogonal
-from quantum_simulator.base import pure_qubits
 
 
 def eig_for_density(

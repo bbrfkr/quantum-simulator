@@ -9,19 +9,23 @@ import numpy as np
 from numpy import conjugate
 from numpy.linalg import linalg as LA
 
-from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
+from quantum_simulator.base.utils import allclose, isclose
 
 
 class PureQubits:
     """
     一般的に複数かつ純粋状態のQubit群
       array: ndarray形式のQubits
-
+      vector: ベクトル形式のQubits
+      qubit_count: 内包されているQubitの数
+      projection: Qubitに対応する射影のndarray
+      projection_matrix: Qubitに対応する射影行列
+      projection_matrix_dim: 射影行列の次元
     """
 
     def __init__(self, amplitudes: list):
@@ -42,18 +46,10 @@ class PureQubits:
         # 内包するQubit数を計算
         qubit_count = count_qubits(array)
 
-        ### ここまでリファクタ済み 2020/05/04
-
-
-
-
-
-
-
         # 射影作用素を導出
         projection = np.multiply.outer(array, np.conjugate(array))
 
-        # 射影作用素に対応する行列を求める
+        # 射影作用素に対応する行列を導出
         projection_matrix_dim = 2 ** qubit_count
         projection_matrix = projection.reshape(
             projection_matrix_dim, projection_matrix_dim
@@ -61,8 +57,8 @@ class PureQubits:
 
         # 初期化
         self.array = array
-        self.qubit_count = qubit_count
         self.vector = vector
+        self.qubit_count = qubit_count
         self.projection = projection
         self.projection_matrix = projection_matrix
         self.projection_matrix_dim = projection_matrix_dim
@@ -85,17 +81,17 @@ class PureQubits:
 
     def dirac_notation(self):
         """PureQubitsのDirac表記を出力"""
-        term = ""
-        array_repl = list(self.array.flat)
-        for index in range(self.array.size):
-            vec_repl = format(index, "b").zfill(len(self.array.shape))
-            term += f"{array_repl[index]}|{vec_repl}>"
+        notation = ""
+        vec_size = self.vector.size
+        for index in range(vec_size):
+            vec_repl = format(index, "b").zfill(self.qubit_count)
+            notation += f"{self.vector[index]}|{vec_repl}>"
 
             # 最後以外はプラスと改行をつける
-            if index != self.array.size - 1:
-                term += " +\n"
+            if index != vec_size - 1:
+                notation += " +\n"
 
-        print(term)
+        print(notation)
 
 
 def is_pure_qubits(array: np.array) -> bool:
@@ -122,7 +118,7 @@ def is_pure_qubits(array: np.array) -> bool:
 
     # 長さが1、つまり確率が1になるかをチェック
     norm = np.sqrt(np.sum(np.abs(array) ** 2))
-    if np.round(norm - 1.0, APPROX_DIGIT) != 0.0:
+    if not isclose(norm, 1.0):
         return False
 
     return True
@@ -178,31 +174,33 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
         message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
         raise QubitCountNotMatchError(message)
 
-    return np.inner(qubits_0.array.flat, conjugate(qubits_1.array.flat))
+    return np.inner(conjugate(qubits_0.vector), qubits_1.vector)
 
 
 def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
     """二つのPureQubits同士が直交しているか"""
-    return np.round(inner(qubits_0, qubits_1), APPROX_DIGIT) == 0.0
+    return isclose(inner(qubits_0, qubits_1), 0.0)
 
 
-def is_all_orthogonal(qubits_group: List[PureQubits]) -> bool:
+def all_orthogonal(qubits_list: List[PureQubits]) -> bool:
     """複数のPureQubits同士が互い直交しているか"""
-    len_pure_qubits_group = len(qubits_group)
+
+    len_qubits_list = len(qubits_list)
+
     # PureQubitsが一つも入力されない時はエラー
-    if len_pure_qubits_group == 0:
+    if len_qubits_list == 0:
         message = "[ERROR]: 与えられたリストにPureQubitsが見つかりません"
         raise NoQubitsInputError(message)
 
     # PureQubitsが一つだけ与えられた時は明らかに互いに直交
-    if len_pure_qubits_group == 1:
+    if len_qubits_list == 1:
         return True
 
     # PureQubitsが二つ以上与えられた場合
-    for index_0 in range(ceil(len_pure_qubits_group / 2)):
-        for index_1 in range(len_pure_qubits_group - index_0 - 1):
+    for index_0 in range(ceil(len_qubits_list / 2)):
+        for index_1 in range(len_qubits_list - index_0 - 1):
             if not is_orthogonal(
-                qubits_group[index_0], qubits_group[len_pure_qubits_group - index_1 - 1]
+                qubits_list[index_0], qubits_list[len_qubits_list - index_1 - 1]
             ):
                 return False
 

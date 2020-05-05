@@ -168,329 +168,290 @@ def dict_for_test_resolve_arrays(request):
     return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         [1 + 0j, 0j],
-#         [0j, 1 + 0j],
-#         [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-#         [sqrt(0.5) * 1j, sqrt(0.5) * 1j],
-#         [sqrt(0.4) + 0j, sqrt(0.6) * 1j],
-#     ]
-# )
-# def valid_pure_qubit_amp(request):
-#     """妥当な単一qubitに対する確率振幅のfixture"""
-#     return request.param
+@pytest.fixture(
+    params=[
+        # 単一Qubit
+        {
+            "target": [1 + 0j, 0j],
+            "projection": [[1 + 0j, 0j], [0j, 0j]],
+            "projection_matrix": [[1 + 0j, 0j], [0j, 0j]],
+            "projection_matrix_dim": 2,
+            "dirac_notation": "(1+0j)|0> +\n0j|1>\n",
+        },
+        # 2粒子Qubit系
+        {
+            "target": [
+                sqrt(0.25) + 0j,
+                sqrt(0.25) + 0j,
+                sqrt(0.25) + 0j,
+                sqrt(0.25) + 0j,
+            ],
+            "projection": [
+                [
+                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+                ],
+                [
+                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+                ],
+            ],
+            "projection_matrix": [
+                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
+                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
+                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
+                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
+            ],
+            "projection_matrix_dim": 4,
+            "dirac_notation": "(0.5+0j)|00> +\n(0.5+0j)|01> +\n(0.5+0j)|10> +\n(0.5+0j)|11>\n",
+        },
+        # 3粒子Qubit系
+        {
+            "target": [
+                sqrt(0.25) + 0j,
+                0j,
+                0j,
+                sqrt(0.25) + 0j,
+                sqrt(0.25) + 0j,
+                0j,
+                0j,
+                sqrt(0.25) + 0j,
+            ],
+            "projection": [
+                [
+                    [
+                        [
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                        ],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                        ],
+                    ],
+                ],
+                [
+                    [
+                        [
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                        ],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                        ],
+                    ],
+                ],
+            ],
+            "projection_matrix": [
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
+            ],
+            "projection_matrix_dim": 8,
+            "dirac_notation": "(0.5+0j)|000> +\n0j|001> +\n0j|010> +\n(0.5+0j)|011> +\n(0.5+0j)|100> +\n0j|101> +\n0j|110> +\n(0.5+0j)|111>\n",
+        },
+    ]
+)
+def dict_for_test_constructor(request):
+    """resolve_arraysメソッドテスト用のfixture"""
+    return request.param
 
 
-# @pytest.fixture()
-# def valid_qubit(valid_pure_qubits_amp):
-#     """妥当な単一qubitのfixture"""
-#     array = valid_pure_qubits_amp
-#     return PureQubits(array)
+@pytest.fixture(
+    params=[
+        # 単一Qubit同士の結合
+        {
+            "target_0": [1 + 0j, 0j],
+            "target_1": [0j, 1 + 0j],
+            "result": [0j, 1 + 0j, 0j, 0j]
+        },
+        # 結果が3粒子Qubitになる結合
+        {
+            "target_0": [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            "target_1": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
+            "result": [0.5 + 0j, 0j, 0j, 0.5 + 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j]
+        },
+        # 結果が4粒子Qubitになる結合
+        {
+            "target_0": [0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j],
+            "target_1": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
+            "result": [0j, 0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j]
+        },
+    ]
+)
+def dict_for_test_combine(request):
+    """combineメソッドテスト用のfixture"""
+    return request.param
+
+@pytest.fixture(
+    params=[
+        # 1 : 2 Qubits同士
+        {
+            "target_0": PureQubits([1 + 0j, 0j]),
+            "target_1": PureQubits([0j, 1 + 0j, 0j, 0j]),
+        },
+        # 4 : 2 Qubits同士
+        {
+            "target_0": PureQubits([0j, 0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j]),
+            "target_1": PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
+        },
+    ]
+)
+def invalid_inner_input_qubits(request):
+    """innerメソッドテスト用の不正なインプットのfixture"""
+    return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         [0 + 0j, 0j],
-#         [sqrt(0.3) + 0j, sqrt(0.3) + 0j],
-#         [sqrt(0.3) * 1j, sqrt(0.3) * 1j],
-#         [sqrt(0.6) + 0j, sqrt(0.6) + 0j],
-#         [sqrt(0.6) * 1j, sqrt(0.6) * 1j],
-#         [1 + 0j],
-#         [sqrt(0.25) + 0j, sqrt(0.25) + 0j, sqrt(0.25) + 0j, sqrt(0.25) + 0j],
-#         [],
-#     ]
-# )
-# def invalid_pure_qubits_amp(request):
-#     """不正な単一qubitに対する確率振幅のfixture"""
-#     return request.param
+@pytest.fixture(
+    params=[
+        # 単一Qubit同士
+        {
+            "target_0": PureQubits([0 + 1j, 0j]),
+            "target_1": PureQubits([1 + 0j, 0j]),
+            "result": -1j
+        },
+        {
+            "target_0": PureQubits([0j, sqrt(0.5) + 0j, sqrt(0.25) + 0j, sqrt(0.25) + 0j]),
+            "target_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.25) + 0j, sqrt(0.25) * 1j]),
+            "result": 0.25 + 0.25j
+        },
+    ]
+)
+def dict_for_test_valid_inner_input(request):
+    """innerメソッドテスト用の不正なインプットのfixture"""
+    return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         [[1 + 0j, 0j], [0j, 1 + 0j]],
-#         [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) * 1j, -sqrt(0.5) * 1j]],
-#         [[sqrt(0.4) + 0j, sqrt(0.6) * 1j], [sqrt(0.6) + 0j, -sqrt(0.4) * 1j]],
-#     ]
-# )
-# def orthogonal_qubits(request):
-#     """直交する単一qubit同士のfixture"""
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
+@pytest.fixture(
+    params=[
+        # 1 : 2 Qubits同士
+        {
+            "target_0": PureQubits([1 + 0j, 0j]),
+            "target_1": PureQubits([0j, 1 + 0j, 0j, 0j]),
+        },
+        # 4 : 2 Qubits同士
+        {
+            "target_0": PureQubits([0j, 0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j]),
+            "target_1": PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
+        },
+    ]
+)
+def dict_for_test_invalid_inner_input(request):
+    """innerメソッドテスト用の不正なインプットのfixture"""
+    return request.param
+
+@pytest.fixture(
+    params=[
+        # 直交を期待する場合
+        {
+            "target_0": PureQubits([1 + 0j, 0j]),
+            "target_1": PureQubits([0j, 1 + 0j]),
+            "result": True
+        },
+        {
+            "target_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+            "target_1": PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+            "result": True
+        },
+        {
+            "target_0": PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]]),
+            "target_1": PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [-sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+            "result": True
+        },
+        # 直交を期待しない場合
+        {
+            "target_0": PureQubits([0 + 1j, 0j]),
+            "target_1": PureQubits([1 + 0j, 0j]),
+            "result": False
+        },
+        {
+            "target_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.25) + sqrt(0.25) * 1j]),
+            "target_1": PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+            "result": False
+        },
+        {
+            "target_0": PureQubits([0j, sqrt(0.5) + 0j, sqrt(0.25) + 0j, sqrt(0.25) + 0j]),
+            "target_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.25) + 0j, sqrt(0.25) * 1j]),
+            "result": False
+        },
+    ]
+)
+def dict_for_test_is_orthogonal(request):
+    """innerメソッドテスト用の不正なインプットのfixture"""
+    return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         [[1 + 0j, 0j], [1 + 0j, 0j]],
-#         [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) * 1j, sqrt(0.5) * 1j]],
-#         [[sqrt(0.4) + 0j, sqrt(0.6) * 1j], [sqrt(0.4) + 0j, -sqrt(0.6) * 1j]],
-#     ]
-# )
-# def non_orthogonal_qubits(request):
-#     """直交しない単一qubit同士のfixture"""
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
-
-
-# @pytest.fixture(
-#     params=[
-#         [[1 + 0j, 0j], [0j, 0j]],
-#         [[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#         [[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
-#         [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
-#     ]
-# )
-# def valid_pure_qubits_amp(request):
-#     """
-#     妥当なQubit群に対する確率振幅のfixture
-#     2粒子: |00>
-#     3粒子: |010>
-#     4粒子: |1001>
-#     重ね合わせ2粒子(EPR pair): sqrt(0.5)|00> + sqrt(0.5)|11>
-#     """
-#     return request.param
-
-
-# @pytest.fixture()
-# def valid_qubits(valid_pure_qubits_amp):
-#     """妥当なQubit群のfixture"""
-#     array = valid_pure_qubits_amp
-#     return PureQubits(array)
-
-
-# @pytest.fixture(
-#     params=[
-#         {
-#             "qubit": PureQubits([1.0 + 0j, 0.0 + 0j]),
-#             "projection": [[1.0 + 0j, 0j], [0j, 0j]],
-#         },
-#         {
-#             "qubit": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-#             "projection": [[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]],
-#         },
-#     ]
-# )
-# def proj_for_valid_qubit(request):
-#     """単一Qubitに対する射影作用素のfixture"""
-#     return request.param
-
-
-# @pytest.fixture(
-#     params=[
-#         {
-#             "qubits": PureQubits([[1 + 0j, 0j], [0j, 0j]]),
-#             "projection": [
-#                 [[[1 + 0j, 0j], [0j, 0j]], [[0 + 0j, 0j], [0j, 0j]]],
-#                 [[[0j, 0j], [0j, 0j]], [[0 + 0j, 0j], [0j, 0j]]],
-#             ],
-#         },
-#         {
-#             "qubits": PureQubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-#             "projection": [
-#                 [
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                     [
-#                         [[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                 ],
-#                 [
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                 ],
-#             ],
-#         },
-#         {
-#             "qubits": PureQubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-#             "projection": [
-#                 [
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                 ],
-#                 [
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
-#                     ],
-#                     [
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                         [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-#                     ],
-#                 ],
-#             ],
-#         },
-#         {
-#             "qubits": PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
-#             "projection": [
-#                 [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
-#                 [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
-#             ],
-#         },
-#     ]
-# )
-# def proj_for_valid_qubits(request):
-#     """
-#     Qubit群に対する射影作用素のfixture
-#     2粒子: |00>
-#     3粒子: |010>
-#     4粒子: |1001>
-#     重ね合わせ2粒子(EPR pair): sqrt(0.5)|00> + sqrt(0.5)|11>
-#     """
-#     return request.param
-
-
-# @pytest.fixture(
-#     params=[
-#         {
-#             "qubits_group": [[1 + 0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-#             "result": [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-#         },
-#         {
-#             "qubits_group": [
-#                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-#                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-#             ],
-#             "result": [[0.5 + 0j, -0.5 + 0j], [0.5 + 0j, -0.5 + 0j]],
-#         },
-#         {
-#             "qubits_group": [
-#                 [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-#                 [0j, 1 + 0j],
-#             ],
-#             "result": [
-#                 [[0j, sqrt(0.5) + 0j], [0j, -sqrt(0.5) + 0j]],
-#                 [[0j, 0j], [0j, 0j]],
-#             ],
-#         },
-#     ]
-# )
-# def dict_test_for_combine(request):
-#     """
-#     粒子間結合テスト用fixture
-#     test1: |0> x |+> = sqrt(0.5)|00> + sqrt(0.5)|01>
-#     test2: |+> x |-> = 0.5|00> - 0.5|01> + 0.5|10> - 0.5|11>
-#     test3: |0-> x |1> = sqrt(0.5)|001> - sqrt(0.5)|011>
-#     """
-#     test_dict = {
-#         "qubits_group": [PureQubits(array) for array in request.param["qubits_group"]],
-#         "result": request.param["result"],
-#     }
-#     return test_dict
-
-
-# @pytest.fixture(
-#     params=[
-#         [
-#             [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-#             [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-#         ],
-#         [
-#             [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-#             [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-#         ],
-#     ]
-# )
-# def orthogonal_two_pure_qubits_groups(request):
-#     """
-#     直交する二つのQubit群同士のfixture
-#     test1: |0+>, |1+>
-#     test2: |0->, |0+>
-#     """
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
-
-
-# @pytest.fixture(
-#     params=[
-#         [
-#             [[0.5 + 0j, 0.5 + 0j], [-0.5 + 0j, -0.5 + 0j]],
-#             [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-#         ],
-#         [[[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
-#     ]
-# )
-# def non_orthogonal_two_pure_qubits_groups(request):
-#     """
-#     直交しない二つのQubit群のfixture
-#     test1: {|-+>, |1+>} (<1+|-+>)
-#     test2: {|0->, |01>} (<01|0->)
-#     """
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
-
-
-# @pytest.fixture(
-#     params=[
-#         [[[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]], [0j, 1.0 + 0j]],
-#         [[1.0 + 0j, 0j], [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]],
-#     ]
-# )
-# def not_match_counts_two_pure_qubits_groups(request):
-#     """
-#     異なるQubit数の二つのQubit群のfixture
-#     test1: |0+>, |1>
-#     test2: |0>, |0+>
-#     """
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
-
-
-# @pytest.fixture(
-#     params=[
-#         [
-#             [[1 + 0j, 0j], [0j, 0j]],
-#             [[0j, 1 + 0j], [0j, 0j]],
-#             [[0j, 0j], [1 + 0j, 0j]],
-#             [[0j, 0j], [0j, 1 + 0j]],
-#         ]
-#     ]
-# )
-# def orthogonal_multiple_pure_qubits_groups(request):
-#     """
-#     互いに直交する二つより多いQubit群同士のfixture
-#     test1: {|00>, |01>, |10>, |11>}
-#     """
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
-
-
-# @pytest.fixture(
-#     params=[
-#         [
-#             [[1 + 0j, 0j], [0j, 0j]],
-#             [[0j, 1 + 0j], [0j, 0j]],
-#             [[0j, 0j], [1 + 0j, 0j]],
-#             [[0j, 0j], [0j, 1 + 0j]],
-#             [[1 + 0j, 0j], [0j, 0j]],
-#         ]
-#     ]
-# )
-# def non_orthogonal_multiple_pure_qubits_groups(request):
-#     """
-#     互いに直交しない二つより多いQubit群同士のfixture
-#     test1: {|00>, |01>, |10>, |11>, |00>}
-#     """
-#     array_list = [array for array in request.param]
-#     qubits = [PureQubits(array) for array in array_list]
-#     return qubits
+@pytest.fixture(
+    params=[
+        # 直交を期待する場合 - 要素が一つ
+        {
+            "target": [PureQubits([1 + 0j, 0j])],
+            "result": True
+        },
+        {
+            "target": [PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]])],
+            "result": True
+        },
+        # 直交を期待する場合 - 要素が3つ以上
+        {
+            "target": [
+                PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+            ],
+            "result": True
+        },
+        {
+            "target": [
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [-sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, -sqrt(0.25) + 0j], [sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[-sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+            ],
+            "result": True
+        },
+        # 直交を期待しない場合
+        {
+            "target": [
+                PureQubits([0 + 1j, 0j]),
+                PureQubits([1 + 0j, 0j]),
+            ],
+            "result": False
+        },
+        {
+            "target": [
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [-sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, -sqrt(0.25) + 0j], [sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[-sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]]),
+            ],
+            "result": False
+        },
+        {
+            "target": [
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [-sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, -sqrt(0.25) + 0j], [sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.25) + 0j, -sqrt(0.25) + 0j]]),
+                PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]])
+            ],
+            "result": False
+        },
+    ]
+)
+def dict_for_test_all_orthogonal(request):
+    """innerメソッドテスト用の不正なインプットのfixture"""
+    return request.param

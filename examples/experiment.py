@@ -7,9 +7,8 @@ from math import sqrt
 from quantum_simulator.base import observable, pure_qubits, transformer
 from quantum_simulator.base.observable import Observable, ObservedBasis
 from quantum_simulator.base.pure_qubits import PureQubits
-from quantum_simulator.base.qubits import Qubits, reduction, combine
+from quantum_simulator.base.qubits import Qubits, combine, reduction
 from quantum_simulator.base.transformer import UnitaryTransformer
-
 
 matrix_a = [[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]]
 matrix_b = [

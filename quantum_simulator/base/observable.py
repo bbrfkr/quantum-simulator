@@ -9,10 +9,10 @@ from typing import List
 import numpy as np
 from numpy import linalg as LA
 
+import quantum_simulator.base.pure_qubits as pure_qubits
+
 from .error import InitializeError
 from .pure_qubits import PureQubits, inner, is_all_orthogonal
-
-import quantum_simulator.base.pure_qubits as pure_qubits
 from .typing import ObservableElements
 
 
