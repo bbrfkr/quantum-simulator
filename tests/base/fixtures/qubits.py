@@ -103,10 +103,7 @@ from quantum_simulator.base.pure_qubits import PureQubits
                     ]
                 ),
                 PureQubits(
-                    [
-                        [[0j, 0j], [0j, 0j]],
-                        [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
-                    ]
+                    [[[0j, 0j], [0j, 0j]], [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]]
                 ),
                 PureQubits(
                     [

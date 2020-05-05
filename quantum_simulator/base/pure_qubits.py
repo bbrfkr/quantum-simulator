@@ -2,19 +2,18 @@
 純粋状態のQubit系の定義
 """
 
-from math import ceil, sqrt
+from math import ceil
 from typing import List, Tuple
 
 import numpy as np
 from numpy import conjugate
-from numpy.linalg import linalg as LA
 
 from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.utils import allclose, isclose
+from quantum_simulator.base.utils import isclose
 
 
 class PureQubits:

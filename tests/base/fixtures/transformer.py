@@ -30,7 +30,7 @@ def valid_observed_basis_for_unitary(multi_particles_observed_basis):
                 PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
                 PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
             ],
-        ],
+        ]
     ]
 )
 def invalid_observed_basis_for_unitary(request):
@@ -185,7 +185,7 @@ def dict_for_test_operation_of_unitary(request):
                     ]
                 ),
             ),
-        },
+        }
     ]
 )
 def dict_for_test_combined_of_unitaries(request):

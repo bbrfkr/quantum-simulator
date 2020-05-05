@@ -8,15 +8,15 @@ from quantum_simulator.base.error import (
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.pure_qubits import (  # combine,; inner,; is_all_orthogonal,; is_orthogonal,
+from quantum_simulator.base.pure_qubits import (
     PureQubits,
-    count_qubits,
-    is_pure_qubits,
-    resolve_arrays,
+    all_orthogonal,
     combine,
+    count_qubits,
     inner,
     is_orthogonal,
-    all_orthogonal
+    is_pure_qubits,
+    resolve_arrays,
 )
 from quantum_simulator.base.utils import allclose, isclose
 
@@ -82,8 +82,8 @@ class TestPureQubits:
         __init__メソッドの異常系テスト
         """
         with pytest.raises(InitializeError):
-            PureQubits(invalid_pure_qubits_amp)       
-        
+            PureQubits(invalid_pure_qubits_amp)
+
     def test_for_success_combine(self, dict_for_test_combine):
         """
         combineメソッドの正常系テスト
@@ -107,7 +107,7 @@ class TestPureQubits:
         target_0 = dict_for_test_valid_inner_input["target_0"]
         target_1 = dict_for_test_valid_inner_input["target_1"]
         result = inner(target_0, target_1)
-        
+
         expected_result = dict_for_test_valid_inner_input["result"]
         assert isclose(result, expected_result)
 
@@ -147,130 +147,3 @@ class TestPureQubits:
         """
         with pytest.raises(NoQubitsInputError):
             all_orthogonal([])
-
-        # 正常系
-
-    # # 単一Qubitに対するテスト
-    # def test_valid_pure_qubit_input(self, valid_pure_qubit_amp):
-    #     """[正常系]: 単一Qubit生成"""
-    #     array = valid_pure_qubit_amp
-    #     qubit = PureQubits(array)
-    #     assert np.all(qubit.array == array)
-    #     assert qubit.qubit_count == 1
-
-    # def test_invalid_pure_qubits_input(self, invalid_pure_qubits_amp):
-    #     """[異常系]: 不正な単一Qubitパラメータ"""
-    #     with pytest.raises(InitializeError):
-    #         array = invalid_pure_qubits_amp
-    #         PureQubits(array)
-
-    # def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
-    #     """[正常系]: 直交した単一Qubit同士の内積"""
-    #     assert is_orthogonal(orthogonal_qubits[0], orthogonal_qubits[1])
-
-    # def test_non_zero_inner_product_of_qubits(self, non_orthogonal_qubits):
-    #     """[正常系]: 直交しない単一Qubit同士の内積"""
-    #     assert not is_orthogonal(non_orthogonal_qubits[0], non_orthogonal_qubits[1])
-
-    # def test_one_inner_product_of_qubits(self, valid_qubit):
-    #     """[正常系]: 長さが1の単一Qubitに対する内積"""
-    #     assert round(inner(valid_qubit, valid_qubit) - 1.0, APPROX_DIGIT) == 0.0
-
-    # def test_matrix_of_one_qubit(self, proj_for_valid_qubit):
-    #     """[正常系]: 単一Qubitに対する射影作用素"""
-    #     assert np.all(
-    #         np.round(
-    #             proj_for_valid_qubit["qubit"].projection
-    #             - np.array(proj_for_valid_qubit["projection"]),
-    #             APPROX_DIGIT,
-    #         )
-    #         == 0.0
-    #     )
-
-    # # Qubit群に対するテスト
-    # def test_valid_pure_qubits_input(self, valid_pure_qubits_amp):
-    #     """[正常系]: Qubit群生成"""
-    #     array = valid_pure_qubits_amp
-    #     qubit = PureQubits(array)
-    #     assert np.all(qubit.array == array)
-    #     assert qubit.qubit_count == len(np.array(array).shape)
-
-    # def test_combine_qubits(self, dict_test_for_combine):
-    #     """[正常系]: Qubit群同士の結合"""
-    #     qubits_group = dict_test_for_combine["qubits_group"]
-    #     combined_qubits = combine(qubits_group[0], qubits_group[1])
-    #     expected_result = np.array(dict_test_for_combine["result"])
-    #     assert np.all(
-    #         np.round(abs(combined_qubits.array - expected_result), APPROX_DIGIT) == 0.0
-    #     )
-
-    # def test_zero_inner_product_of_two_qubits(self, orthogonal_two_pure_qubits_groups):
-    #     """[正常系]: 直交した二つのQubit群の内積"""
-    #     assert (
-    #         round(
-    #             inner(
-    #                 orthogonal_two_pure_qubits_groups[0],
-    #                 orthogonal_two_pure_qubits_groups[1],
-    #             ),
-    #             APPROX_DIGIT,
-    #         )
-    #         == 0.0
-    #     )
-    #     assert is_orthogonal(
-    #         orthogonal_two_pure_qubits_groups[0], orthogonal_two_pure_qubits_groups[1]
-    #     )
-
-    # def test_one_inner_product_of_two_qubits(self, valid_qubits):
-    #     """[正常系]: 長さが1のQubit群に対する内積"""
-    #     assert round(inner(valid_qubits, valid_qubits) - 1.0, APPROX_DIGIT) == 0.0
-
-    # def test_non_zero_inner_product_of_two_qubits(
-    #     self, non_orthogonal_two_pure_qubits_groups
-    # ):
-    #     """[正常系]: 直交しない二つのQubit群同士の内積"""
-    #     assert not is_orthogonal(
-    #         non_orthogonal_two_pure_qubits_groups[0],
-    #         non_orthogonal_two_pure_qubits_groups[1],
-    #     )
-
-    # def test_inner_product_of_two_pure_qubits_with_unmatch_counts(
-    #     self, not_match_counts_two_pure_qubits_groups
-    # ):
-    #     """[異常系]: 異なるQubit数の二つのQubit群に対する内積"""
-    #     with pytest.raises(QubitCountNotMatchError):
-    #         inner(
-    #             not_match_counts_two_pure_qubits_groups[0],
-    #             not_match_counts_two_pure_qubits_groups[1],
-    #         )
-
-    # def test_check_of_orthogonality_for_empty_set(self):
-    #     """[異常系]: 空集合に対する直交性のテスト"""
-    #     with pytest.raises(NoQubitsInputError):
-    #         is_all_orthogonal([])
-
-    # def test_check_of_orthogonality_for_unit_set(self, valid_qubits):
-    #     """[正常系]: 単一Qubit群に対する直交性のテスト"""
-    #     assert is_all_orthogonal([valid_qubits])
-
-    # def test_check_of_orthogonality_for_multiple_pure_qubits_groups(
-    #     self, orthogonal_multiple_pure_qubits_groups,
-    # ):
-    #     """[正常系]: 互いに直交する二つ以上のQubit群に対する直交性のテスト"""
-    #     assert is_all_orthogonal(orthogonal_multiple_pure_qubits_groups)
-
-    # def test_check_of_non_orthogonality_for_multiple_pure_qubits_groups(
-    #     self, non_orthogonal_multiple_pure_qubits_groups
-    # ):
-    #     """[正常系]: 互いに直交しない二つ以上のQubit群に対する直交性のテスト"""
-    #     assert not is_all_orthogonal(non_orthogonal_multiple_pure_qubits_groups)
-
-    # def test_matrix_of_multiple_qubits(self, proj_for_valid_qubits):
-    #     """[正常系]: 単一Qubitに対する射影作用素"""
-    #     assert np.all(
-    #         np.round(
-    #             proj_for_valid_qubits["qubits"].projection
-    #             - np.array(proj_for_valid_qubits["projection"]),
-    #             APPROX_DIGIT,
-    #         )
-    #         == 0.0
-    #     )

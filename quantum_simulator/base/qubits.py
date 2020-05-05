@@ -217,7 +217,7 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
 
     axis1 = target_particle
     axis2 = target_qubits.qubit_count + target_particle
-    reduced_array = np.trace(target_qubits.array, axis1=axis1, axis2=axis2,)
+    reduced_array = np.trace(target_qubits.array, axis1=axis1, axis2=axis2)
 
     return Qubits(density_array=reduced_array)
 

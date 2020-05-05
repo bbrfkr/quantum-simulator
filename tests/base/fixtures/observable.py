@@ -213,7 +213,7 @@ def compound_observable(
                 ]
             ),
             "expected_value": 5,
-        },
+        }
     ]
 )
 def dict_for_test_expected_value_with_compound_observable(request):
@@ -246,7 +246,7 @@ def dict_for_test_expected_value_with_compound_observable(request):
                 ]
             ),
             "randomize_seed": 1,
-        },
+        }
     ]
 )
 def dict_for_test_observation_with_compound_observable(request):

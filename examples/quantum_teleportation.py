@@ -107,16 +107,16 @@ print()
 # ユニタリ変換の適用
 whole_unitaries[int_observed_value].operate(whole_qubits)
 
-# print("##### Bobに送信されたユニタリ変換後のQubit #####")
-# print("### Matrix表示 ###")
-# density = Qubits(density_array=whole_qubits.projection)
-# print(density)
-# for index in [2, 1]:
-#     density = reduction(density, index)
-#     print(density)
-# print()
-# print("### Dirac表記表示 ###")
-# for index in range(1):
-#     if density.eigen_values[index] == 1.0 + 0j:
-#         density.eigen_states[index].dirac_notation()
-# print()
+print("##### Bobに送信されたユニタリ変換後のQubit #####")
+print("### Matrix表示 ###")
+density = Qubits(density_array=whole_qubits.projection)
+print(density)
+for index in [2, 1]:
+    density = reduction(density, index)
+    print(density)
+print()
+print("### Dirac表記表示 ###")
+for index in range(1):
+    if density.eigen_values[index] == 1.0 + 0j:
+        density.eigen_states[index].dirac_notation()
+print()

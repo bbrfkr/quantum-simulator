@@ -8,10 +8,12 @@ import numpy as np
 RELATIVE_TOLERANCE = 1.0e-5
 ABSOLUTE_TOLERANCE = 1.0e-8
 
-# 上記の近似を利用した比較関数群
-def isclose(a: np.array, b: np.array):
+
+def isclose(a: np.array, b: np.array) -> np.array:
+    """np.iscloseの本プロジェクト用のラッパー"""
     return np.isclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
 
 
-def allclose(a: np.array, b: np.array):
+def allclose(a: np.array, b: np.array) -> bool:
+    """np.allcloseの本プロジェクト用のラッパー"""
     return np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
