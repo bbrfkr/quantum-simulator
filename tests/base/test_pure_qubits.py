@@ -195,4 +195,3 @@ class TestOrthogonalBasis:
             qubits_list = dict_for_test_insufficient_onb_constructor
             OrthogonalBasis(qubits_list)
         assert "基底を構成するためのQubit群の数が不足しています" in str(error.value)
-
