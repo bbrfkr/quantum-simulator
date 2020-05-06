@@ -23,6 +23,10 @@ class NotMatchCountError(BaseError):
     """要素数が一致しないエラー"""
 
 
+class NotMatchDimensionError(BaseError):
+    """要素数が一致しないエラー"""
+
+
 class InvalidProbabilitiesError(BaseError):
     """不正な確率リストエラー"""
 

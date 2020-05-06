@@ -15,12 +15,18 @@ from quantum_simulator.base.error import (
     ReductionError,
 )
 from quantum_simulator.base.pure_qubits import PureQubits
-from quantum_simulator.base.utils import around, is_pow2, is_probabilities, isclose
+from quantum_simulator.base.utils import (
+    around,
+    is_pow2,
+    is_probabilities,
+    is_real,
+    isclose,
+)
 
 
 class Qubits:
     """
-    一般的に複数かつ混合状態のQubit
+    一般的に複数かつ混合状態のQubit群のクラス
         eigen_values: 固有値のリスト
         eigen_states: 固有状態のリスト
         ndarray: ndarray形式のQubits
@@ -38,18 +44,18 @@ class Qubits:
 
         # arrayの次元をチェック
         tmp_array = np.array(density_array, dtype=complex)
-        if not _is_qubits_dim(tmp_array):
+        if not is_qubits_dim(tmp_array):
             message = "[ERROR]: 与えられたリストは形がQubit系に対応しません"
             raise InitializeError(message)
 
         # 行列表現とndarray表現を導出
-        matrix, ndarray = _resolve_arrays(tmp_array)
+        matrix, ndarray = resolve_arrays(tmp_array)
 
         # 固有値と固有ベクトルを導出
-        eigen_values, eigen_states = _resolve_eigen(matrix)
+        eigen_values, eigen_states = resolve_eigen(matrix)
 
         # 固有値の虚部の有無をチェックし、floatに変換
-        if np.any(around(np.imag(eigen_values)) != 0j):
+        if not is_real(eigen_values):
             message = "[ERROR]: 与えられたリストには虚数の固有値が存在します"
             raise InitializeError(message)
 
@@ -91,7 +97,7 @@ class Qubits:
         return False
 
 
-def _is_qubits_dim(array: np.array) -> bool:
+def is_qubits_dim(array: np.array) -> bool:
     """与えられたarrayの形がQubit系を表現しているか判定する"""
 
     # 次元のチェック
@@ -135,7 +141,7 @@ def _is_qubits_dim(array: np.array) -> bool:
     return True
 
 
-def _resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
+def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
     """
     Qubit系の空間上のnp.arrayを仮定し、行列表現とndarray表現を導出して返す
     """
@@ -161,7 +167,7 @@ def _resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
     return (matrix, ndarray)
 
 
-def _resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
+def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
     """
     行列表現のarrayを仮定し、固有値・固有状態を導出する
     """
@@ -281,14 +287,14 @@ def combine(
 
     # 確率分布の結合
     probabilities = [
-        value_0 * value_1 for value_0 in eigen_values_0 for value_1 in eigen_values_1
+        value_0 * value_1 for value_1 in eigen_values_1 for value_0 in eigen_values_0
     ]
 
     # 固有状態の結合
     eigen_states = [
         pure_qubits.combine(state_0, state_1)
-        for state_0 in eigen_states_0
         for state_1 in eigen_states_1
+        for state_0 in eigen_states_0
     ]
 
     # 新しい状態の生成

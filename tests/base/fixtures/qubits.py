@@ -156,8 +156,8 @@ def invalid_qubits_array(request):
         },
     ]
 )
-def dict_for_test_qubits__resolve_arrays(request):
-    """_resolve_arraysメソッドテスト用のfixture"""
+def dict_for_test_qubits_resolve_arrays(request):
+    """resolve_arraysメソッドテスト用のfixture"""
     return request.param
 
 
@@ -199,8 +199,8 @@ def dict_for_test_qubits__resolve_arrays(request):
         },
     ]
 )
-def dict_for_test__resolve_eigen(request):
-    """_resolve_eigenメソッドテスト用のfixture"""
+def dict_for_test_resolve_eigen(request):
+    """resolve_eigenメソッドテスト用のfixture"""
     return request.param
 
 

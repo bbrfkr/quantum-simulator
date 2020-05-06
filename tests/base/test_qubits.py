@@ -9,12 +9,12 @@ from quantum_simulator.base.error import (
 )
 from quantum_simulator.base.qubits import (
     Qubits,
-    _is_qubits_dim,
-    _resolve_arrays,
-    _resolve_eigen,
     combine,
     create_from_qubits_list,
+    is_qubits_dim,
     reduction,
+    resolve_arrays,
+    resolve_eigen,
 )
 from quantum_simulator.base.utils import allclose, isclose
 
@@ -28,35 +28,35 @@ class TestQubits:
             * 既存オブジェクトを出力するだけのロジック
     """
 
-    def test_for_success__is_qubits_dim(self, valid_qubits_array):
-        """_is_qubits_dimメソッドの正常系テスト"""
+    def test_for_success_is_qubits_dim(self, valid_qubits_array):
+        """is_qubits_dimメソッドの正常系テスト"""
 
         array = np.array(valid_qubits_array)
-        assert _is_qubits_dim(array)
+        assert is_qubits_dim(array)
 
-    def test_for_failure__is_qubits_dim(self, invalid_qubits_array):
-        """_is_qubits_dimメソッドの異常系テスト"""
+    def test_for_failure_is_qubits_dim(self, invalid_qubits_array):
+        """is_qubits_dimメソッドの異常系テスト"""
 
         array = np.array(invalid_qubits_array)
-        assert not _is_qubits_dim(array)
+        assert not is_qubits_dim(array)
 
-    def test_for_success__resolve_arrays(self, dict_for_test_qubits__resolve_arrays):
-        """_resolve_arraysメソッドの正常系テスト"""
-        target = np.array(dict_for_test_qubits__resolve_arrays["target"])
-        matrix, ndarray = _resolve_arrays(target)
-        expected_matrix = np.array(dict_for_test_qubits__resolve_arrays["matrix"])
-        expected_ndarray = np.array(dict_for_test_qubits__resolve_arrays["ndarray"])
+    def test_for_success_resolve_arrays(self, dict_for_test_qubits_resolve_arrays):
+        """resolve_arraysメソッドの正常系テスト"""
+        target = np.array(dict_for_test_qubits_resolve_arrays["target"])
+        matrix, ndarray = resolve_arrays(target)
+        expected_matrix = np.array(dict_for_test_qubits_resolve_arrays["matrix"])
+        expected_ndarray = np.array(dict_for_test_qubits_resolve_arrays["ndarray"])
         assert np.allclose(matrix, expected_matrix)
         assert matrix.shape == expected_matrix.shape
         assert ndarray.shape == expected_ndarray.shape
 
-    def test_for_success__resolve_eigen(self, dict_for_test__resolve_eigen):
-        """_resolve_eigenメソッドの正常系テスト"""
-        target = np.array(dict_for_test__resolve_eigen["target"])
-        eigen_values, eigen_states = _resolve_eigen(target)
+    def test_for_success_resolve_eigen(self, dict_for_test_resolve_eigen):
+        """resolve_eigenメソッドの正常系テスト"""
+        target = np.array(dict_for_test_resolve_eigen["target"])
+        eigen_values, eigen_states = resolve_eigen(target)
 
-        expected_eigen_values = dict_for_test__resolve_eigen["eigen_values"]
-        expected_eigen_states = dict_for_test__resolve_eigen["eigen_states"]
+        expected_eigen_values = dict_for_test_resolve_eigen["eigen_values"]
+        expected_eigen_states = dict_for_test_resolve_eigen["eigen_states"]
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False

@@ -52,3 +52,11 @@ def is_probabilities(target_list: List[float]):
         return False
 
     return True
+
+
+def is_real(array: np.array):
+    """与えられたarrayの虚部の有無をチェックする"""
+    if np.any(around(np.imag(array)) != 0j):
+        return False
+
+    return True
