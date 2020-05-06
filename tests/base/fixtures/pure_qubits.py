@@ -94,8 +94,8 @@ def invalid_pure_qubits_amp(request):
         },
     ]
 )
-def dict_for_test_count_qubits(request):
-    """count_qubitsメソッドテスト用のfixture"""
+def dict_for_test__count_qubits(request):
+    """_count_qubitsメソッドテスト用のfixture"""
     return request.param
 
 
@@ -163,8 +163,8 @@ def dict_for_test_count_qubits(request):
         },
     ]
 )
-def dict_for_test_pure_qubits_resolve_arrays(request):
-    """resolve_arraysメソッドテスト用のfixture"""
+def dict_for_test_pure_qubits__resolve_arrays(request):
+    """_resolve_arraysメソッドテスト用のfixture"""
     return request.param
 
 
@@ -269,7 +269,7 @@ def dict_for_test_pure_qubits_resolve_arrays(request):
     ]
 )
 def dict_for_test_pure_qubits_constructor(request):
-    """resolve_arraysメソッドテスト用のfixture"""
+    """_resolve_arraysメソッドテスト用のfixture"""
     return request.param
 
 
@@ -609,7 +609,7 @@ def dict_for_test_success_onb_constructor(request):
 @pytest.fixture(
     params=[
         [PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]), PureQubits([1 + 0j, 0j])],
-        [PureQubits([1 + 0j, 0j]), PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j])]
+        [PureQubits([1 + 0j, 0j]), PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j])],
     ]
 )
 def dict_for_test_non_orthogonal_onb_constructor(request):
@@ -624,9 +624,48 @@ def dict_for_test_non_orthogonal_onb_constructor(request):
             PureQubits([1 + 0j, 0j, 0j, 0j]),
             PureQubits([0j, 1 + 0j, 0j, 0j]),
             PureQubits([0j, 0j, 1 + 0j, 0j]),
-        ]
+        ],
     ]
 )
 def dict_for_test_insufficient_onb_constructor(request):
     """OrthogonalBasisの__init__メソッドテスト用の不足しているインプットのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "basis_0": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "basis_1": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "result": [
+                PureQubits([1.0 + 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 1.0 + 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 1.0 + 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 1.0 + 0j]),
+            ],
+        },
+        {
+            "basis_0": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
+            "basis_1": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "result": [
+                PureQubits([0j, 0j, 1.0 + 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 1.0 + 0j]),
+                PureQubits([1.0 + 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 1.0 + 0j, 0j, 0j]),
+            ],
+        },
+        {
+            "basis_0": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
+            "basis_1": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
+            "result": [
+                PureQubits([1.0 + 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 1.0 + 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 1.0 + 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 1.0 + 0j]),
+            ],
+        },
+    ]
+)
+def dict_for_test_combine_basis(request):
+    """combine_basisメソッドのテスト用fixture"""
     return request.param

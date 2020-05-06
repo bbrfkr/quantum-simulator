@@ -16,24 +16,6 @@ from .pure_qubits import PureQubits, inner, is_all_orthogonal
 from .typing import ObservableElements
 
 
-class ObservedBasis:  # pylint: disable=too-few-public-methods
-    """観測基底のクラス"""
-
-    def __init__(self, qubits_group: List[PureQubits]):
-        # 観測基底を構成するQubit群同士は互いに直交していなければならない
-        if not is_all_orthogonal(qubits_group):
-            message = "[ERROR]: 観測基底が直交しません"
-            raise InitializeError(message)
-
-        # 観測基底はPureQubitsの要素数と同じだけ指定されていなければならない
-        if len(qubits_group) != qubits_group[0].array.size:
-            message = "[ERROR]: 観測基底を構成するQubitの数が不足しています"
-            raise InitializeError(message)
-
-        # 観測基底を構成するqubit列を初期化
-        self.qubits_group = qubits_group
-
-
 class Observable:  # pylint: disable=too-few-public-methods
     """観測量のクラス"""
 

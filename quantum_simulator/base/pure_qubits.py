@@ -35,15 +35,15 @@ class PureQubits:
 
         # Qubit系であるかチェック
         tmp_array = np.array(amplitudes, dtype=complex)
-        if not is_pure_qubits(tmp_array):
+        if not _is_pure_qubits(tmp_array):
             message = "[ERROR]: 与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
 
         # 各Qubit表現形式の導出
-        vector, ndarray = resolve_arrays(tmp_array)
+        vector, ndarray = _resolve_arrays(tmp_array)
 
         # 内包するQubit数を計算
-        qubit_count = count_qubits(ndarray)
+        qubit_count = _count_qubits(ndarray)
 
         # 射影作用素を導出
         projection = np.multiply.outer(ndarray, np.conjugate(ndarray))
@@ -117,7 +117,7 @@ class OrthogonalBasis:
         self.qubits_list = qubits_list
 
 
-def is_pure_qubits(array: np.array) -> bool:
+def _is_pure_qubits(array: np.array) -> bool:
     """与えられたarrayがQubit系を表現しているか判定する"""
 
     # 要素数が2の累乗個であるかチェック
@@ -140,7 +140,7 @@ def is_pure_qubits(array: np.array) -> bool:
     return True
 
 
-def count_qubits(pure_qubits: np.array) -> int:
+def _count_qubits(pure_qubits: np.array) -> int:
     """
     与えられたarrayがQubit系であることを仮定し
     Qubitの個数を返す
@@ -155,7 +155,7 @@ def count_qubits(pure_qubits: np.array) -> int:
     return count
 
 
-def resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
+def _resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
     """
     与えられたarrayがQubit系であることを仮定し、
     ベクトル表現とndarray表現の組を返す
@@ -165,7 +165,7 @@ def resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
 
     if len(pure_qubits.shape) == 1:
         vector = pure_qubits
-        qubit_count = count_qubits(pure_qubits)
+        qubit_count = _count_qubits(pure_qubits)
         ndarray_shape = tuple([2 for i in range(qubit_count)])
         ndarray = pure_qubits.reshape(ndarray_shape)
     else:
@@ -181,6 +181,20 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     new_qubits = PureQubits(new_ndarray)
 
     return new_qubits
+
+
+def combine_basis(
+    basis_0: OrthogonalBasis, basis_1: OrthogonalBasis
+) -> OrthogonalBasis:
+    """二つのOrthogonalBasisを結合する"""
+    new_qubits = [
+        combine(qubits_0, qubits_1)
+        for qubits_1 in basis_1.qubits_list
+        for qubits_0 in basis_0.qubits_list
+    ]
+
+    new_basis = OrthogonalBasis(new_qubits)
+    return new_basis
 
 
 def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:

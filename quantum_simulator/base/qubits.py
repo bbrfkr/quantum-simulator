@@ -38,15 +38,15 @@ class Qubits:
 
         # arrayの次元をチェック
         tmp_array = np.array(density_array, dtype=complex)
-        if not is_qubits_dim(tmp_array):
+        if not _is_qubits_dim(tmp_array):
             message = "[ERROR]: 与えられたリストは形がQubit系に対応しません"
             raise InitializeError(message)
 
         # 行列表現とndarray表現を導出
-        matrix, ndarray = resolve_arrays(tmp_array)
+        matrix, ndarray = _resolve_arrays(tmp_array)
 
         # 固有値と固有ベクトルを導出
-        eigen_values, eigen_states = resolve_eigen(matrix)
+        eigen_values, eigen_states = _resolve_eigen(matrix)
 
         # 固有値の虚部の有無をチェックし、floatに変換
         if np.any(around(np.imag(eigen_values)) != 0j):
@@ -91,7 +91,7 @@ class Qubits:
         return False
 
 
-def is_qubits_dim(array: np.array) -> bool:
+def _is_qubits_dim(array: np.array) -> bool:
     """与えられたarrayの形がQubit系を表現しているか判定する"""
 
     # 次元のチェック
@@ -135,7 +135,7 @@ def is_qubits_dim(array: np.array) -> bool:
     return True
 
 
-def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
+def _resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
     """
     Qubit系の空間上のnp.arrayを仮定し、行列表現とndarray表現を導出して返す
     """
@@ -161,7 +161,7 @@ def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
     return (matrix, ndarray)
 
 
-def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
+def _resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
     """
     行列表現のarrayを仮定し、固有値・固有状態を導出する
     """
