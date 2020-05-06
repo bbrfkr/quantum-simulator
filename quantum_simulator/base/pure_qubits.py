@@ -95,7 +95,7 @@ class PureQubits:
 
 class OrthogonalBasis:
     """
-    互いに直交している複数の純粋状態であるQubit群
+    互いに直交し、かつ空間を張る、純粋状態である複数のQubit群
         qubits_list: PureQubitsのリスト
     """
 
@@ -104,8 +104,14 @@ class OrthogonalBasis:
         初期化
             qubits_list: PureQubitsのリスト
         """
+        # 直交性の確認(相互にQubit数の確認も兼ねる)
         if not all_orthogonal(qubits_list):
             message = "[ERROR]: 与えられたQubit群のリストは互いに直交しません"
+            raise InitializeError(message)
+
+        # 基底を構成するQubit群の個数の確認
+        if len(qubits_list) != qubits_list[0].vector.size:
+            message = "[ERROR]: 基底を構成するためのQubit群の数が不足しています"
             raise InitializeError(message)
 
         self.qubits_list = qubits_list

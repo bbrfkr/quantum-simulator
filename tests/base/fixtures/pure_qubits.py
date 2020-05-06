@@ -609,9 +609,24 @@ def dict_for_test_success_onb_constructor(request):
 @pytest.fixture(
     params=[
         [PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]), PureQubits([1 + 0j, 0j])],
-        [PureQubits([1 + 0j, 0j]), PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j])],
+        [PureQubits([1 + 0j, 0j]), PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j])]
     ]
 )
-def dict_for_test_failure_onb_constructor(request):
-    """OrthogonalBasisの__init__メソッドテスト用の不正なインプットのfixture"""
+def dict_for_test_non_orthogonal_onb_constructor(request):
+    """OrthogonalBasisの__init__メソッドテスト用の非直交なインプットのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        [PureQubits([1 + 0j, 0j])],
+        [
+            PureQubits([1 + 0j, 0j, 0j, 0j]),
+            PureQubits([0j, 1 + 0j, 0j, 0j]),
+            PureQubits([0j, 0j, 1 + 0j, 0j]),
+        ]
+    ]
+)
+def dict_for_test_insufficient_onb_constructor(request):
+    """OrthogonalBasisの__init__メソッドテスト用の不足しているインプットのfixture"""
     return request.param

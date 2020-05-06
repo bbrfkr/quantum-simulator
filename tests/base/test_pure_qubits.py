@@ -172,10 +172,27 @@ class TestOrthogonalBasis:
         onb = OrthogonalBasis(qubits_list)
         assert onb.qubits_list == qubits_list
 
-    def test_for_failure_onb_constructor(self, dict_for_test_failure_onb_constructor):
+    def test_for_non_orthogonal_onb_constructor(
+        self, dict_for_test_non_orthogonal_onb_constructor
+    ):
         """
         __init__メソッドの異常系テスト
+        (非直交)
         """
-        with pytest.raises(InitializeError):
-            qubits_list = dict_for_test_failure_onb_constructor
+        with pytest.raises(InitializeError) as error:
+            qubits_list = dict_for_test_non_orthogonal_onb_constructor
             OrthogonalBasis(qubits_list)
+        assert "与えられたQubit群のリストは互いに直交しません" in str(error.value)
+
+    def test_for_insufficient_onb_constructor(
+        self, dict_for_test_insufficient_onb_constructor
+    ):
+        """
+        __init__メソッドの異常系テスト
+        (Qubit群数不足)
+        """
+        with pytest.raises(InitializeError) as error:
+            qubits_list = dict_for_test_insufficient_onb_constructor
+            OrthogonalBasis(qubits_list)
+        assert "基底を構成するためのQubit群の数が不足しています" in str(error.value)
+
