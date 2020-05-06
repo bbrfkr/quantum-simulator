@@ -3,7 +3,7 @@ from math import sqrt
 import pytest
 
 from quantum_simulator.base.pure_qubits import PureQubits
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.qubits import Qubits, combine
 
 
 @pytest.fixture(
@@ -417,7 +417,7 @@ def not_match_count_probabilities_and_qubits_list(request):
                         [0.25 + 0j, 0j, 0j, 0.25 + 0j],
                         [0j, 0j, 0j, 0j],
                         [0j, 0j, 0.5 + 0j, 0j],
-                        [0.25 + 0j, 0j, 0j, 0.25 + 0j]
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
                     ]
                 ),
             ],
@@ -465,8 +465,103 @@ def not_match_count_probabilities_and_qubits_list(request):
     ]
 )
 def dict_for_test_qubits_combine(request):
-    """
-    create_from_qubits_listメソッドテスト用の異常系fixture
-    (リスト要素数不一致)
-    """
+    """combineメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "qubits": combine(
+                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 1,
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[1.0 + 0j, 0j, 0j, 0j], [0j, 1.0 + 0j, 0j, 0j]],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0j],
+                [0j, 0.5 + 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0j, 0j]], [[0j, 0.5 + 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "qubits": combine(
+                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 0,
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[0j, 0j, 1.0 + 0j, 0j], [0j, 0j, 0j, 1.0 + 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j],
+                [0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "qubits": combine(
+                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 2,
+            "eigen_values": [1.0],
+            "eigen_states": [[0j, 1.0 + 0j, 0j, 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 1.0 + 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 1.0 + 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": True,
+        },
+    ]
+)
+def dict_for_test_reduction(request):
+    """reductionメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "qubits": combine(
+                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": -1,
+        },
+        {
+            "qubits": combine(
+                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 3,
+        },
+    ]
+)
+def invalid_reduction(request):
+    """reductionメソッドテスト用の異常系fixture"""
     return request.param

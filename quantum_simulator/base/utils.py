@@ -2,8 +2,9 @@
 baseパッケージ内で利用する定数群
 """
 
-import numpy as np
 from typing import List
+
+import numpy as np
 
 # 計算時の近似桁数
 RELATIVE_TOLERANCE = 1.0e-5

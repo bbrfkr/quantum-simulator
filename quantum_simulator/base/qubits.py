@@ -7,14 +7,15 @@ from typing import List, Tuple, Union
 import numpy as np
 from numpy import linalg as LA
 
+from quantum_simulator.base import pure_qubits
 from quantum_simulator.base.error import (
     InitializeError,
-    NotMatchCountError,
     InvalidProbabilitiesError,
+    NotMatchCountError,
+    ReductionError,
 )
 from quantum_simulator.base.pure_qubits import PureQubits
-from quantum_simulator.base import pure_qubits
-from quantum_simulator.base.utils import is_pow2, around, is_probabilities, isclose
+from quantum_simulator.base.utils import around, is_pow2, is_probabilities, isclose
 
 
 class Qubits:
@@ -227,19 +228,32 @@ def create_from_qubits_list(
     return qubits
 
 
-# def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
-#     """target番目のQubitを縮約した局所Qubit群を返す"""
-#     if target_qubits.qubit_count == 1:
-#         message = "[ERROR]: このQubit系はこれ以上縮約できません"
-#         raise ReductionError(message)
+def reduction(target_qubits: Union[Qubits, PureQubits], target_particle: int) -> Qubits:
+    """target番目のQubitを縮約した局所Qubit群を返す"""
 
-#     # TODO target_listの長さや中の値はもっとバリデーションすべき
+    qubit_count = target_qubits.qubit_count
 
-#     axis1 = target_particle
-#     axis2 = target_qubits.qubit_count + target_particle
-#     reduced_array = np.trace(target_qubits.array, axis1=axis1, axis2=axis2)
+    # 縮約対象が指定された数縮約できるかチェック
+    if qubit_count < 2:
+        message = "[ERROR]: このQubit系はこれ以上縮約できません"
+        raise ReductionError(message)
 
-#     return Qubits(density_array=reduced_array)
+    # 縮約対象が指定されたQubit番号で縮約できるかチェック
+    if target_particle >= qubit_count or target_particle < 0:
+        message = "[ERROR]: 指定された要素番号のQubitは存在しません"
+        raise ReductionError(message)
+
+    # 縮約の実施
+    if isinstance(target_qubits, PureQubits):
+        reduced_array = target_qubits.projection
+    else:
+        reduced_array = target_qubits.ndarray
+
+    axis1 = target_particle
+    axis2 = target_qubits.qubit_count + target_particle
+    reduced_array = np.trace(reduced_array, axis1=axis1, axis2=axis2)
+
+    return Qubits(reduced_array)
 
 
 def combine(

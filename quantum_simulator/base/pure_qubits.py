@@ -13,7 +13,7 @@ from quantum_simulator.base.error import (
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.utils import isclose, is_pow2
+from quantum_simulator.base.utils import is_pow2, isclose
 
 
 class PureQubits:

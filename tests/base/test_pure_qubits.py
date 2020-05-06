@@ -9,6 +9,7 @@ from quantum_simulator.base.error import (
     QubitCountNotMatchError,
 )
 from quantum_simulator.base.pure_qubits import (
+    OrthogonalBasis,
     PureQubits,
     all_orthogonal,
     combine,
@@ -17,7 +18,6 @@ from quantum_simulator.base.pure_qubits import (
     is_orthogonal,
     is_pure_qubits,
     resolve_arrays,
-    OrthogonalBasis
 )
 from quantum_simulator.base.utils import allclose, isclose
 
