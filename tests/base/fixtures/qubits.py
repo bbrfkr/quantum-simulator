@@ -368,12 +368,14 @@ def dict_for_test_generalize(request):
         },
         # 2粒子系
         {
-            "target": Qubits([
-                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
-                [0j, 0j, 0j, 0j],
-                [0j, 0j, 0j, 0j],
-                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
-            ]),
+            "target": Qubits(
+                [
+                    [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                    [0j, 0j, 0j, 0j],
+                    [0j, 0j, 0j, 0j],
+                    [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                ]
+            ),
             "vector": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
             "ndarray": [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
             "qubit_count": 2,
@@ -494,10 +496,9 @@ def not_match_count_probabilities_and_qubits_list(request):
         # 単一Qubit
         {
             "probabilities": [0.3, 0.7],
-            "basis": OrthogonalBasis([
-                PureQubits([1.0 + 0j, 0j]),
-                PureQubits([0j, 1.0 + 0j]),
-            ]),
+            "basis": OrthogonalBasis(
+                [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j]),]
+            ),
             "eigen_values": [0.3, 0.7],
             "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
@@ -508,12 +509,17 @@ def not_match_count_probabilities_and_qubits_list(request):
         },
         {
             "probabilities": [0.25, 0.75],
-            "basis": OrthogonalBasis([
-                PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                PureQubits([-sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-            ]),
+            "basis": OrthogonalBasis(
+                [
+                    PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                    PureQubits([-sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                ]
+            ),
             "eigen_values": [0.25, 0.75],
-            "eigen_states": [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            ],
             "matrix": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],
             "matrix_dim": 2,
             "ndarray": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],

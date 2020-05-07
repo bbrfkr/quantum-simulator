@@ -17,7 +17,7 @@ from quantum_simulator.base.qubits import (
     reduction,
     resolve_arrays,
     resolve_eigen,
-    create_from_basis
+    create_from_basis,
 )
 from quantum_simulator.base.utils import allclose, isclose
 
