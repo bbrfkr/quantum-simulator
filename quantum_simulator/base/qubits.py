@@ -254,7 +254,7 @@ def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits
     return qubits
 
 
-def reduce(target_qubits: Qubits, target_particle: int) -> Qubits:
+def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
     """target番目のQubitを縮約した局所Qubit群を返す"""
 
     qubit_count = target_qubits.qubit_count
@@ -313,12 +313,12 @@ def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
     return combined_qubits
 
 
-def multiple_reduce(qubits: Qubits, target_particles: List[int]) -> Qubits:
+def multiple_reduction(qubits: Qubits, target_particles: List[int]) -> Qubits:
     """指定された番号全てのQubitを縮約した新しいQubitsを返す"""
     reduced_qubits = qubits
     list.sort(target_particles, reverse=True)
 
     for target in target_particles:
-        reduced_qubits = reduce(reduced_qubits, target)
+        reduced_qubits = reduction(reduced_qubits, target)
 
     return reduced_qubits

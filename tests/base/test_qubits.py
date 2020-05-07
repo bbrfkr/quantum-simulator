@@ -15,8 +15,8 @@ from quantum_simulator.base.qubits import (
     generalize,
     is_qubits_dim,
     multiple_combine,
-    multiple_reduce,
-    reduce,
+    multiple_reduction,
+    reduction,
     resolve_arrays,
     resolve_eigen,
     specialize,
@@ -297,13 +297,13 @@ class TestQubits:
             qubits_list = not_match_count_probabilities_and_qubits_list["qubits_list"]
             convex_combination(probabilities, qubits_list)
 
-    def test_for_failure_reduce(self, invalid_reduce):
-        """reduceメソッドの正常系テスト"""
-        qubits = invalid_reduce["qubits"]
-        target_particle = invalid_reduce["target_particle"]
+    def test_for_failure_reduction(self, invalid_reduction):
+        """reductionメソッドの正常系テスト"""
+        qubits = invalid_reduction["qubits"]
+        target_particle = invalid_reduction["target_particle"]
 
         with pytest.raises(ReductionError):
-            reduce(qubits, target_particle)
+            reduction(qubits, target_particle)
 
     def test_for_success_combine(self, dict_for_test_qubits_combine):
         """combineメソッドの正常系テスト"""
@@ -348,11 +348,11 @@ class TestQubits:
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
 
-    def test_for_success_reduce(self, dict_for_test_reduce):
-        """reduceメソッドの正常系テスト"""
-        qubits = dict_for_test_reduce["qubits"]
-        target_particle = dict_for_test_reduce["target_particle"]
-        reduced_qubits = reduce(qubits, target_particle)
+    def test_for_success_reduction(self, dict_for_test_reduction):
+        """reductionメソッドの正常系テスト"""
+        qubits = dict_for_test_reduction["qubits"]
+        target_particle = dict_for_test_reduction["target_particle"]
+        reduced_qubits = reduction(qubits, target_particle)
 
         eigen_values = reduced_qubits.eigen_values
         eigen_states = reduced_qubits.eigen_states
@@ -362,13 +362,13 @@ class TestQubits:
         qubit_count = reduced_qubits.qubit_count
         is_pure = reduced_qubits.is_pure()
 
-        expected_eigen_values = dict_for_test_reduce["eigen_values"]
-        expected_eigen_states = dict_for_test_reduce["eigen_states"]
-        expected_matrix = np.array(dict_for_test_reduce["matrix"])
-        expected_matrix_dim = dict_for_test_reduce["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_reduce["ndarray"])
-        expected_qubit_count = dict_for_test_reduce["qubit_count"]
-        expected_is_pure = dict_for_test_reduce["is_pure"]
+        expected_eigen_values = dict_for_test_reduction["eigen_values"]
+        expected_eigen_states = dict_for_test_reduction["eigen_states"]
+        expected_matrix = np.array(dict_for_test_reduction["matrix"])
+        expected_matrix_dim = dict_for_test_reduction["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_reduction["ndarray"])
+        expected_qubit_count = dict_for_test_reduction["qubit_count"]
+        expected_is_pure = dict_for_test_reduction["is_pure"]
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False
@@ -435,11 +435,11 @@ class TestQubits:
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
 
-    def test_for_success_multiple_reduce(self, dict_for_test_multiple_reduce):
-        """reduceメソッドの正常系テスト"""
-        qubits = dict_for_test_multiple_reduce["qubits"]
-        target_particles = dict_for_test_multiple_reduce["target_particles"]
-        reduced_qubits = multiple_reduce(qubits, target_particles)
+    def test_for_success_multiple_reduction(self, dict_for_test_multiple_reduction):
+        """multiple_reductionメソッドの正常系テスト"""
+        qubits = dict_for_test_multiple_reduction["qubits"]
+        target_particles = dict_for_test_multiple_reduction["target_particles"]
+        reduced_qubits = multiple_reduction(qubits, target_particles)
 
         eigen_values = reduced_qubits.eigen_values
         eigen_states = reduced_qubits.eigen_states
@@ -449,13 +449,13 @@ class TestQubits:
         qubit_count = reduced_qubits.qubit_count
         is_pure = reduced_qubits.is_pure()
 
-        expected_eigen_values = dict_for_test_multiple_reduce["eigen_values"]
-        expected_eigen_states = dict_for_test_multiple_reduce["eigen_states"]
-        expected_matrix = np.array(dict_for_test_multiple_reduce["matrix"])
-        expected_matrix_dim = dict_for_test_multiple_reduce["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_multiple_reduce["ndarray"])
-        expected_qubit_count = dict_for_test_multiple_reduce["qubit_count"]
-        expected_is_pure = dict_for_test_multiple_reduce["is_pure"]
+        expected_eigen_values = dict_for_test_multiple_reduction["eigen_values"]
+        expected_eigen_states = dict_for_test_multiple_reduction["eigen_states"]
+        expected_matrix = np.array(dict_for_test_multiple_reduction["matrix"])
+        expected_matrix_dim = dict_for_test_multiple_reduction["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_multiple_reduction["ndarray"])
+        expected_qubit_count = dict_for_test_multiple_reduction["qubit_count"]
+        expected_is_pure = dict_for_test_multiple_reduction["is_pure"]
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False

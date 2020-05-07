@@ -8,7 +8,7 @@ from quantum_simulator.base.qubits import (
     combine,
     generalize,
     multiple_combine,
-    multiple_reduce,
+    multiple_reduction,
 )
 
 
@@ -713,8 +713,8 @@ def dict_for_test_qubits_combine(request):
         },
     ]
 )
-def dict_for_test_reduce(request):
-    """reduceメソッドテスト用の正常系fixture"""
+def dict_for_test_reduction(request):
+    """reductionメソッドテスト用の正常系fixture"""
     return request.param
 
 
@@ -742,8 +742,8 @@ def dict_for_test_reduce(request):
         },
     ]
 )
-def invalid_reduce(request):
-    """reduceメソッドテスト用の異常系fixture"""
+def invalid_reduction(request):
+    """reductionメソッドテスト用の異常系fixture"""
     return request.param
 
 
@@ -919,6 +919,6 @@ def dict_for_test_qubits_multiple_combine(request):
         },
     ]
 )
-def dict_for_test_multiple_reduce(request):
-    """reduceメソッドテスト用の正常系fixture"""
+def dict_for_test_multiple_reduction(request):
+    """reductionメソッドテスト用の正常系fixture"""
     return request.param
