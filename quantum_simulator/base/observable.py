@@ -10,10 +10,10 @@ import numpy as np
 import quantum_simulator.base.pure_qubits as pure_qubits
 from quantum_simulator.base.error import (
     InitializeError,
-    NotMatchDimensionError,
     NotMatchCountError,
+    NotMatchDimensionError,
 )
-from quantum_simulator.base.pure_qubits import PureQubits, combine, OrthogonalSystem
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits, combine
 from quantum_simulator.base.qubits import (
     Qubits,
     is_qubits_dim,

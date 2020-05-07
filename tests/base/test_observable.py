@@ -8,9 +8,9 @@ from quantum_simulator.base.observable import (
     Observable,
     _resolve_observed_results,
     combine,
-    observe,
-    multiple_combine,
     create_from_ons,
+    multiple_combine,
+    observe,
 )
 from quantum_simulator.base.qubits import Qubits
 from quantum_simulator.base.utils import allclose, isclose

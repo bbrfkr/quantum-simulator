@@ -3,7 +3,7 @@ from math import sqrt
 import pytest
 
 from quantum_simulator.base.observable import Observable
-from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalSystem
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.qubits import Qubits
 
 
@@ -109,7 +109,9 @@ def test_for_success_observable_constructor(request):
         # 単一Qubitに対する観測量
         {
             "observed_values": [1.0, -1.0],
-            "ons": OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
+            "ons": OrthogonalSystem(
+                [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+            ),
             "eigen_values": [1.0, -1.0],
             "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
