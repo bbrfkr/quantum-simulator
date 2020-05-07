@@ -93,9 +93,9 @@ class PureQubits:
         print(notation)
 
 
-class OrthogonalBasis:
+class OrthogonalSystem:
     """
-    互いに直交し、かつ空間を張る、純粋状態である複数のQubit群
+    互いに直交する純粋状態である複数のQubit群
         qubits_list: PureQubitsのリスト
     """
 
@@ -109,12 +109,15 @@ class OrthogonalBasis:
             message = "[ERROR]: 与えられたQubit群のリストは互いに直交しません"
             raise InitializeError(message)
 
-        # 基底を構成するQubit群の個数の確認
-        if len(qubits_list) != qubits_list[0].vector.size:
-            message = "[ERROR]: 基底を構成するためのQubit群の数が不足しています"
-            raise InitializeError(message)
-
         self.qubits_list = qubits_list
+
+    def is_onb(self):
+        """ONSが基底であるか判定する"""
+        # 基底を構成するQubit群の個数の確認
+        if len(self.qubits_list) != self.qubits_list[0].vector.size:
+            return False
+
+        return True
 
 
 def _is_pure_qubits(array: np.array) -> bool:
@@ -183,18 +186,18 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     return new_qubits
 
 
-def combine_basis(
-    basis_0: OrthogonalBasis, basis_1: OrthogonalBasis
-) -> OrthogonalBasis:
-    """二つのOrthogonalBasisを結合する"""
+def combine_ons(
+    ons_0: OrthogonalSystem, ons_1: OrthogonalSystem
+) -> OrthogonalSystem:
+    """二つのOrthogonalSystemを結合する"""
     new_qubits = [
         combine(qubits_0, qubits_1)
-        for qubits_1 in basis_1.qubits_list
-        for qubits_0 in basis_0.qubits_list
+        for qubits_1 in ons_1.qubits_list
+        for qubits_0 in ons_0.qubits_list
     ]
 
-    new_basis = OrthogonalBasis(new_qubits)
-    return new_basis
+    new_ons = OrthogonalSystem(new_qubits)
+    return new_ons
 
 
 def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:

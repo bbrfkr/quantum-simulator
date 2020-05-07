@@ -9,14 +9,14 @@ from quantum_simulator.base.error import (
     QubitCountNotMatchError,
 )
 from quantum_simulator.base.pure_qubits import (
-    OrthogonalBasis,
+    OrthogonalSystem,
     PureQubits,
     _count_qubits,
     _is_pure_qubits,
     _resolve_arrays,
     all_orthogonal,
     combine,
-    combine_basis,
+    combine_ons,
     inner,
     is_orthogonal,
 )
@@ -160,9 +160,9 @@ class TestPureQubits:
             all_orthogonal([])
 
 
-class TestOrthogonalBasis:
+class TestOrthogonalSystem:
     """
-    OrthogonalBasisクラスと付随するメソッドのテスト
+    OrthogonalSystemクラスと付随するメソッドのテスト
         * 以下のロジックはテストしない
             * ただ値を代入するだけのロジック
             * すでにテスト済みの値を代入するロジック
@@ -174,7 +174,7 @@ class TestOrthogonalBasis:
         __init__メソッドの正常系テスト
         """
         qubits_list = dict_for_test_success_onb_constructor
-        onb = OrthogonalBasis(qubits_list)
+        onb = OrthogonalSystem(qubits_list)
         assert onb.qubits_list == qubits_list
 
     def test_for_non_orthogonal_onb_constructor(
@@ -186,28 +186,36 @@ class TestOrthogonalBasis:
         """
         with pytest.raises(InitializeError) as error:
             qubits_list = dict_for_test_non_orthogonal_onb_constructor
-            OrthogonalBasis(qubits_list)
+            OrthogonalSystem(qubits_list)
         assert "与えられたQubit群のリストは互いに直交しません" in str(error.value)
 
-    def test_for_insufficient_onb_constructor(
-        self, dict_for_test_insufficient_onb_constructor
+    def test_for_success_is_onb(
+        self, dict_for_test_success_onb
     ):
         """
-        __init__メソッドの異常系テスト
-        (Qubit群数不足)
+        onbメソッドの正常系テスト (True)
         """
-        with pytest.raises(InitializeError) as error:
-            qubits_list = dict_for_test_insufficient_onb_constructor
-            OrthogonalBasis(qubits_list)
-        assert "基底を構成するためのQubit群の数が不足しています" in str(error.value)
+        qubits_list = dict_for_test_success_onb
+        ons = OrthogonalSystem(qubits_list)
+        assert ons.is_onb()
 
-    def test_for_combine_basis(self, dict_for_test_combine_basis):
-        """combin_basisメソッドの異常系テスト"""
-        basis_0 = OrthogonalBasis(dict_for_test_combine_basis["basis_0"])
-        basis_1 = OrthogonalBasis(dict_for_test_combine_basis["basis_1"])
-        expected_result = OrthogonalBasis(dict_for_test_combine_basis["result"])
+    def test_for_failure_is_onb(
+        self, dict_for_test_failure_onb
+    ):
+        """
+        onbメソッドの正常系テスト (False)
+        """
+        qubits_list = dict_for_test_failure_onb
+        ons = OrthogonalSystem(qubits_list)
+        assert not ons.is_onb()
 
-        result = combine_basis(basis_0, basis_1)
+    def test_for_combine_ons(self, dict_for_test_combine_ons):
+        """combin_onsメソッドの異常系テスト"""
+        ons_0 = OrthogonalSystem(dict_for_test_combine_ons["ons_0"])
+        ons_1 = OrthogonalSystem(dict_for_test_combine_ons["ons_1"])
+        expected_result = OrthogonalSystem(dict_for_test_combine_ons["result"])
+
+        result = combine_ons(ons_0, ons_1)
 
         assert len(result.qubits_list) == len(expected_result.qubits_list)
         for index in range(len(result.qubits_list)):

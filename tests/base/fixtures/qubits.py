@@ -2,7 +2,7 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalBasis
+from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalSystem
 from quantum_simulator.base.qubits import Qubits, combine
 
 
@@ -496,7 +496,7 @@ def not_match_count_probabilities_and_qubits_list(request):
         # 単一Qubit
         {
             "probabilities": [0.3, 0.7],
-            "basis": OrthogonalBasis(
+            "ons": OrthogonalSystem(
                 [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j]),]
             ),
             "eigen_values": [0.3, 0.7],
@@ -509,7 +509,7 @@ def not_match_count_probabilities_and_qubits_list(request):
         },
         {
             "probabilities": [0.25, 0.75],
-            "basis": OrthogonalBasis(
+            "ons": OrthogonalSystem(
                 [
                     PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
                     PureQubits([-sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
@@ -528,8 +528,8 @@ def not_match_count_probabilities_and_qubits_list(request):
         },
     ]
 )
-def dict_for_test_create_from_basis(request):
-    """create_for_basisメソッドテスト用の正常系fixture"""
+def dict_for_test_create_from_ons(request):
+    """create_for_onsメソッドテスト用の正常系fixture"""
     return request.param
 
 

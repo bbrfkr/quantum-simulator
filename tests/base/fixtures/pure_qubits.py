@@ -602,7 +602,7 @@ def dict_for_test_all_orthogonal(request):
     ]
 )
 def dict_for_test_success_onb_constructor(request):
-    """OrthogonalBasisの__init__メソッドテスト用の妥当なインプットのfixture"""
+    """OrthogonalSystemの__init__メソッドテスト用の妥当なインプットのfixture"""
     return request.param
 
 
@@ -613,7 +613,23 @@ def dict_for_test_success_onb_constructor(request):
     ]
 )
 def dict_for_test_non_orthogonal_onb_constructor(request):
-    """OrthogonalBasisの__init__メソッドテスト用の非直交なインプットのfixture"""
+    """OrthogonalSystemの__init__メソッドテスト用の非直交なインプットのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        [PureQubits([1 + 0j, 0j]), PureQubits([0j, 1 + 0j])],
+        [
+            PureQubits([1 + 0j, 0j, 0j, 0j]),
+            PureQubits([0j, 1 + 0j, 0j, 0j]),
+            PureQubits([0j, 0j, 1 + 0j, 0j]),
+            PureQubits([0j, 0j, 0j, 1 + 0j]),
+        ],
+    ]
+)
+def dict_for_test_success_onb(request):
+    """is_onbメソッドテスト用の充足インプットのfixture"""
     return request.param
 
 
@@ -627,16 +643,16 @@ def dict_for_test_non_orthogonal_onb_constructor(request):
         ],
     ]
 )
-def dict_for_test_insufficient_onb_constructor(request):
-    """OrthogonalBasisの__init__メソッドテスト用の不足しているインプットのfixture"""
+def dict_for_test_failure_onb(request):
+    """is_onbメソッドテスト用の不足インプットのfixture"""
     return request.param
 
 
 @pytest.fixture(
     params=[
         {
-            "basis_0": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
-            "basis_1": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "ons_0": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "ons_1": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
             "result": [
                 PureQubits([1.0 + 0j, 0j, 0j, 0j]),
                 PureQubits([0j, 1.0 + 0j, 0j, 0j]),
@@ -645,8 +661,8 @@ def dict_for_test_insufficient_onb_constructor(request):
             ],
         },
         {
-            "basis_0": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
-            "basis_1": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "ons_0": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
+            "ons_1": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
             "result": [
                 PureQubits([0j, 0j, 1.0 + 0j, 0j]),
                 PureQubits([0j, 0j, 0j, 1.0 + 0j]),
@@ -655,8 +671,8 @@ def dict_for_test_insufficient_onb_constructor(request):
             ],
         },
         {
-            "basis_0": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
-            "basis_1": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
+            "ons_0": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
+            "ons_1": [PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])],
             "result": [
                 PureQubits([1.0 + 0j, 0j, 0j, 0j]),
                 PureQubits([0j, 1.0 + 0j, 0j, 0j]),
@@ -666,6 +682,6 @@ def dict_for_test_insufficient_onb_constructor(request):
         },
     ]
 )
-def dict_for_test_combine_basis(request):
-    """combine_basisメソッドのテスト用fixture"""
+def dict_for_test_combine_ons(request):
+    """combine_onsメソッドのテスト用fixture"""
     return request.param
