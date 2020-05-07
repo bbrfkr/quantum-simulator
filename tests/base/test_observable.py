@@ -1,6 +1,7 @@
 import random
 
 import numpy as np
+
 from quantum_simulator.base.observable import (
     Observable,
     _resolve_observed_results,
