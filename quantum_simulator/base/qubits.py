@@ -195,7 +195,12 @@ def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
     return (eigen_values, eigen_states)
 
 
-def create_from_qubits_list(
+def generalize(pure_qubits: PureQubits) -> Qubits:
+    density_array = pure_qubits.projection
+    return Qubits(density_array)
+
+
+def convex_combination(
     probabilities: List[float], qubits_list: List[Union[PureQubits, Qubits]]
 ) -> Qubits:
     """確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する"""
@@ -298,5 +303,5 @@ def combine(
     ]
 
     # 新しい状態の生成
-    new_qubits = create_from_qubits_list(probabilities, eigen_states)
+    new_qubits = convex_combination(probabilities, eigen_states)
     return new_qubits

@@ -9,8 +9,9 @@ from quantum_simulator.base.error import (
 )
 from quantum_simulator.base.qubits import (
     Qubits,
+    generalize,
     combine,
-    create_from_qubits_list,
+    convex_combination,
     is_qubits_dim,
     reduction,
     resolve_arrays,
@@ -121,13 +122,10 @@ class TestQubits:
             Qubits(target)
         assert "与えられたリストには虚数の固有値が存在します" in str(error.value)
 
-    def test_for_success_create_from_qubits_list(
-        self, dict_for_test_create_from_qubits_list
-    ):
-        """create_from_qubits_listメソッドの正常系テスト"""
-        probabilities = dict_for_test_create_from_qubits_list["probabilities"]
-        qubits_list = dict_for_test_create_from_qubits_list["qubits_list"]
-        qubits = create_from_qubits_list(probabilities, qubits_list)
+    def test_for_success_generalize(self, dict_for_test_generalize):
+        """convex_combinationメソッドの正常系テスト"""
+        target = dict_for_test_generalize["target"]
+        qubits = generalize(target)
 
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
@@ -137,13 +135,13 @@ class TestQubits:
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
 
-        expected_eigen_values = dict_for_test_create_from_qubits_list["eigen_values"]
-        expected_eigen_states = dict_for_test_create_from_qubits_list["eigen_states"]
-        expected_matrix = np.array(dict_for_test_create_from_qubits_list["matrix"])
-        expected_matrix_dim = dict_for_test_create_from_qubits_list["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_create_from_qubits_list["ndarray"])
-        expected_qubit_count = dict_for_test_create_from_qubits_list["qubit_count"]
-        expected_is_pure = dict_for_test_create_from_qubits_list["is_pure"]
+        expected_eigen_values = dict_for_test_generalize["eigen_values"]
+        expected_eigen_states = dict_for_test_generalize["eigen_states"]
+        expected_matrix = np.array(dict_for_test_generalize["matrix"])
+        expected_matrix_dim = dict_for_test_generalize["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_generalize["ndarray"])
+        expected_qubit_count = dict_for_test_generalize["qubit_count"]
+        expected_is_pure = dict_for_test_generalize["is_pure"]
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False
@@ -167,25 +165,69 @@ class TestQubits:
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
 
-    def test_for_invalid_probabilities_error_create_from_qubits_list(
+    def test_for_success_convex_combination(self, dict_for_test_convex_combination):
+        """convex_combinationメソッドの正常系テスト"""
+        probabilities = dict_for_test_convex_combination["probabilities"]
+        qubits_list = dict_for_test_convex_combination["qubits_list"]
+        qubits = convex_combination(probabilities, qubits_list)
+
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_convex_combination["eigen_values"]
+        expected_eigen_states = dict_for_test_convex_combination["eigen_states"]
+        expected_matrix = np.array(dict_for_test_convex_combination["matrix"])
+        expected_matrix_dim = dict_for_test_convex_combination["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_convex_combination["ndarray"])
+        expected_qubit_count = dict_for_test_convex_combination["qubit_count"]
+        expected_is_pure = dict_for_test_convex_combination["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_invalid_probabilities_error_convex_combination(
         self, invalid_probabilities_and_qubits_list
     ):
-        """create_from_qubits_listメソッドに対する不正な確率リストエラーの異常系テスト"""
+        """convex_combinationメソッドに対する不正な確率リストエラーの異常系テスト"""
         with pytest.raises(InvalidProbabilitiesError):
             probabilities = invalid_probabilities_and_qubits_list["probabilities"]
             qubits_list = invalid_probabilities_and_qubits_list["qubits_list"]
-            create_from_qubits_list(probabilities, qubits_list)
+            convex_combination(probabilities, qubits_list)
 
-    def test_for_not_match_count_error_create_from_qubits_list(
+    def test_for_not_match_count_error_convex_combination(
         self, not_match_count_probabilities_and_qubits_list
     ):
-        """create_from_qubits_listメソッドに対するリスト要素数不一致エラーの異常系テスト"""
+        """convex_combinationメソッドに対するリスト要素数不一致エラーの異常系テスト"""
         with pytest.raises(NotMatchCountError):
             probabilities = not_match_count_probabilities_and_qubits_list[
                 "probabilities"
             ]
             qubits_list = not_match_count_probabilities_and_qubits_list["qubits_list"]
-            create_from_qubits_list(probabilities, qubits_list)
+            convex_combination(probabilities, qubits_list)
 
     def test_for_success_combine(self, dict_for_test_qubits_combine):
         """combineメソッドの正常系テスト"""
