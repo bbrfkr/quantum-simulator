@@ -16,6 +16,7 @@ from quantum_simulator.base.qubits import (
     reduction,
     resolve_arrays,
     resolve_eigen,
+    create_from_basis
 )
 from quantum_simulator.base.utils import allclose, isclose
 
@@ -186,6 +187,50 @@ class TestQubits:
         expected_ndarray = np.array(dict_for_test_convex_combination["ndarray"])
         expected_qubit_count = dict_for_test_convex_combination["qubit_count"]
         expected_is_pure = dict_for_test_convex_combination["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_success_create_from_basis(self, dict_for_test_create_from_basis):
+        """create_from_basisメソッドの正常系テスト"""
+        probabilities = dict_for_test_create_from_basis["probabilities"]
+        basis = dict_for_test_create_from_basis["basis"]
+        qubits = create_from_basis(probabilities, basis)
+
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_create_from_basis["eigen_values"]
+        expected_eigen_states = dict_for_test_create_from_basis["eigen_states"]
+        expected_matrix = np.array(dict_for_test_create_from_basis["matrix"])
+        expected_matrix_dim = dict_for_test_create_from_basis["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_create_from_basis["ndarray"])
+        expected_qubit_count = dict_for_test_create_from_basis["qubit_count"]
+        expected_is_pure = dict_for_test_create_from_basis["is_pure"]
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False

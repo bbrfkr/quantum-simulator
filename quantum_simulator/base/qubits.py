@@ -14,7 +14,7 @@ from quantum_simulator.base.error import (
     NotMatchCountError,
     ReductionError,
 )
-from quantum_simulator.base.pure_qubits import PureQubits
+from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalBasis
 from quantum_simulator.base.utils import (
     around,
     is_pow2,
@@ -236,6 +236,14 @@ def convex_combination(
         density_matrix = np.add(density_matrix, added_matrix)
 
     qubits = Qubits(density_matrix)
+    return qubits
+
+
+def create_from_basis(
+    probabilities: List[float], basis: OrthogonalBasis
+) -> Qubits:
+    """確率リストと直交基底からQubitsオブジェクトを作成する"""
+    qubits = convex_combination(probabilities, basis.qubits_list)
     return qubits
 
 
