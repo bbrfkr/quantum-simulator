@@ -1,120 +1,324 @@
 """
-Qubit系の定義
+一般的なQubit系の定義
 """
 
-from math import ceil
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
-from numpy import conjugate
-from numpy.linalg import linalg
+from numpy import linalg as LA
 
-from .conf import APPROX_DIGIT
-from .error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
+from quantum_simulator.base import pure_qubits
+from quantum_simulator.base.error import (
+    InitializeError,
+    InvalidProbabilitiesError,
+    NotMatchCountError,
+    NotPureError,
+    ReductionError,
+)
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
+from quantum_simulator.base.utils import (
+    around,
+    is_pow2,
+    is_probabilities,
+    is_real,
+    isclose,
+)
 
 
 class Qubits:
-    """純粋状態の一般的に複数のQubit"""
+    """
+    一般的に複数かつ混合状態のQubit群のクラス
+        eigen_values: 固有値のリスト
+        eigen_states: 固有状態のリスト
+        ndarray: ndarray形式のQubits
+        matrix: 行列形式のQubits
+        matrix_dim: 行列形式における行列の次元
+        qubit_count: 内包されているQubitの数
+    """
 
-    def __init__(self, amps: list):
-        amplitudes = np.array(amps, dtype=complex)
+    def __init__(self, density_array: list):
+        """
+        初期化
+            density_array: 密度行列に対応するnp.arrayインスタンス。
+                           行列形式とndarray形式を許容する。
+        """
 
-        # 与えられた確率振幅の次元がQubitのテンソル積空間の次元かチェック
-        for dim in amplitudes.shape:
-            if dim != 2:
-                message = "[ERROR]: 与えられた確率振幅の次元が不正です"
-                raise InitializeError(message)
-
-        # 確率の総和をチェック
-        if round(linalg.norm(amplitudes) - 1.0, APPROX_DIGIT) != 0.0:
-            message = "[ERROR]: 確率の総和が1ではありません"
+        # arrayの次元をチェック
+        tmp_array = np.array(density_array, dtype=complex)
+        if not is_qubits_dim(tmp_array):
+            message = "[ERROR]: 与えられたリストは形がQubit系に対応しません"
             raise InitializeError(message)
 
+        # 行列表現とndarray表現を導出
+        matrix, ndarray = resolve_arrays(tmp_array)
+
+        # 固有値と固有ベクトルを導出
+        tmp_eigen_values, eigen_states = resolve_eigen(matrix)
+
+        # 固有値の虚部の有無をチェックし、floatに変換
+        if not is_real(tmp_eigen_values):
+            message = "[ERROR]: 与えられたリストには虚数の固有値が存在します"
+            raise InitializeError(message)
+
+        eigen_values = np.real(tmp_eigen_values)
+
+        # 固有値全体が確率分布に対応できるかチェック
+        if not is_probabilities(eigen_values):
+            message = "[ERROR]: リストから導出された固有値群は確率分布に対応しません"
+            raise InitializeError(message)
+
+        # 行列の次元を導出
+        matrix_dim = matrix.shape[0]
+
+        # Qubitの個数を導出
+        qubit_count = int(len(ndarray.shape) / 2)
+
         # 初期化
-        self.amplitudes = amplitudes
-        self.qubit_count = len(self.amplitudes.shape)
-        self.vector = self.amplitudes.reshape(self.amplitudes.size)
+        self.eigen_values = eigen_values
+        self.eigen_states = eigen_states
+        self.ndarray = ndarray
+        self.matrix = matrix
+        self.matrix_dim = matrix_dim
+        self.qubit_count = qubit_count
 
     def __str__(self):
-        """Qubitsのベクトル表現を出力"""
-        return str(self.vector)
+        """Qubitsの行列表現を出力"""
+        return str(self.matrix)
 
-    def print_array(self):
+    def print_ndarray(self):
         """Qubitsのndarray表現を出力"""
-        print(self.amplitudes)
+        print(self.ndarray)
 
-    def dirac_notation(self):
-        """QubitsのDirac表記を出力"""
-        term = ""
-        array_repl = list(self.amplitudes.flat)
-        for index in range(self.amplitudes.size):
-            vec_repl = format(index, "b").zfill(len(self.amplitudes.shape))
-            term += f"{array_repl[index]}|{vec_repl}>"
+    def is_pure(self) -> bool:
+        """Qubitsが純粋状態か判定する"""
+        for eigen_value in self.eigen_values:
+            if isclose(eigen_value, 1.0 + 0j):
+                return True
 
-            # 最後以外はプラスと改行をつける
-            if index != self.amplitudes.size - 1:
-                term += " +\n"
-
-        print(term)
-
-    def projection(self) -> np.ndarray:
-        """Qubit群に対応する射影作用素を返す"""
-        projection = np.multiply.outer(self.amplitudes, np.conjugate(self.amplitudes))
-        return projection
+        return False
 
 
-def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
-    """二つのQubit群を結合する"""
-    new_amplitudes = np.tensordot(qubits_0.amplitudes, qubits_1.amplitudes, 0)
-    new_qubits = Qubits(new_amplitudes)
+def is_qubits_dim(array: np.array) -> bool:
+    """与えられたarrayの形がQubit系を表現しているか判定する"""
 
-    return new_qubits
+    # 次元のチェック
 
+    # 要素数が2の累乗個であるかチェック
+    if not is_pow2(array.size):
+        return False
 
-def inner(qubits_0: Qubits, qubits_1: Qubits) -> complex:
-    """Qubit群同士の内積 <qubit_0 | qubit_1>"""
-    # 内積をとるQubit群同士のQubit数が一致してなければエラー
-    if qubits_0.qubit_count != qubits_1.qubit_count:
-        message = "[ERROR]: 対象Qubit群同士のQubit数が一致しません"
-        raise QubitCountNotMatchError(message)
+    # array.shapeの要素数をチェック
+    len_array_shape = len(array.shape)
 
-    return np.inner(qubits_0.amplitudes.flat, conjugate(qubits_1.amplitudes.flat))
+    # 2よりも小さい場合、ベクトルであるため、偽
+    if len_array_shape < 2:
+        return False
 
+    # 2の場合、行列表現とndarray表現の双方の可能性がある
+    # いずれの場合も、各要素は一致していなければならない
+    # ndarray表現の場合は(2, 2)、つまり2粒子Qubit系でなくてはならない
+    # 行列表現の場合は各要素は2の累乗でなければならない
+    elif len_array_shape == 2:
+        if array.shape[0] != array.shape[1]:
+            return False
 
-def is_orthogonal(qubits_0: Qubits, qubits_1: Qubits) -> bool:
-    """二つのQubit群同士が直交しているか"""
-    return np.round(inner(qubits_0, qubits_1), APPROX_DIGIT) == 0.0
+        for element in array.shape:
+            if not is_pow2(element):
+                return False
 
+    # 2より大きい場合、ndarray表現にのみ対応する
+    # この場合、最低限以下が満たされていなければならない
+    # * 要素数が2の倍数であること
+    # * 各要素が2であること
+    # (各テンソル空間がC^2であることのチェックに対応)
+    else:
+        if len_array_shape % 2 != 0:
+            return False
 
-def is_all_orthogonal(qubits_group: List[Qubits]) -> bool:
-    """Qubit群同士が互い直交しているか"""
-    len_qubits_group = len(qubits_group)
-    # Qubit群が一つも入力されない時はエラー
-    if len_qubits_group == 0:
-        message = "[ERROR]: 与えられたリストにQubit群が見つかりません"
-        raise NoQubitsInputError(message)
-
-    # Qubit群が一つだけ与えられた時は明らかに互いに直交
-    if len_qubits_group == 1:
-        return True
-
-    # Qubit群が二つ以上与えられた場合
-    for index_0 in range(ceil(len_qubits_group / 2)):
-        for index_1 in range(len_qubits_group - index_0 - 1):
-            if not is_orthogonal(
-                qubits_group[index_0], qubits_group[len_qubits_group - index_1 - 1]
-            ):
+        for element in array.shape:
+            if element != 2:
                 return False
 
     return True
 
 
-# def reduction(density: np.ndarray, target: int) -> np.ndarray:
-#     """target番目のQubitを縮約した、局所Qubit群に対応する密度行列を返す"""
-#     qubit_count = int(len(density.shape) / 2)
-#     if qubit_count == 1:
-#         message = "[ERROR]: このQubit系はこれ以上縮約できません"
-#         raise ReductionError(message)
-#     return np.trace(
-#         density, axis1=qubit_count - 1 - target, axis2=(2 * qubit_count - 1 - target),
-#     )
+def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
+    """
+    Qubit系の空間上のnp.arrayを仮定し、行列表現とndarray表現を導出して返す
+    """
+    matrix = None
+    ndarray = None
+
+    len_array_shape = len(array.shape)
+
+    # 与えられたarrayが行列表現である場合
+    if len_array_shape == 2:
+        qubit_count = int(np.log2(array.shape[0]))
+        ndarray_shape = tuple([2 for i in range(2 * qubit_count)])
+        ndarray = array.reshape(ndarray_shape)
+        matrix = array
+
+    # 与えられたarrayがndarray表現である場合
+    else:
+        qubit_count = int(len_array_shape / 2)
+        matrix_dim = 2 ** qubit_count
+        matrix = array.reshape(matrix_dim, matrix_dim)
+        ndarray = array
+
+    return (matrix, ndarray)
+
+
+def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
+    """
+    行列表現のarrayを仮定し、固有値・固有状態を導出する
+    """
+
+    # 固有値・固有状態の導出
+    tmp_eigen_values, tmp_eigen_states = LA.eig(matrix)
+
+    # 実際に呼び出し元に渡すオブジェクトの整理
+    eigen_values = []  # type: List[complex]
+    eigen_states = []  # type: List[PureQubits]
+    for index in range(len(tmp_eigen_values)):
+
+        # 固有値は0または1に近い値は丸める
+        rounded_value = around(tmp_eigen_values[index])
+        if rounded_value == 1.0 + 0j:
+            eigen_values.append(1.0 + 0j)
+        elif rounded_value == 0.0 + 0j:
+            eigen_values.append(0.0 + 0j)
+        else:
+            eigen_values.append(complex(tmp_eigen_values[index]))
+
+        # 固有ベクトルはPureQubits化
+        eigen_states.append(PureQubits(tmp_eigen_states[:, index]))
+
+    return (eigen_values, eigen_states)
+
+
+def generalize(pure_qubits: PureQubits) -> Qubits:
+    """PureQubitsから対応するQubitsを作る"""
+    density_array = pure_qubits.projection
+    return Qubits(density_array)
+
+
+def specialize(qubits: Qubits) -> PureQubits:
+    """固有値1を持つQubitsから対応するPureQubitsを作る"""
+    # Qubitsが純粋状態かチェックし、対応するインデックスを取り出す
+    pure_index = -1
+    for index in range(len(qubits.eigen_values)):
+        if isclose(qubits.eigen_values[index], 1.0 + 0j):
+            pure_index = index
+
+    if pure_index == -1:
+        message = "[ERROR]: 対象のQubitsは純粋状態ではありません"
+        raise NotPureError(message)
+
+    return qubits.eigen_states[pure_index]
+
+
+def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) -> Qubits:
+    """確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する"""
+
+    # 確率リストが確率分布であるかチェック
+    if not is_probabilities(probabilities):
+        message = "[ERROR]: 与えられた確率リストは確率分布ではありません"
+        raise InvalidProbabilitiesError(message)
+
+    len_qubits_list = len(qubits_list)
+
+    # 確率リストとQubitsリストの要素数同士が一致するかチェック
+    if len_qubits_list != len(probabilities):
+        message = "[ERROR]: 与えられた確率リストと純粋状態リストの要素数が一致しません"
+        raise NotMatchCountError(message)
+
+    # 密度行列から再度密度行列を導出する
+    density_matrix = probabilities[-1] * qubits_list[-1].matrix
+
+    for index in range(len_qubits_list - 1):
+        added_matrix = probabilities[index] * qubits_list[index].matrix
+        density_matrix = np.add(density_matrix, added_matrix)
+
+    qubits = Qubits(density_matrix)
+    return qubits
+
+
+def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits:
+    """確率リストと直交基底からQubitsオブジェクトを作成する"""
+    # PureQubitsのgeneralizeリストを作る
+    generalized_pure_qubits_list = [
+        generalize(pure_qubits) for pure_qubits in ons.qubits_list
+    ]
+
+    qubits = convex_combination(probabilities, generalized_pure_qubits_list)
+    return qubits
+
+
+def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
+    """target番目のQubitを縮約した局所Qubit群を返す"""
+
+    qubit_count = target_qubits.qubit_count
+
+    # 縮約対象が指定された数縮約できるかチェック
+    if qubit_count < 2:
+        message = "[ERROR]: このQubit系はこれ以上縮約できません"
+        raise ReductionError(message)
+
+    # 縮約対象が指定されたQubit番号で縮約できるかチェック
+    if target_particle >= qubit_count or target_particle < 0:
+        message = "[ERROR]: 指定された要素番号のQubitは存在しません"
+        raise ReductionError(message)
+
+    # 縮約の実施
+    reduced_array = target_qubits.ndarray
+
+    axis1 = target_particle
+    axis2 = target_qubits.qubit_count + target_particle
+    reduced_array = np.trace(reduced_array, axis1=axis1, axis2=axis2)
+
+    return Qubits(reduced_array)
+
+
+def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
+    """２つのQubit系を結合して新たなQubit系を作る"""
+    eigen_values_0 = qubits_0.eigen_values
+    eigen_states_0 = qubits_0.eigen_states
+    eigen_values_1 = qubits_1.eigen_values
+    eigen_states_1 = qubits_1.eigen_states
+
+    # 確率分布の結合
+    probabilities = [
+        value_0 * value_1 for value_0 in eigen_values_0 for value_1 in eigen_values_1
+    ]
+
+    # 固有状態の結合
+    generalized_eigen_states = [
+        generalize(pure_qubits.combine(state_0, state_1))
+        for state_0 in eigen_states_0
+        for state_1 in eigen_states_1
+    ]
+
+    # 新しい状態の生成
+    new_qubits = convex_combination(probabilities, generalized_eigen_states)
+    return new_qubits
+
+
+def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
+    """一般的に２つ以上のQubits同士を結合する"""
+    combined_qubits = qubits_list[0]
+
+    for index in range(len(qubits_list) - 1):
+        combined_qubits = combine(combined_qubits, qubits_list[index + 1])
+
+    return combined_qubits
+
+
+def multiple_reduction(qubits: Qubits, target_particles: List[int]) -> Qubits:
+    """指定された番号全てのQubitを縮約した新しいQubitsを返す"""
+    reduced_qubits = qubits
+    list.sort(target_particles, reverse=True)
+
+    for target in target_particles:
+        reduced_qubits = reduction(reduced_qubits, target)
+
+    return reduced_qubits

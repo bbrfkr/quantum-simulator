@@ -2,193 +2,477 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.qubits import Qubits
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
+from quantum_simulator.base.qubits import Qubits, combine, generalize, multiple_combine
 
 
 @pytest.fixture(
     params=[
-        [1 + 0j, 0j],
-        [0j, 1 + 0j],
-        [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-        [sqrt(0.5) * 1j, sqrt(0.5) * 1j],
-        [sqrt(0.4) + 0j, sqrt(0.6) * 1j],
-    ]
-)
-def valid_qubit_amp(request):
-    """妥当な単一qubitに対する確率振幅のfixture"""
-    return request.param
-
-
-@pytest.fixture()
-def valid_qubit(valid_qubit_amp):
-    """妥当な単一qubitのfixture"""
-    amplitudes = valid_qubit_amp
-    return Qubits(amplitudes)
-
-
-@pytest.fixture(
-    params=[
-        [0 + 0j, 0j],
-        [sqrt(0.3) + 0j, sqrt(0.3) + 0j],
-        [sqrt(0.3) * 1j, sqrt(0.3) * 1j],
-        [sqrt(0.6) + 0j, sqrt(0.6) + 0j],
-        [sqrt(0.6) * 1j, sqrt(0.6) * 1j],
-        [1 + 0j],
-        [sqrt(0.25) + 0j, sqrt(0.25) + 0j, sqrt(0.25) + 0j, sqrt(0.25) + 0j],
-        [],
-    ]
-)
-def invalid_qubit_amp(request):
-    """不正な単一qubitに対する確率振幅のfixture"""
-    return request.param
-
-
-@pytest.fixture(
-    params=[
-        [[1 + 0j, 0j], [0j, 1 + 0j]],
-        [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) * 1j, -sqrt(0.5) * 1j]],
-        [[sqrt(0.4) + 0j, sqrt(0.6) * 1j], [sqrt(0.6) + 0j, -sqrt(0.4) * 1j]],
-    ]
-)
-def orthogonal_qubits(request):
-    """直交する単一qubit同士のfixture"""
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
-
-
-@pytest.fixture(
-    params=[
-        [[1 + 0j, 0j], [1 + 0j, 0j]],
-        [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) * 1j, sqrt(0.5) * 1j]],
-        [[sqrt(0.4) + 0j, sqrt(0.6) * 1j], [sqrt(0.4) + 0j, -sqrt(0.6) * 1j]],
-    ]
-)
-def non_orthogonal_qubits(request):
-    """直交しない単一qubit同士のfixture"""
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
-
-
-@pytest.fixture(
-    params=[
-        [[1 + 0j, 0j], [0j, 0j]],
-        [[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
-        [[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
-        [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
-    ]
-)
-def valid_qubits_amp(request):
-    """
-    妥当なQubit群に対する確率振幅のfixture
-    2粒子: |00>
-    3粒子: |010>
-    4粒子: |1001>
-    重ね合わせ2粒子(EPR pair): sqrt(0.5)|00> + sqrt(0.5)|11>
-    """
-    return request.param
-
-
-@pytest.fixture()
-def valid_qubits(valid_qubits_amp):
-    """妥当なQubit群のfixture"""
-    amplitudes = valid_qubits_amp
-    return Qubits(amplitudes)
-
-
-@pytest.fixture(
-    params=[
-        {
-            "qubit": Qubits([1.0 + 0j, 0.0 + 0j]),
-            "projection": [[1.0 + 0j, 0j], [0j, 0j]],
-        },
-        {
-            "qubit": Qubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-            "projection": [[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]],
-        },
-    ]
-)
-def proj_for_valid_qubit(request):
-    """単一Qubitに対する射影作用素のfixture"""
-    return request.param
-
-
-@pytest.fixture(
-    params=[
-        {
-            "qubits": Qubits([[1 + 0j, 0j], [0j, 0j]]),
-            "projection": [
-                [[[1 + 0j, 0j], [0j, 0j]], [[0 + 0j, 0j], [0j, 0j]]],
-                [[[0j, 0j], [0j, 0j]], [[0 + 0j, 0j], [0j, 0j]]],
-            ],
-        },
-        {
-            "qubits": Qubits([[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]]),
-            "projection": [
+        # 行列形式
+        [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+        [
+            [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            [0j, 0j, 0j, 0j],
+            [0j, 0j, 0j, 0j],
+            [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+        ],
+        [
+            [0.25 + 0j, 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0.25 + 0j],
+            [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            [0.25 + 0j, 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0.25 + 0j],
+            [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            [0.25 + 0j, 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0.25 + 0j],
+            [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            [0.25 + 0j, 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0.25 + 0j],
+        ],
+        # ndarray形式
+        [
+            [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+            [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+        ],
+        [
+            [
                 [
                     [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[0.25 + 0j, 0j], [0.25 + 0j, 0j]],
+                        [[0j, 0.25 + 0j], [0j, 0.25 + 0j]],
                     ],
-                    [
-                        [[[0j, 0j], [1 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                    ],
+                    [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
                 ],
                 [
                     [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[0.25 + 0j, 0j], [0.25 + 0j, 0j]],
+                        [[0j, 0.25 + 0j], [0j, 0.25 + 0j]],
                     ],
+                    [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                ],
+            ],
+            [
+                [
+                    [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
                     [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[0.25 + 0j, 0j], [0.25 + 0j, 0j]],
+                        [[0j, 0.25 + 0j], [0j, 0.25 + 0j]],
+                    ],
+                ],
+                [
+                    [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    [
+                        [[0.25 + 0j, 0j], [0.25 + 0j, 0j]],
+                        [[0j, 0.25 + 0j], [0j, 0.25 + 0j]],
                     ],
                 ],
             ],
-        },
+        ],
+    ]
+)
+def valid_qubits_array(request):
+    """妥当なQubitsに対するarrayのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # ベクトル
+        [1.0 + 0j, 0j],
+        # 正方行列でない行列
+        [
+            [sqrt(1 / 8) + 0j, 0j],
+            [0j, sqrt(1 / 8) + 0j],
+            [sqrt(1 / 8) + 0j, 0j],
+            [0j, sqrt(1 / 8) + 0j],
+            [sqrt(1 / 8) + 0j, 0j],
+            [0j, sqrt(1 / 8) + 0j],
+            [sqrt(1 / 8) + 0j, 0j],
+            [0j, sqrt(1 / 8) + 0j],
+        ],
+        # 正方行列だが、次元が2^nでない行列
+        [
+            [sqrt(1 / 3) + 0j, 0j, 0j],
+            [0j, sqrt(1 / 3) + 0j, 0j],
+            [0j, 0j, sqrt(1 / 3) + 0j],
+        ],
+        # shapeの要素数が2の倍数でないndarray
+        [
+            [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], [0j, 0j, 0j, sqrt(1 / 4) + 0j]],
+            [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], 0j, 0j, 0j, sqrt(1 / 4) + 0j],
+        ],
+        # shapeの各要素が2でないndarray
+        [
+            [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], [0j, 0j, 0j, sqrt(1 / 4) + 0j]],
+            [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], [0j, 0j, 0j, sqrt(1 / 4) + 0j]],
+        ],
+    ]
+)
+def invalid_qubits_array(request):
+    """妥当でないQubitsに対するarrayのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # 単一Qubit
         {
-            "qubits": Qubits([[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]]),
-            "projection": [
-                [
-                    [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                    ],
-                    [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                    ],
-                ],
-                [
-                    [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
-                    ],
-                    [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                    ],
-                ],
+            "target": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "matrix": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "ndarray": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+        },
+        # 2粒子行列形式
+        {
+            "target": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
             ],
         },
+        # 2粒子ndarray形式
         {
-            "qubits": Qubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
-            "projection": [
+            "target": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "ndarray": [
                 [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
                 [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
             ],
         },
     ]
 )
-def proj_for_valid_qubits(request):
+def dict_for_test_qubits_resolve_arrays(request):
+    """resolve_arraysメソッドテスト用のfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # 単一Qubit
+        {
+            "target": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "eigen_values": [0.3 + 0j, 0.7 + 0j],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
+        },
+        {
+            "target": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+            "eigen_values": [(2 + sqrt(2)) / 4 + 0j, (2 - sqrt(2)) / 4 + 0j],
+            "eigen_states": [
+                [
+                    (1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                    (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                ],
+                [
+                    (1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                    (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                ],
+            ],
+        },
+        # 2粒子Qubit系
+        {
+            "target": [
+                [0.5 + 0j, 0j, 0.25 + 0j, 0.25 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0.25 + 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+            ],
+            "eigen_values": [0.25, 0.75],
+            "eigen_states": [
+                [0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [sqrt(2 / 3) + 0j, 0j, sqrt(1 / 6) + 0j, sqrt(1 / 6) + 0j],
+            ],
+        },
+    ]
+)
+def dict_for_test_resolve_eigen(request):
+    """resolve_eigenメソッドテスト用のfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # 単一Qubit
+        {
+            "target": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "eigen_values": [0.3 + 0j, 0.7 + 0j],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
+            "matrix": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+        {
+            "target": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+            "eigen_values": [(2 + sqrt(2)) / 4 + 0j, (2 - sqrt(2)) / 4 + 0j],
+            "eigen_states": [
+                [
+                    (1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                    (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                ],
+                [
+                    (1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                    (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                ],
+            ],
+            "matrix": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+        # 2粒子Qubit系
+        {
+            "target": [
+                [0.5 + 0j, 0j, 0.25 + 0j, 0.25 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0.25 + 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+            ],
+            "eigen_values": [0.25, 0.75],
+            "eigen_states": [
+                [0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [sqrt(2 / 3) + 0j, 0j, sqrt(1 / 6) + 0j, sqrt(1 / 6) + 0j],
+            ],
+            "matrix": [
+                [0.5 + 0j, 0j, 0.25 + 0j, 0.25 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0.25 + 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0.25 + 0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [
+                    [[0.25 + 0j, 0j], [0.25 + 0j, 0j]],
+                    [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
+                ],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "target": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "eigen_values": [1.0],
+            "eigen_states": [[sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": True,
+        },
+    ]
+)
+def dict_for_test_qubits_constructor(request):
+    """__init__メソッドテスト用のfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # 単一Qubit
+        {
+            "target": PureQubits([1.0 + 0j, 0j]),
+            "eigen_values": [1.0],
+            "eigen_states": [[1.0 + 0j, 0j]],
+            "matrix": [[1.0 + 0j, 0j], [0j, 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[1.0 + 0j, 0j], [0j, 0j]],
+            "qubit_count": 1,
+            "is_pure": True,
+        },
+        {
+            "target": PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+            "eigen_values": [1.0],
+            "eigen_states": [[-sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
+            "matrix": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
+            "qubit_count": 1,
+            "is_pure": True,
+        },
+        # 2粒子系
+        {
+            "target": PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
+            "eigen_values": [1.0],
+            "eigen_states": [[sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": True,
+        },
+    ]
+)
+def dict_for_test_generalize(request):
+    """generalizeメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # 単一Qubit
+        {
+            "target": Qubits([[1.0 + 0j, 0j], [0j, 0j]]),
+            "vector": [1.0 + 0j, 0j],
+            "ndarray": [1.0 + 0j, 0j],
+            "qubit_count": 1,
+            "projection": [[1.0 + 0j, 0j], [0j, 0j]],
+            "projection_matrix": [[1.0 + 0j, 0j], [0j, 0j]],
+            "projection_matrix_dim": 2,
+        },
+        {
+            "target": Qubits([[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]]),
+            "vector": [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            "ndarray": [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            "qubit_count": 1,
+            "projection": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
+            "projection_matrix": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
+            "projection_matrix_dim": 2,
+        },
+        # 2粒子系
+        {
+            "target": Qubits(
+                [
+                    [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                    [0j, 0j, 0j, 0j],
+                    [0j, 0j, 0j, 0j],
+                    [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                ]
+            ),
+            "vector": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
+            "ndarray": [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
+            "qubit_count": 2,
+            "projection": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "projection_matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "projection_matrix_dim": 4,
+        },
+    ]
+)
+def dict_for_test_specialize(request):
+    """specializeメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "probabilities": [0.5, 0.3, 0.2],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0j, 0j], [0j, 1.0 + 0j]]),
+            ],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
+            "matrix": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+        {
+            "probabilities": [0.5, 0.5],
+            "qubits_list": [
+                generalize(PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j])),
+                Qubits(
+                    [
+                        [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                        [0j, 0j, 0j, 0j],
+                        [0j, 0j, 0j, 0j],
+                        [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                    ]
+                ),
+            ],
+            "eigen_values": [1.0],
+            "eigen_states": [[sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": True,
+        },
+    ]
+)
+def dict_for_test_convex_combination(request):
+    """convex_combinationメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "probabilities": [0.2, 0.5],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
+        },
+        {
+            "probabilities": [-0.1, 0.4],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
+        },
+    ]
+)
+def invalid_probabilities_and_qubits_list(request):
     """
-    Qubit群に対する射影作用素のfixture
-    2粒子: |00>
-    3粒子: |010>
-    4粒子: |1001>
-    重ね合わせ2粒子(EPR pair): sqrt(0.5)|00> + sqrt(0.5)|11>
+    convex_combinationメソッドテスト用の異常系fixture
+    (不正な確率リスト)
     """
     return request.param
 
@@ -196,140 +480,439 @@ def proj_for_valid_qubits(request):
 @pytest.fixture(
     params=[
         {
-            "qubits_group": [[1 + 0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-            "result": [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
+            "probabilities": [0.5, 0.3, 0.2],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
         },
         {
-            "qubits_group": [
+            "probabilities": [1.0],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
+        },
+    ]
+)
+def not_match_count_probabilities_and_qubits_list(request):
+    """
+    convex_combinationメソッドテスト用の異常系fixture
+    (リスト要素数不一致)
+    """
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        # 単一Qubit
+        {
+            "probabilities": [0.3, 0.7],
+            "ons": OrthogonalSystem(
+                [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+            ),
+            "eigen_values": [0.3, 0.7],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
+            "matrix": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+        {
+            "probabilities": [0.25, 0.75],
+            "ons": OrthogonalSystem(
+                [
+                    PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                    PureQubits([-sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                ]
+            ),
+            "eigen_values": [0.25, 0.75],
+            "eigen_states": [
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
-            "result": [[0.5 + 0j, -0.5 + 0j], [0.5 + 0j, -0.5 + 0j]],
+            "matrix": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+    ]
+)
+def dict_for_test_create_from_ons(request):
+    """create_for_onsメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
+            "eigen_values": [1.0],
+            "eigen_states": [[0j, 1.0 + 0j, 0j, 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 1.0 + 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 1.0 + 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": True,
         },
         {
-            "qubits_group": [
-                [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-                [0j, 1 + 0j],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                Qubits(
+                    [
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                        [0j, 0j, 0j, 0j],
+                        [0j, 0j, 0.5 + 0j, 0j],
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                    ]
+                ),
             ],
-            "result": [
-                [[0j, sqrt(0.5) + 0j], [0j, -sqrt(0.5) + 0j]],
-                [[0j, 0j], [0j, 0j]],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
             ],
+            "matrix": [
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 8,
+            "ndarray": [
+                [
+                    [
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+            ],
+            "qubit_count": 3,
+            "is_pure": False,
         },
     ]
 )
-def dict_test_for_combine(request):
-    """
-    粒子間結合テスト用fixture
-    test1: |0> x |+> = sqrt(0.5)|00> + sqrt(0.5)|01>
-    test2: |+> x |-> = 0.5|00> - 0.5|01> + 0.5|10> - 0.5|11>
-    test3: |0-> x |1> = sqrt(0.5)|001> - sqrt(0.5)|011>
-    """
-    test_dict = {
-        "qubits_group": [
-            Qubits(amplitudes) for amplitudes in request.param["qubits_group"]
-        ],
-        "result": request.param["result"],
-    }
-    return test_dict
+def dict_for_test_qubits_combine(request):
+    """combineメソッドテスト用の正常系fixture"""
+    return request.param
 
 
 @pytest.fixture(
     params=[
-        [
-            [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-            [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-        ],
-        [
-            [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-            [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-        ],
+        {
+            "qubits": combine(
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 1,
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[1.0 + 0j, 0j, 0j, 0j], [0j, 1.0 + 0j, 0j, 0j]],
+            "matrix": [
+                [0.5 + 0j, 0j, 0j, 0j],
+                [0j, 0.5 + 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0.5 + 0j, 0j], [0j, 0j]], [[0j, 0.5 + 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "qubits": combine(
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 0,
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[0j, 0j, 1.0 + 0j, 0j], [0j, 0j, 0j, 1.0 + 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j],
+                [0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "qubits": combine(
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 2,
+            "eigen_values": [1.0],
+            "eigen_states": [[0j, 1.0 + 0j, 0j, 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 1.0 + 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 1.0 + 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": True,
+        },
     ]
 )
-def orthogonal_two_qubits_groups(request):
-    """
-    直交する二つのQubit群同士のfixture
-    test1: |0+>, |1+>
-    test2: |0->, |0+>
-    """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
+def dict_for_test_reduction(request):
+    """reductionメソッドテスト用の正常系fixture"""
+    return request.param
 
 
 @pytest.fixture(
     params=[
-        [
-            [[0.5 + 0j, 0.5 + 0j], [-0.5 + 0j, -0.5 + 0j]],
-            [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-        ],
-        [[[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]], [[0j, 1 + 0j], [0j, 0j]]],
+        {
+            "qubits": combine(
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": -1,
+        },
+        {
+            "qubits": combine(
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ),
+            "target_particle": 3,
+        },
     ]
 )
-def non_orthogonal_two_qubits_groups(request):
-    """
-    直交しない二つのQubit群のfixture
-    test1: {|-+>, |1+>} (<1+|-+>)
-    test2: {|0->, |01>} (<01|0->)
-    """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
+def invalid_reduction(request):
+    """reductionメソッドテスト用の異常系fixture"""
+    return request.param
 
 
 @pytest.fixture(
     params=[
-        [[[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]], [0j, 1.0 + 0j]],
-        [[1.0 + 0j, 0j], [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]]],
+        {
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [
+                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix": [
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 8,
+            "ndarray": [
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+            ],
+            "qubit_count": 3,
+            "is_pure": False,
+        },
+        {
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                Qubits(
+                    [
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                        [0j, 0j, 0j, 0j],
+                        [0j, 0j, 0.5 + 0j, 0j],
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                    ]
+                ),
+            ],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix": [
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 8,
+            "ndarray": [
+                [
+                    [
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+            ],
+            "qubit_count": 3,
+            "is_pure": False,
+        },
     ]
 )
-def not_match_counts_two_qubits_groups(request):
-    """
-    異なるQubit数の二つのQubit群のfixture
-    test1: |0+>, |1>
-    test2: |0>, |0+>
-    """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
+def dict_for_test_qubits_multiple_combine(request):
+    """combineメソッドテスト用の正常系fixture"""
+    return request.param
 
 
 @pytest.fixture(
     params=[
-        [
-            [[1 + 0j, 0j], [0j, 0j]],
-            [[0j, 1 + 0j], [0j, 0j]],
-            [[0j, 0j], [1 + 0j, 0j]],
-            [[0j, 0j], [0j, 1 + 0j]],
-        ]
+        {
+            "qubits": multiple_combine(
+                [
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                    Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+                ]
+            ),
+            "target_particles": [0, 1],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
+            "matrix": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+        {
+            "qubits": multiple_combine(
+                [
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                    Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+                ]
+            ),
+            "target_particles": [0],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[0j, 0j, 1.0 + 0j, 0j], [0j, 0j, 0j, 1.0 + 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j],
+                [0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "qubits": multiple_combine(
+                [
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                    Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+                ]
+            ),
+            "target_particles": [0, 2],
+            "eigen_values": [1.0],
+            "eigen_states": [[0j, 1.0 + 0j]],
+            "matrix": [[0j, 0j], [0j, 1.0 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0j, 0j], [0j, 1.0 + 0j]],
+            "qubit_count": 1,
+            "is_pure": True,
+        },
     ]
 )
-def orthogonal_multiple_qubits_groups(request):
-    """
-    互いに直交する二つより多いQubit群同士のfixture
-    test1: {|00>, |01>, |10>, |11>}
-    """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
-
-
-@pytest.fixture(
-    params=[
-        [
-            [[1 + 0j, 0j], [0j, 0j]],
-            [[0j, 1 + 0j], [0j, 0j]],
-            [[0j, 0j], [1 + 0j, 0j]],
-            [[0j, 0j], [0j, 1 + 0j]],
-            [[1 + 0j, 0j], [0j, 0j]],
-        ]
-    ]
-)
-def non_orthogonal_multiple_qubits_groups(request):
-    """
-    互いに直交しない二つより多いQubit群同士のfixture
-    test1: {|00>, |01>, |10>, |11>, |00>}
-    """
-    amplitudes_list = [amplitudes for amplitudes in request.param]
-    qubits = [Qubits(amplitudes) for amplitudes in amplitudes_list]
-    return qubits
+def dict_for_test_multiple_reduction(request):
+    """reductionメソッドテスト用の正常系fixture"""
+    return request.param

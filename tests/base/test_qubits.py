@@ -1,142 +1,480 @@
 import numpy as np
 import pytest
 
-from quantum_simulator.base.conf import APPROX_DIGIT
 from quantum_simulator.base.error import (
     InitializeError,
-    NoQubitsInputError,
-    QubitCountNotMatchError,
+    InvalidProbabilitiesError,
+    NotMatchCountError,
+    ReductionError,
 )
 from quantum_simulator.base.qubits import (
     Qubits,
     combine,
-    inner,
-    is_all_orthogonal,
-    is_orthogonal,
+    convex_combination,
+    create_from_ons,
+    generalize,
+    is_qubits_dim,
+    multiple_combine,
+    multiple_reduction,
+    reduction,
+    resolve_arrays,
+    resolve_eigen,
+    specialize,
 )
+from quantum_simulator.base.utils import allclose, isclose
 
 
 class TestQubits:
-    """Qubitsクラスと付随するメソッドのテスト"""
+    """
+    Qubitsクラスと付随するメソッドのテスト
+        * 以下のロジックはテストしない
+            * ただ値を代入するだけのロジック
+            * すでにテスト済みの値を代入するロジック
+            * 既存オブジェクトを出力するだけのロジック
+    """
 
-    # 単一Qubitに対するテスト
-    def test_valid_qubit_input(self, valid_qubit_amp):
-        """[正常系]: 単一Qubit生成"""
-        amplitudes = valid_qubit_amp
-        qubit = Qubits(amplitudes)
-        assert np.all(qubit.amplitudes == amplitudes)
-        assert qubit.qubit_count == 1
+    def test_for_success_is_qubits_dim(self, valid_qubits_array):
+        """is_qubits_dimメソッドの正常系テスト"""
 
-    def test_invalid_qubit_input(self, invalid_qubit_amp):
-        """[異常系]: 不正な単一Qubitパラメータ"""
-        with pytest.raises(InitializeError):
-            amplitudes = invalid_qubit_amp
-            Qubits(amplitudes)
+        array = np.array(valid_qubits_array)
+        assert is_qubits_dim(array)
 
-    def test_zero_inner_product_of_qubits(self, orthogonal_qubits):
-        """[正常系]: 直交した単一Qubit同士の内積"""
-        assert is_orthogonal(orthogonal_qubits[0], orthogonal_qubits[1])
+    def test_for_failure_is_qubits_dim(self, invalid_qubits_array):
+        """is_qubits_dimメソッドの異常系テスト"""
 
-    def test_non_zero_inner_product_of_qubits(self, non_orthogonal_qubits):
-        """[正常系]: 直交しない単一Qubit同士の内積"""
-        assert not is_orthogonal(non_orthogonal_qubits[0], non_orthogonal_qubits[1])
+        array = np.array(invalid_qubits_array)
+        assert not is_qubits_dim(array)
 
-    def test_one_inner_product_of_qubits(self, valid_qubit):
-        """[正常系]: 長さが1の単一Qubitに対する内積"""
-        assert round(inner(valid_qubit, valid_qubit) - 1.0, APPROX_DIGIT) == 0.0
+    def test_for_success_resolve_arrays(self, dict_for_test_qubits_resolve_arrays):
+        """resolve_arraysメソッドの正常系テスト"""
+        target = np.array(dict_for_test_qubits_resolve_arrays["target"])
+        matrix, ndarray = resolve_arrays(target)
+        expected_matrix = np.array(dict_for_test_qubits_resolve_arrays["matrix"])
+        expected_ndarray = np.array(dict_for_test_qubits_resolve_arrays["ndarray"])
+        assert np.allclose(matrix, expected_matrix)
+        assert matrix.shape == expected_matrix.shape
+        assert ndarray.shape == expected_ndarray.shape
 
-    def test_projection_of_one_qubit(self, proj_for_valid_qubit):
-        """[正常系]: 単一Qubitに対する射影作用素"""
-        assert np.all(
-            np.round(
-                proj_for_valid_qubit["qubit"].projection()
-                - np.array(proj_for_valid_qubit["projection"]),
-                APPROX_DIGIT,
-            )
-            == 0.0
-        )
+    def test_for_success_resolve_eigen(self, dict_for_test_resolve_eigen):
+        """resolve_eigenメソッドの正常系テスト"""
+        target = np.array(dict_for_test_resolve_eigen["target"])
+        eigen_values, eigen_states = resolve_eigen(target)
 
-    # Qubit群に対するテスト
-    def test_valid_qubits_input(self, valid_qubits_amp):
-        """[正常系]: Qubit群生成"""
-        amplitudes = valid_qubits_amp
-        qubit = Qubits(amplitudes)
-        assert np.all(qubit.amplitudes == amplitudes)
-        assert qubit.qubit_count == len(np.array(amplitudes).shape)
+        expected_eigen_values = dict_for_test_resolve_eigen["eigen_values"]
+        expected_eigen_states = dict_for_test_resolve_eigen["eigen_states"]
 
-    def test_combine_qubits(self, dict_test_for_combine):
-        """[正常系]: Qubit群同士の結合"""
-        qubits_group = dict_test_for_combine["qubits_group"]
-        combined_qubits = combine(qubits_group[0], qubits_group[1])
-        expected_result = np.array(dict_test_for_combine["result"])
-        assert np.all(
-            np.round(abs(combined_qubits.amplitudes - expected_result), APPROX_DIGIT)
-            == 0.0
-        )
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
 
-    def test_zero_inner_product_of_two_qubits(self, orthogonal_two_qubits_groups):
-        """[正常系]: 直交した二つのQubit群の内積"""
-        assert (
-            round(
-                inner(orthogonal_two_qubits_groups[0], orthogonal_two_qubits_groups[1]),
-                APPROX_DIGIT,
-            )
-            == 0.0
-        )
-        assert is_orthogonal(
-            orthogonal_two_qubits_groups[0], orthogonal_two_qubits_groups[1]
-        )
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
 
-    def test_one_inner_product_of_two_qubits(self, valid_qubits):
-        """[正常系]: 長さが1のQubit群に対する内積"""
-        assert round(inner(valid_qubits, valid_qubits) - 1.0, APPROX_DIGIT) == 0.0
+            assert is_passed
 
-    def test_non_zero_inner_product_of_two_qubits(
-        self, non_orthogonal_two_qubits_groups
+    def test_for_success_constructor(self, dict_for_test_qubits_constructor):
+        """__init__メソッドの正常系テスト"""
+        target = dict_for_test_qubits_constructor["target"]
+        qubits = Qubits(target)
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_qubits_constructor["eigen_values"]
+        expected_eigen_states = dict_for_test_qubits_constructor["eigen_states"]
+        expected_matrix = np.array(dict_for_test_qubits_constructor["matrix"])
+        expected_matrix_dim = dict_for_test_qubits_constructor["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_qubits_constructor["ndarray"])
+        expected_qubit_count = dict_for_test_qubits_constructor["qubit_count"]
+        expected_is_pure = dict_for_test_qubits_constructor["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_failure_constructor(self):
+        """__init__メソッド 虚数固有値の異常系テスト"""
+        with pytest.raises(InitializeError) as error:
+            target = [[0.5 + 0j, 0j], [0j, 0.5 * 1j]]
+            Qubits(target)
+        assert "与えられたリストには虚数の固有値が存在します" in str(error.value)
+
+    def test_for_success_generalize(self, dict_for_test_generalize):
+        """generalizeメソッドの正常系テスト"""
+        target = dict_for_test_generalize["target"]
+        qubits = generalize(target)
+
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_generalize["eigen_values"]
+        expected_eigen_states = dict_for_test_generalize["eigen_states"]
+        expected_matrix = np.array(dict_for_test_generalize["matrix"])
+        expected_matrix_dim = dict_for_test_generalize["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_generalize["ndarray"])
+        expected_qubit_count = dict_for_test_generalize["qubit_count"]
+        expected_is_pure = dict_for_test_generalize["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_success_specialize(self, dict_for_test_specialize):
+        """specializeメソッドの正常系テスト"""
+        target = dict_for_test_specialize["target"]
+        result = specialize(target)
+
+        expected_ndarray = dict_for_test_specialize["ndarray"]
+        expected_vector = dict_for_test_specialize["vector"]
+        expected_qubit_count = dict_for_test_specialize["qubit_count"]
+        expected_projection = dict_for_test_specialize["projection"]
+        expected_projection_matrix = dict_for_test_specialize["projection_matrix"]
+        expected_projection_matrix_dim = dict_for_test_specialize[
+            "projection_matrix_dim"
+        ]
+        assert allclose(result.ndarray, expected_ndarray)
+        assert allclose(result.vector, expected_vector)
+        assert result.qubit_count == expected_qubit_count
+        assert allclose(result.projection, expected_projection)
+        assert allclose(result.projection_matrix, expected_projection_matrix)
+        assert result.projection_matrix_dim == expected_projection_matrix_dim
+
+    def test_for_success_convex_combination(self, dict_for_test_convex_combination):
+        """convex_combinationメソッドの正常系テスト"""
+        probabilities = dict_for_test_convex_combination["probabilities"]
+        qubits_list = dict_for_test_convex_combination["qubits_list"]
+        qubits = convex_combination(probabilities, qubits_list)
+
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_convex_combination["eigen_values"]
+        expected_eigen_states = dict_for_test_convex_combination["eigen_states"]
+        expected_matrix = np.array(dict_for_test_convex_combination["matrix"])
+        expected_matrix_dim = dict_for_test_convex_combination["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_convex_combination["ndarray"])
+        expected_qubit_count = dict_for_test_convex_combination["qubit_count"]
+        expected_is_pure = dict_for_test_convex_combination["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_success_create_from_ons(self, dict_for_test_create_from_ons):
+        """create_from_onsメソッドの正常系テスト"""
+        probabilities = dict_for_test_create_from_ons["probabilities"]
+        ons = dict_for_test_create_from_ons["ons"]
+        qubits = create_from_ons(probabilities, ons)
+
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_create_from_ons["eigen_values"]
+        expected_eigen_states = dict_for_test_create_from_ons["eigen_states"]
+        expected_matrix = np.array(dict_for_test_create_from_ons["matrix"])
+        expected_matrix_dim = dict_for_test_create_from_ons["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_create_from_ons["ndarray"])
+        expected_qubit_count = dict_for_test_create_from_ons["qubit_count"]
+        expected_is_pure = dict_for_test_create_from_ons["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_invalid_probabilities_error_convex_combination(
+        self, invalid_probabilities_and_qubits_list
     ):
-        """[正常系]: 直交しない二つのQubit群同士の内積"""
-        assert not is_orthogonal(
-            non_orthogonal_two_qubits_groups[0], non_orthogonal_two_qubits_groups[1]
-        )
+        """convex_combinationメソッドに対する不正な確率リストエラーの異常系テスト"""
+        with pytest.raises(InvalidProbabilitiesError):
+            probabilities = invalid_probabilities_and_qubits_list["probabilities"]
+            qubits_list = invalid_probabilities_and_qubits_list["qubits_list"]
+            convex_combination(probabilities, qubits_list)
 
-    def test_inner_product_of_two_qubits_with_unmatch_counts(
-        self, not_match_counts_two_qubits_groups
+    def test_for_not_match_count_error_convex_combination(
+        self, not_match_count_probabilities_and_qubits_list
     ):
-        """[異常系]: 異なるQubit数の二つのQubit群に対する内積"""
-        with pytest.raises(QubitCountNotMatchError):
-            inner(
-                not_match_counts_two_qubits_groups[0],
-                not_match_counts_two_qubits_groups[1],
-            )
+        """convex_combinationメソッドに対するリスト要素数不一致エラーの異常系テスト"""
+        with pytest.raises(NotMatchCountError):
+            probabilities = not_match_count_probabilities_and_qubits_list[
+                "probabilities"
+            ]
+            qubits_list = not_match_count_probabilities_and_qubits_list["qubits_list"]
+            convex_combination(probabilities, qubits_list)
 
-    def test_check_of_orthogonality_for_empty_set(self):
-        """[異常系]: 空集合に対する直交性のテスト"""
-        with pytest.raises(NoQubitsInputError):
-            is_all_orthogonal([])
+    def test_for_failure_reduction(self, invalid_reduction):
+        """reductionメソッドの正常系テスト"""
+        qubits = invalid_reduction["qubits"]
+        target_particle = invalid_reduction["target_particle"]
 
-    def test_check_of_orthogonality_for_unit_set(self, valid_qubits):
-        """[正常系]: 単一Qubit群に対する直交性のテスト"""
-        assert is_all_orthogonal([valid_qubits])
+        with pytest.raises(ReductionError):
+            reduction(qubits, target_particle)
 
-    def test_check_of_orthogonality_for_multiple_qubits_groups(
-        self, orthogonal_multiple_qubits_groups,
-    ):
-        """[正常系]: 互いに直交する二つ以上のQubit群に対する直交性のテスト"""
-        assert is_all_orthogonal(orthogonal_multiple_qubits_groups)
+    def test_for_success_combine(self, dict_for_test_qubits_combine):
+        """combineメソッドの正常系テスト"""
+        qubits_list = dict_for_test_qubits_combine["qubits_list"]
+        qubits = combine(qubits_list[0], qubits_list[1])
 
-    def test_check_of_non_orthogonality_for_multiple_qubits_groups(
-        self, non_orthogonal_multiple_qubits_groups
-    ):
-        """[正常系]: 互いに直交しない二つ以上のQubit群に対する直交性のテスト"""
-        assert not is_all_orthogonal(non_orthogonal_multiple_qubits_groups)
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
 
-    def test_projection_of_multiple_qubits(self, proj_for_valid_qubits):
-        """[正常系]: 単一Qubitに対する射影作用素"""
-        assert np.all(
-            np.round(
-                proj_for_valid_qubits["qubits"].projection()
-                - np.array(proj_for_valid_qubits["projection"]),
-                APPROX_DIGIT,
-            )
-            == 0.0
-        )
+        expected_eigen_values = dict_for_test_qubits_combine["eigen_values"]
+        expected_eigen_states = dict_for_test_qubits_combine["eigen_states"]
+        expected_matrix = np.array(dict_for_test_qubits_combine["matrix"])
+        expected_matrix_dim = dict_for_test_qubits_combine["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_qubits_combine["ndarray"])
+        expected_qubit_count = dict_for_test_qubits_combine["qubit_count"]
+        expected_is_pure = dict_for_test_qubits_combine["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_success_reduction(self, dict_for_test_reduction):
+        """reductionメソッドの正常系テスト"""
+        qubits = dict_for_test_reduction["qubits"]
+        target_particle = dict_for_test_reduction["target_particle"]
+        reduced_qubits = reduction(qubits, target_particle)
+
+        eigen_values = reduced_qubits.eigen_values
+        eigen_states = reduced_qubits.eigen_states
+        matrix = reduced_qubits.matrix
+        matrix_dim = reduced_qubits.matrix_dim
+        ndarray = reduced_qubits.ndarray
+        qubit_count = reduced_qubits.qubit_count
+        is_pure = reduced_qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_reduction["eigen_values"]
+        expected_eigen_states = dict_for_test_reduction["eigen_states"]
+        expected_matrix = np.array(dict_for_test_reduction["matrix"])
+        expected_matrix_dim = dict_for_test_reduction["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_reduction["ndarray"])
+        expected_qubit_count = dict_for_test_reduction["qubit_count"]
+        expected_is_pure = dict_for_test_reduction["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_success_multiple_combine(self, dict_for_test_qubits_multiple_combine):
+        """multiple_combineメソッドの正常系テスト"""
+        qubits_list = dict_for_test_qubits_multiple_combine["qubits_list"]
+        qubits = multiple_combine(qubits_list)
+
+        eigen_values = qubits.eigen_values
+        eigen_states = qubits.eigen_states
+        matrix = qubits.matrix
+        matrix_dim = qubits.matrix_dim
+        ndarray = qubits.ndarray
+        qubit_count = qubits.qubit_count
+        is_pure = qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_qubits_multiple_combine["eigen_values"]
+        expected_eigen_states = dict_for_test_qubits_multiple_combine["eigen_states"]
+        expected_matrix = np.array(dict_for_test_qubits_multiple_combine["matrix"])
+        expected_matrix_dim = dict_for_test_qubits_multiple_combine["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_qubits_multiple_combine["ndarray"])
+        expected_qubit_count = dict_for_test_qubits_multiple_combine["qubit_count"]
+        expected_is_pure = dict_for_test_qubits_multiple_combine["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
+
+    def test_for_success_multiple_reduction(self, dict_for_test_multiple_reduction):
+        """multiple_reductionメソッドの正常系テスト"""
+        qubits = dict_for_test_multiple_reduction["qubits"]
+        target_particles = dict_for_test_multiple_reduction["target_particles"]
+        reduced_qubits = multiple_reduction(qubits, target_particles)
+
+        eigen_values = reduced_qubits.eigen_values
+        eigen_states = reduced_qubits.eigen_states
+        matrix = reduced_qubits.matrix
+        matrix_dim = reduced_qubits.matrix_dim
+        ndarray = reduced_qubits.ndarray
+        qubit_count = reduced_qubits.qubit_count
+        is_pure = reduced_qubits.is_pure()
+
+        expected_eigen_values = dict_for_test_multiple_reduction["eigen_values"]
+        expected_eigen_states = dict_for_test_multiple_reduction["eigen_states"]
+        expected_matrix = np.array(dict_for_test_multiple_reduction["matrix"])
+        expected_matrix_dim = dict_for_test_multiple_reduction["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_multiple_reduction["ndarray"])
+        expected_qubit_count = dict_for_test_multiple_reduction["qubit_count"]
+        expected_is_pure = dict_for_test_multiple_reduction["is_pure"]
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert qubit_count == expected_qubit_count
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert is_pure == expected_is_pure
