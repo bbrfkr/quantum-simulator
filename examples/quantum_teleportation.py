@@ -4,11 +4,12 @@
 
 from math import sqrt
 
-from quantum_simulator.base.transformer import UnitaryTransformer, create_from_onb
 from quantum_simulator.base import observable, pure_qubits
 from quantum_simulator.base.observable import observe
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
+from quantum_simulator.base.transformer import UnitaryTransformer, create_from_onb
+from quantum_simulator.base.utils import around
 
 # 初期状態の確率振幅
 alpha = sqrt(0.7) + 0j
@@ -65,7 +66,7 @@ print()
 
 # Aliceによる局所観測の実行
 observed_value, converged_qubits = observe(whole_observable, generalize(whole_qubits))
-int_observed_value = int(observed_value)
+int_observed_value = int(around(observed_value))
 print("##### 観測結果 #####")
 print(int_observed_value)
 print()
