@@ -40,9 +40,9 @@ def is_pow2(a: int) -> bool:
 def is_probabilities(target_list: List[float]):
     """与えられたfloatリストが確率分布であるか判定する"""
 
-    total = 0
+    total = 0.0
     for element in target_list:
-        if element < 0:
+        if element < 0.0:
             return False
         total += element
         if round(total, AROUNDED_DECIMALS) > 1.0:

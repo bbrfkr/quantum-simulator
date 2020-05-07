@@ -8,7 +8,7 @@ from quantum_simulator.base import observable, pure_qubits
 from quantum_simulator.base.observable import observe
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
-from quantum_simulator.base.transformer import UnitaryTransformer, create_from_onb
+from quantum_simulator.base.transformer import create_from_onb
 from quantum_simulator.base.utils import around
 
 # 初期状態の確率振幅

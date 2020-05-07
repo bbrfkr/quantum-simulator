@@ -119,7 +119,7 @@ class TestQubits:
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
 
-    def test_for_success_constructor(self):
+    def test_for_failure_constructor(self):
         """__init__メソッド 虚数固有値の異常系テスト"""
         with pytest.raises(InitializeError) as error:
             target = [[0.5 + 0j, 0j], [0j, 0.5 * 1j]]

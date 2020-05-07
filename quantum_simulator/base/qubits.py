@@ -53,14 +53,14 @@ class Qubits:
         matrix, ndarray = resolve_arrays(tmp_array)
 
         # 固有値と固有ベクトルを導出
-        eigen_values, eigen_states = resolve_eigen(matrix)
+        tmp_eigen_values, eigen_states = resolve_eigen(matrix)
 
         # 固有値の虚部の有無をチェックし、floatに変換
-        if not is_real(eigen_values):
+        if not is_real(tmp_eigen_values):
             message = "[ERROR]: 与えられたリストには虚数の固有値が存在します"
             raise InitializeError(message)
 
-        eigen_values = np.real(eigen_values)
+        eigen_values = np.real(tmp_eigen_values)
 
         # 固有値全体が確率分布に対応できるかチェック
         if not is_probabilities(eigen_values):

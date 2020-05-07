@@ -59,8 +59,8 @@ def dict_for_test_unitary_constructor(request):
 
 @pytest.fixture(
     params=[
-        [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -1 + 0j],],
-        [[1.0 + 0j, 0j, 0j], [0j, 1.0 + 0j, 0j], [0j, 0j, 1.0 + 0j],],
+        [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -1 + 0j]],
+        [[1.0 + 0j, 0j, 0j], [0j, 1.0 + 0j, 0j], [0j, 0j, 1.0 + 0j]],
         [
             [1.0 + 0j, 0j, 0j, 0j],
             [0j, -2.0 + 0j, 0j, 0j],
@@ -174,7 +174,7 @@ def dict_for_test_create_from_onb(request):
         {
             "unitary_0": UnitaryTransformer([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
             "unitary_1": UnitaryTransformer(
-                [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],]
+                [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]]
             ),
             "matrix": [
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],

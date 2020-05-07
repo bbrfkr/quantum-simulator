@@ -3,7 +3,7 @@
 """
 
 from random import choices
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -13,7 +13,7 @@ from quantum_simulator.base.error import (
     NotMatchCountError,
     NotMatchDimensionError,
 )
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits, combine
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.qubits import (
     Qubits,
     is_qubits_dim,
@@ -49,14 +49,14 @@ class Observable:  # pylint: disable=too-few-public-methods
         matrix, ndarray = resolve_arrays(tmp_array)
 
         # 固有値、固有状態の導出
-        eigen_values, eigen_states = resolve_eigen(matrix)
+        tmp_eigen_values, eigen_states = resolve_eigen(matrix)
 
         # 固有値の虚部の有無をチェックし、floatに変換
-        if not is_real(eigen_values):
+        if not is_real(tmp_eigen_values):
             message = "[ERROR]: 与えられたリストには虚数の固有値が存在します"
             raise InitializeError(message)
 
-        eigen_values = np.real(eigen_values)
+        eigen_values = np.real(tmp_eigen_values)
 
         # 行列の次元を導出
         matrix_dim = matrix.shape[0]
@@ -91,7 +91,7 @@ class Observable:  # pylint: disable=too-few-public-methods
 
 def _resolve_observed_results(
     eigen_values: List[float], eigen_states: List[PureQubits]
-) -> (List[float], List[Observable]):
+) -> Tuple[List[float], List[Observable]]:
     """固有値の縮退を検知し、観測に対して取りうる観測結果(固有値と射影行列の組)を返す"""
 
     # 固有値の近似的に一意のリストと一致していたインデックスのリストを作る
@@ -155,7 +155,7 @@ def create_from_ons(observed_values: List[float], ons: OrthogonalSystem):
     return Observable(new_hermite_array)
 
 
-def observe(observable: Observable, target: Qubits) -> (float, Qubits):
+def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
     """観測を実施して観測値および収束後のQubitsを取得する"""
 
     # 観測の取りうる結果のリストを作る
@@ -164,16 +164,13 @@ def observe(observable: Observable, target: Qubits) -> (float, Qubits):
         observable.eigen_values, observable.eigen_states
     )
     observed_results = [
-        {
-            "value": observed_results_tuple[0][index],
-            "projection": observed_results_tuple[1][index],
-        }
+        (observed_results_tuple[0][index], observed_results_tuple[1][index])
         for index in range(len(observed_results_tuple[0]))
     ]
 
     # 各観測結果に対する射影観測の期待値(観測確率)を求める
     observed_probabilities = [
-        observed_results[index]["projection"].expected_value(target)
+        observed_results[index][1].expected_value(target)
         for index in range(len(observed_results))
     ]
 
@@ -181,7 +178,7 @@ def observe(observable: Observable, target: Qubits) -> (float, Qubits):
     observed_result = choices(observed_results, observed_probabilities)[0]
 
     # 観測によるQubitの収束 - 射影の適用と規格化
-    projection_matrix = observed_result["projection"].matrix
+    projection_matrix = observed_result[1].matrix
     target_matrix = target.matrix
 
     # 射影行列を両側から挟み、かつトレース値で割って規格化する
@@ -190,7 +187,7 @@ def observe(observable: Observable, target: Qubits) -> (float, Qubits):
     normalized_post_matrix = (1.0 / observed_probability) * post_matrix
 
     # 観測値の返却
-    return (observed_result["value"], Qubits(normalized_post_matrix))
+    return (observed_result[0], Qubits(normalized_post_matrix))
 
 
 def combine(observable_0: Observable, observable_1: Observable) -> Observable:
