@@ -202,8 +202,8 @@ def combine(observable_0: Observable, observable_1: Observable) -> Observable:
         * pure_qubits.combine(
             observable_0.eigen_states[index_0], observable_1.eigen_states[index_1]
         ).projection_matrix
-        for index_1 in range(len(observable_1.eigen_values))
         for index_0 in range(len(observable_0.eigen_values))
+        for index_1 in range(len(observable_1.eigen_values))
     ]
 
     new_hermite_array = new_elements[-1]

@@ -4,6 +4,7 @@
 
 from math import sqrt
 
+from quantum_simulator.base.transformer import UnitaryTransformer, create_from_onb
 from quantum_simulator.base import observable, pure_qubits
 from quantum_simulator.base.observable import observe
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
@@ -14,9 +15,15 @@ alpha = sqrt(0.7) + 0j
 beta = sqrt(0.3) + 0j
 
 # 転送したい初期状態を定義
-initial_qubit = PureQubits([alpha, beta])
-print("##### 初期状態 #####")
-initial_qubit.dirac_notation()
+input_qubit = PureQubits([alpha, beta])
+print("##### 初期の入力状態 #####")
+
+print("### Matrix表示 ###")
+print(input_qubit.projection_matrix)
+print()
+
+print("### Dirac表記表示 ###")
+input_qubit.dirac_notation()
 print()
 
 # Bell基底の定義
@@ -31,9 +38,7 @@ bell_basis[0].dirac_notation()
 print()
 
 # 合成系の構成と全系ベクトルのDirac表記
-print(initial_qubit)
-print(bell_basis[0])
-whole_qubits = pure_qubits.combine(initial_qubit, bell_basis[0])
+whole_qubits = pure_qubits.combine(input_qubit, bell_basis[0])
 print("##### 全系の状態ベクトル #####")
 whole_qubits.dirac_notation()
 print()
@@ -65,55 +70,47 @@ print("##### 観測結果 #####")
 print(int_observed_value)
 print()
 
-# # 恒等変換(作用素)の定義
-# standard_basis_4x4 = OrthogonalSystem(
-#     [
-#         PureQubits([[1 + 0j, 0j], [0j, 0j]]),
-#         PureQubits([[0j, 1 + 0j], [0j, 0j]]),
-#         PureQubits([[0j, 0j], [1 + 0j, 0j]]),
-#         PureQubits([[0j, 0j], [0j, 1 + 0j]]),
-#     ]
-# )
-# identity_transformer = UnitaryTransformer(standard_basis_4x4, standard_basis_4x4)
-
 # Bobが適用するユニタリ変換の定義
-# local_unitaries = [
-#     UnitaryTransformer(
-#         ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-#         ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-#     ),
-#     UnitaryTransformer(
-#         ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-#         ObservedBasis([PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])]),
-#     ),
-#     UnitaryTransformer(
-#         ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-#         ObservedBasis([PureQubits([0j, -1.0 + 0j]), PureQubits([1.0 + 0j, 0j])]),
-#     ),
-#     UnitaryTransformer(
-#         ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-#         ObservedBasis([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, -1.0 + 0j])]),
-#     ),
-# ]
-# whole_unitaries = [
-#     transformer.combine(identity_transformer, unitary) for unitary in local_unitaries
-# ]
-# print("##### 観測結果に対応する局所ユニタリ変換 #####")
-# print(local_unitaries[int_observed_value])
-# print()
+local_unitaries = [
+    create_from_onb(
+        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
+        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
+    ),
+    create_from_onb(
+        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
+        OrthogonalSystem([PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])]),
+    ),
+    create_from_onb(
+        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
+        OrthogonalSystem([PureQubits([0j, -1.0 + 0j]), PureQubits([1.0 + 0j, 0j])]),
+    ),
+    create_from_onb(
+        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
+        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, -1.0 + 0j])]),
+    ),
+]
 
-# print("##### 観測結果に対応する全系のユニタリ変換 #####")
-# print(whole_unitaries[int_observed_value])
-# print()
+bob_unitary = local_unitaries[int_observed_value]
+bob_qubit = multiple_reduction(converged_qubits, [0, 1])
 
+print("##### 観測直後の出力状態 #####")
+print(bob_qubit)
+print()
 
-# # ユニタリ変換の適用
-# whole_unitaries[int_observed_value].operate(whole_qubits)
+print("##### 観測結果に対応するユニタリ変換 #####")
+print(bob_unitary)
+print()
 
-print("##### Bobに送信されたユニタリ変換後のQubit #####")
-output = multiple_reduction(converged_qubits, [0, 1])
+# ユニタリ変換の適用
+output_qubit = bob_unitary.operate(bob_qubit)
+
+print("##### 最終的な出力状態 #####")
+print()
+
 print("### Matrix表示 ###")
-print(output.matrix)
+print(output_qubit.matrix)
+print()
+
 print("### Dirac表記表示 ###")
-specialize(output).dirac_notation()
+specialize(output_qubit).dirac_notation()
 print()

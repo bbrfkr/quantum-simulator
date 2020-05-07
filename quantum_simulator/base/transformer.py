@@ -67,7 +67,7 @@ class UnitaryTransformer:
             raise IncompatibleDimensionError(message)
 
         transformed_matrix = np.dot(
-            np.dot(self.matrix, qubits.matrix), conjugate(self.matrix)
+            np.dot(self.matrix, qubits.matrix), conjugate(self.matrix.T)
         )
 
         return Qubits(transformed_matrix)

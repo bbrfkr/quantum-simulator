@@ -288,14 +288,14 @@ def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
 
     # 確率分布の結合
     probabilities = [
-        value_0 * value_1 for value_1 in eigen_values_1 for value_0 in eigen_values_0
+        value_0 * value_1 for value_0 in eigen_values_0 for value_1 in eigen_values_1
     ]
 
     # 固有状態の結合
     generalized_eigen_states = [
         generalize(pure_qubits.combine(state_0, state_1))
-        for state_1 in eigen_states_1
         for state_0 in eigen_states_0
+        for state_1 in eigen_states_1
     ]
 
     # 新しい状態の生成
