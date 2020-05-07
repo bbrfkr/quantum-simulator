@@ -151,8 +151,8 @@ def create_from_ons(observed_values: List[float], ons: OrthogonalSystem):
     return Observable(new_hermite_array)
 
 
-def observe(observable: Observable, target: Qubits) -> float:
-    """観測を実施して観測値を取得し、Qubits群を収束させる"""
+def observe(observable: Observable, target: Qubits) -> (float, Qubits):
+    """観測を実施して観測値および収束後のQubitsを取得する"""
 
     # 観測の取りうる結果のリストを作る
     # まず近似的に一意な固有値リストと射影行列のリストを導出
@@ -185,17 +185,8 @@ def observe(observable: Observable, target: Qubits) -> float:
     observed_probability = np.trace(post_matrix)
     normalized_post_matrix = (1.0 / observed_probability) * post_matrix
 
-    # 観測後の固有値、固有状態の再計算
-    eigen_values, eigen_states = resolve_eigen(normalized_post_matrix)
-
-    # Qubitsの収束
-    target.eigen_values = eigen_values
-    target.eigen_states = eigen_states
-    target.matrix = normalized_post_matrix
-    target.ndarray = normalized_post_matrix.reshape(target.ndarray.shape)
-
     # 観測値の返却
-    return observed_result["value"]
+    return (observed_result["value"], Qubits(normalized_post_matrix))
 
 
 def combine(observable_0: Observable, observable_1: Observable) -> Observable:

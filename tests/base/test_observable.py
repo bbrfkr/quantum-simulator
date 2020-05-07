@@ -161,13 +161,13 @@ class TestObservable:
 
         random.seed(test_for_success_observe["random_seed"])
 
-        observed_value = observe(observable, target)
+        observed_value, converged_qubits = observe(observable, target)
 
         expected_observed_value = test_for_success_observe["expected_observed_value"]
         expected_qubits = test_for_success_observe["expected_qubits"]
 
         assert isclose(observed_value, expected_observed_value)
-        assert allclose(target.matrix, expected_qubits.matrix)
+        assert allclose(converged_qubits.matrix, expected_qubits.matrix)
 
     def test_for_success_observable_combine(self, test_for_success_observable_combine):
         """
