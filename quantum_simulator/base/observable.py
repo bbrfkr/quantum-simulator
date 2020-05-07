@@ -8,8 +8,12 @@ from typing import List
 import numpy as np
 
 import quantum_simulator.base.pure_qubits as pure_qubits
-from quantum_simulator.base.error import InitializeError, NotMatchDimensionError
-from quantum_simulator.base.pure_qubits import PureQubits, combine
+from quantum_simulator.base.error import (
+    InitializeError,
+    NotMatchDimensionError,
+    NotMatchCountError,
+)
+from quantum_simulator.base.pure_qubits import PureQubits, combine, OrthogonalSystem
 from quantum_simulator.base.qubits import (
     Qubits,
     is_qubits_dim,
@@ -127,6 +131,26 @@ def _resolve_observed_results(
     return (unique_eigen_values, projections)
 
 
+def create_from_ons(observed_values: List[float], ons: OrthogonalSystem):
+    """正規直交系と観測値リストから観測量を作る"""
+    len_qubits_list = len(ons.qubits_list)
+
+    # 観測値リストとONS内のPureQubitsリストの要素数同士が一致するかチェック
+    if len_qubits_list != len(observed_values):
+        message = "[ERROR]: 与えられた観測値リストと正規直交系を構成するQubitsリストの要素数が一致しません"
+        raise NotMatchCountError(message)
+
+    qubits_list = ons.qubits_list
+    new_hermite_array = observed_values[-1] * qubits_list[-1].projection_matrix
+    for index in range(len(observed_values) - 1):
+        new_hermite_array = np.add(
+            new_hermite_array,
+            observed_values[index] * qubits_list[index].projection_matrix,
+        )
+
+    return Observable(new_hermite_array)
+
+
 def observe(observable: Observable, target: Qubits) -> float:
     """観測を実施して観測値を取得し、Qubits群を収束させる"""
 
@@ -193,3 +217,13 @@ def combine(observable_0: Observable, observable_1: Observable) -> Observable:
 
     new_observable = Observable(new_hermite_array)
     return new_observable
+
+
+def multiple_combine(observables: List[Observable]) -> Observable:
+    """一般的に二つ以上の観測量から合成系の観測量を作る"""
+    combined_observable = observables[0]
+
+    for index in range(len(observables) - 1):
+        combined_observable = combine(combined_observable, observables[index + 1])
+
+    return combined_observable

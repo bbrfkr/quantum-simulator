@@ -9,6 +9,8 @@ from quantum_simulator.base.observable import (
     _resolve_observed_results,
     combine,
     observe,
+    multiple_combine,
+    create_from_ons,
 )
 from quantum_simulator.base.qubits import Qubits
 from quantum_simulator.base.utils import allclose, isclose
@@ -41,6 +43,46 @@ class TestObservable:
         expected_matrix = np.array(test_for_success_observable_constructor["matrix"])
         expected_matrix_dim = test_for_success_observable_constructor["matrix_dim"]
         expected_ndarray = np.array(test_for_success_observable_constructor["ndarray"])
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+
+    def test_for_success_create_from_ons(self, test_for_success_create_from_ons):
+        """
+        create_from_onsメソッドの正常系テスト
+        """
+        observed_values = test_for_success_create_from_ons["observed_values"]
+        ons = test_for_success_create_from_ons["ons"]
+        observable = create_from_ons(observed_values, ons)
+
+        eigen_values = observable.eigen_values
+        eigen_states = observable.eigen_states
+        matrix = observable.matrix
+        matrix_dim = observable.matrix_dim
+        ndarray = observable.ndarray
+
+        expected_eigen_values = test_for_success_create_from_ons["eigen_values"]
+        expected_eigen_states = test_for_success_create_from_ons["eigen_states"]
+        expected_matrix = np.array(test_for_success_create_from_ons["matrix"])
+        expected_matrix_dim = test_for_success_create_from_ons["matrix_dim"]
+        expected_ndarray = np.array(test_for_success_create_from_ons["ndarray"])
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False
@@ -146,6 +188,55 @@ class TestObservable:
         expected_matrix = np.array(test_for_success_observable_combine["matrix"])
         expected_matrix_dim = test_for_success_observable_combine["matrix_dim"]
         expected_ndarray = np.array(test_for_success_observable_combine["ndarray"])
+
+        for expected_index in range(len(expected_eigen_values)):
+            is_passed = False
+
+            for result_index in range(len(eigen_values)):
+                if isclose(
+                    expected_eigen_values[expected_index], eigen_values[result_index]
+                ) and allclose(
+                    expected_eigen_states[expected_index],
+                    eigen_states[result_index].vector,
+                ):
+                    is_passed = True
+
+            assert is_passed
+
+        assert matrix_dim == expected_matrix_dim
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+
+    def test_for_success_observable_multiple_combine(
+        self, test_for_success_observable_multiple_combine
+    ):
+        """
+        multiple_combineメソッドの正常系テスト
+        """
+        target_list = test_for_success_observable_multiple_combine["target_list"]
+        observable = multiple_combine(target_list)
+
+        eigen_values = observable.eigen_values
+        eigen_states = observable.eigen_states
+        matrix = observable.matrix
+        matrix_dim = observable.matrix_dim
+        ndarray = observable.ndarray
+
+        expected_eigen_values = test_for_success_observable_multiple_combine[
+            "eigen_values"
+        ]
+        expected_eigen_states = test_for_success_observable_multiple_combine[
+            "eigen_states"
+        ]
+        expected_matrix = np.array(
+            test_for_success_observable_multiple_combine["matrix"]
+        )
+        expected_matrix_dim = test_for_success_observable_multiple_combine["matrix_dim"]
+        expected_ndarray = np.array(
+            test_for_success_observable_multiple_combine["ndarray"]
+        )
 
         for expected_index in range(len(expected_eigen_values)):
             is_passed = False
