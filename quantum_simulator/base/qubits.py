@@ -13,6 +13,7 @@ from quantum_simulator.base.error import (
     InvalidProbabilitiesError,
     NotMatchCountError,
     ReductionError,
+    NotPureError
 )
 from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalBasis
 from quantum_simulator.base.utils import (
@@ -196,8 +197,24 @@ def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
 
 
 def generalize(pure_qubits: PureQubits) -> Qubits:
+    """PureQubitsから対応するQubitsを作る"""
     density_array = pure_qubits.projection
     return Qubits(density_array)
+
+
+def specialize(qubits: Qubits) -> PureQubits:
+    """固有値1を持つQubitsから対応するPureQubitsを作る"""
+    # Qubitsが純粋状態かチェックし、対応するインデックスを取り出す
+    pure_index = -1
+    for index in range(len(qubits.eigen_values)):
+        if isclose(qubits.eigen_values[index], 1.0 + 0j):
+            pure_index = index
+
+    if pure_index == -1:
+        message = "[ERROR]: 対象のQubitsは純粋状態ではありません"
+        raise NotPureError(message)
+
+    return qubits.eigen_states[pure_index]
 
 
 def convex_combination(

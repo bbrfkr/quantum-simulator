@@ -35,5 +35,9 @@ class ReductionError(BaseError):
     """縮約時エラー"""
 
 
+class NotPureError(BaseError):
+    """不純粋時エラー"""
+
+
 class IncompatibleDimensionError(BaseError):
     """操作時次元不整合エラー"""

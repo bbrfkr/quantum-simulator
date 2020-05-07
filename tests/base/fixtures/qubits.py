@@ -347,6 +347,57 @@ def dict_for_test_generalize(request):
 
 @pytest.fixture(
     params=[
+        # 単一Qubit
+        {
+            "target": Qubits([[1.0 + 0j, 0j], [0j, 0j]]),
+            "vector": [1.0 + 0j, 0j],
+            "ndarray": [1.0 + 0j, 0j],
+            "qubit_count": 1,
+            "projection": [[1.0 + 0j, 0j], [0j, 0j]],
+            "projection_matrix": [[1.0 + 0j, 0j], [0j, 0j]],
+            "projection_matrix_dim": 2,
+        },
+        {
+            "target": Qubits([[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]]),
+            "vector": [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            "ndarray": [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            "qubit_count": 1,
+            "projection": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
+            "projection_matrix": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
+            "projection_matrix_dim": 2,
+        },
+        # 2粒子系
+        {
+            "target": Qubits([
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ]),
+            "vector": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
+            "ndarray": [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
+            "qubit_count": 2,
+            "projection": [
+                [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "projection_matrix": [
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "projection_matrix_dim": 4,
+        },
+    ]
+)
+def dict_for_test_specialize(request):
+    """specializeメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
         {
             "probabilities": [0.5, 0.3, 0.2],
             "qubits_list": [

@@ -10,6 +10,7 @@ from quantum_simulator.base.error import (
 from quantum_simulator.base.qubits import (
     Qubits,
     generalize,
+    specialize,
     combine,
     convex_combination,
     is_qubits_dim,
@@ -124,7 +125,7 @@ class TestQubits:
         assert "与えられたリストには虚数の固有値が存在します" in str(error.value)
 
     def test_for_success_generalize(self, dict_for_test_generalize):
-        """convex_combinationメソッドの正常系テスト"""
+        """generalizeメソッドの正常系テスト"""
         target = dict_for_test_generalize["target"]
         qubits = generalize(target)
 
@@ -165,6 +166,26 @@ class TestQubits:
         assert allclose(matrix.shape, expected_matrix.shape)
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
+
+    def test_for_success_specialize(self, dict_for_test_specialize):
+        """specializeメソッドの正常系テスト"""
+        target = dict_for_test_specialize["target"]
+        result = specialize(target)
+
+        expected_ndarray = dict_for_test_specialize["ndarray"]
+        expected_vector = dict_for_test_specialize["vector"]
+        expected_qubit_count = dict_for_test_specialize["qubit_count"]
+        expected_projection = dict_for_test_specialize["projection"]
+        expected_projection_matrix = dict_for_test_specialize["projection_matrix"]
+        expected_projection_matrix_dim = dict_for_test_specialize[
+            "projection_matrix_dim"
+        ]
+        assert allclose(result.ndarray, expected_ndarray)
+        assert allclose(result.vector, expected_vector)
+        assert result.qubit_count == expected_qubit_count
+        assert allclose(result.projection, expected_projection)
+        assert allclose(result.projection_matrix, expected_projection_matrix)
+        assert result.projection_matrix_dim == expected_projection_matrix_dim
 
     def test_for_success_convex_combination(self, dict_for_test_convex_combination):
         """convex_combinationメソッドの正常系テスト"""
