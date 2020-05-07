@@ -3,7 +3,13 @@ from math import sqrt
 import pytest
 
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
-from quantum_simulator.base.qubits import Qubits, combine, generalize
+from quantum_simulator.base.qubits import (
+    Qubits,
+    combine,
+    generalize,
+    multiple_combine,
+    multiple_reduce,
+)
 
 
 @pytest.fixture(
@@ -707,8 +713,8 @@ def dict_for_test_qubits_combine(request):
         },
     ]
 )
-def dict_for_test_reduction(request):
-    """reductionメソッドテスト用の正常系fixture"""
+def dict_for_test_reduce(request):
+    """reduceメソッドテスト用の正常系fixture"""
     return request.param
 
 
@@ -736,6 +742,183 @@ def dict_for_test_reduction(request):
         },
     ]
 )
-def invalid_reduction(request):
-    """reductionメソッドテスト用の異常系fixture"""
+def invalid_reduce(request):
+    """reduceメソッドテスト用の異常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+                Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+            ],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [
+                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix": [
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 8,
+            "ndarray": [
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+            ],
+            "qubit_count": 3,
+            "is_pure": False,
+        },
+        {
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                Qubits(
+                    [
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                        [0j, 0j, 0j, 0j],
+                        [0j, 0j, 0.5 + 0j, 0j],
+                        [0.25 + 0j, 0j, 0j, 0.25 + 0j],
+                    ]
+                ),
+            ],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix": [
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j],
+                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            ],
+            "matrix_dim": 8,
+            "ndarray": [
+                [
+                    [
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0.25 + 0j, 0j], [0j, 0.25 + 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+                [
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                    [
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                    ],
+                ],
+            ],
+            "qubit_count": 3,
+            "is_pure": False,
+        },
+    ]
+)
+def dict_for_test_qubits_multiple_combine(request):
+    """combineメソッドテスト用の正常系fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "qubits": multiple_combine(
+                [
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                    Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+                ]
+            ),
+            "target_particles": [0, 1],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
+            "matrix": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
+            "qubit_count": 1,
+            "is_pure": False,
+        },
+        {
+            "qubits": multiple_combine(
+                [
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                    Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+                ]
+            ),
+            "target_particles": [0],
+            "eigen_values": [0.5, 0.5],
+            "eigen_states": [[0j, 0j, 1.0 + 0j, 0j], [0j, 0j, 0j, 1.0 + 0j]],
+            "matrix": [
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0j, 0j],
+                [0j, 0j, 0.5 + 0j, 0j],
+                [0j, 0j, 0j, 0.5 + 0j],
+            ],
+            "matrix_dim": 4,
+            "ndarray": [
+                [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+                [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0.5 + 0j]]],
+            ],
+            "qubit_count": 2,
+            "is_pure": False,
+        },
+        {
+            "qubits": multiple_combine(
+                [
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                    Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
+                ]
+            ),
+            "target_particles": [0, 2],
+            "eigen_values": [1.0],
+            "eigen_states": [[0j, 1.0 + 0j]],
+            "matrix": [[0j, 0j], [0j, 1.0 + 0j]],
+            "matrix_dim": 2,
+            "ndarray": [[0j, 0j], [0j, 1.0 + 0j]],
+            "qubit_count": 1,
+            "is_pure": True,
+        },
+    ]
+)
+def dict_for_test_multiple_reduce(request):
+    """reduceメソッドテスト用の正常系fixture"""
     return request.param

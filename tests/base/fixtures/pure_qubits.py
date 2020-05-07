@@ -2,7 +2,7 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.pure_qubits import PureQubits
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 
 
 @pytest.fixture(
@@ -313,6 +313,23 @@ def dict_for_test_pure_qubits_constructor(request):
     ]
 )
 def dict_for_test_pure_qubits_combine(request):
+    """combineメソッドテスト用のfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "target_list": [
+                PureQubits([1.0 + 0j, 0j]),
+                PureQubits([0j, 1.0 + 0j]),
+                PureQubits([1.0 + 0j, 0j]),
+            ],
+            "result": [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+        },
+    ]
+)
+def dict_for_test_pure_qubits_multiple_combine(request):
     """combineメソッドテスト用のfixture"""
     return request.param
 
@@ -683,5 +700,37 @@ def dict_for_test_failure_onb(request):
     ]
 )
 def dict_for_test_combine_ons(request):
+    """combine_onsメソッドのテスト用fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "ons_list": [
+                OrthogonalSystem(
+                    [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+                ),
+                OrthogonalSystem(
+                    [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+                ),
+                OrthogonalSystem(
+                    [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+                ),
+            ],
+            "result": [
+                PureQubits([1.0 + 0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 0j, 1.0 + 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 0j, 0j, 1.0 + 0j, 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 0j, 0j, 0j, 1.0 + 0j, 0j]),
+                PureQubits([0j, 0j, 0j, 0j, 0j, 0j, 0j, 1.0 + 0j]),
+            ],
+        },
+    ]
+)
+def dict_for_test_multiple_combine_ons(request):
     """combine_onsメソッドのテスト用fixture"""
     return request.param

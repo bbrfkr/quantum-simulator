@@ -198,6 +198,24 @@ def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalS
     return new_ons
 
 
+def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
+    """一般的に二つ以上のPureQubitsを結合する"""
+    combined_qubits = qubits_list[0]
+    for index in range(len(qubits_list) - 1):
+        combined_qubits = combine(combined_qubits, qubits_list[index + 1])
+
+    return combined_qubits
+
+
+def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
+    """一般的に二つ以上のOrthogonalSystemを結合する"""
+    combined_ons = ons_list[0]
+    for index in range(len(ons_list) - 1):
+        combined_ons = combine_ons(combined_ons, ons_list[index + 1])
+
+    return combined_ons
+
+
 def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
     """PureQubit同士の内積 <qubit_0 | qubit_1>"""
     # 内積をとるQubit群同士のQubit数が一致してなければエラー

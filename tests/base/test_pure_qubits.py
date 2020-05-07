@@ -19,6 +19,8 @@ from quantum_simulator.base.pure_qubits import (
     combine_ons,
     inner,
     is_orthogonal,
+    multiple_combine,
+    multiple_combine_ons,
 )
 from quantum_simulator.base.utils import allclose, isclose
 
@@ -104,6 +106,25 @@ class TestPureQubits:
         result = combine(target_0, target_1)
 
         expected_result = PureQubits(dict_for_test_pure_qubits_combine["result"])
+        assert allclose(result.ndarray, expected_result.ndarray)
+        assert allclose(result.vector, expected_result.vector)
+        assert result.qubit_count == expected_result.qubit_count
+        assert allclose(result.projection, expected_result.projection)
+        assert allclose(result.projection_matrix, expected_result.projection_matrix)
+        assert result.projection_matrix_dim == expected_result.projection_matrix_dim
+
+    def test_for_success_multiple_combine(
+        self, dict_for_test_pure_qubits_multiple_combine
+    ):
+        """
+        multiple_combineメソッドの正常系テスト
+        """
+        target_list = dict_for_test_pure_qubits_multiple_combine["target_list"]
+        result = multiple_combine(target_list)
+
+        expected_result = PureQubits(
+            dict_for_test_pure_qubits_multiple_combine["result"]
+        )
         assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count
@@ -212,6 +233,19 @@ class TestOrthogonalSystem:
         expected_result = OrthogonalSystem(dict_for_test_combine_ons["result"])
 
         result = combine_ons(ons_0, ons_1)
+
+        assert len(result.qubits_list) == len(expected_result.qubits_list)
+        for index in range(len(result.qubits_list)):
+            qubits_0 = result.qubits_list[index]
+            qubits_1 = expected_result.qubits_list[index]
+            allclose(qubits_0.vector, qubits_1.vector)
+
+    def test_for_multiple_combine_ons(self, dict_for_test_multiple_combine_ons):
+        """multiple_combin_onsメソッドの異常系テスト"""
+        ons_list = dict_for_test_multiple_combine_ons["ons_list"]
+        expected_result = OrthogonalSystem(dict_for_test_multiple_combine_ons["result"])
+
+        result = multiple_combine_ons(ons_list)
 
         assert len(result.qubits_list) == len(expected_result.qubits_list)
         for index in range(len(result.qubits_list)):

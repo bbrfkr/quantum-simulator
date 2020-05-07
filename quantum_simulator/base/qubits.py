@@ -2,7 +2,7 @@
 一般的なQubit系の定義
 """
 
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 import numpy as np
 from numpy import linalg as LA
@@ -254,7 +254,7 @@ def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits
     return qubits
 
 
-def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
+def reduce(target_qubits: Qubits, target_particle: int) -> Qubits:
     """target番目のQubitを縮約した局所Qubit群を返す"""
 
     qubit_count = target_qubits.qubit_count
@@ -279,12 +279,12 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
     return Qubits(reduced_array)
 
 
-def combine(qubit_0: Qubits, qubit_1: Qubits) -> Qubits:
+def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
     """２つのQubit系を結合して新たなQubit系を作る"""
-    eigen_values_0 = qubit_0.eigen_values
-    eigen_states_0 = qubit_0.eigen_states
-    eigen_values_1 = qubit_1.eigen_values
-    eigen_states_1 = qubit_1.eigen_states
+    eigen_values_0 = qubits_0.eigen_values
+    eigen_states_0 = qubits_0.eigen_states
+    eigen_values_1 = qubits_1.eigen_values
+    eigen_states_1 = qubits_1.eigen_states
 
     # 確率分布の結合
     probabilities = [
@@ -301,3 +301,24 @@ def combine(qubit_0: Qubits, qubit_1: Qubits) -> Qubits:
     # 新しい状態の生成
     new_qubits = convex_combination(probabilities, generalized_eigen_states)
     return new_qubits
+
+
+def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
+    """一般的に２つ以上のQubits同士を結合する"""
+    combined_qubits = qubits_list[0]
+
+    for index in range(len(qubits_list) - 1):
+        combined_qubits = combine(combined_qubits, qubits_list[index + 1])
+
+    return combined_qubits
+
+
+def multiple_reduce(qubits: Qubits, target_particles: List[int]) -> Qubits:
+    """指定された番号全てのQubitを縮約した新しいQubitsを返す"""
+    reduced_qubits = qubits
+    list.sort(target_particles, reverse=True)
+
+    for target in target_particles:
+        reduced_qubits = reduce(reduced_qubits, target)
+
+    return reduced_qubits
