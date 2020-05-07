@@ -190,8 +190,8 @@ def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalS
     """二つのOrthogonalSystemを結合する"""
     new_qubits = [
         combine(qubits_0, qubits_1)
-        for qubits_1 in ons_1.qubits_list
         for qubits_0 in ons_0.qubits_list
+        for qubits_1 in ons_1.qubits_list
     ]
 
     new_ons = OrthogonalSystem(new_qubits)

@@ -34,6 +34,10 @@ class Observable:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(self, hermite_array: list):
+        """
+        初期化
+            hermite_array: 観測量のリスト表現。行列形式とndarray形式を許容する
+        """
 
         tmp_array = np.array(hermite_array, dtype=complex)
 

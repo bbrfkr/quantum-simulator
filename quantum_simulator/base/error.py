@@ -41,3 +41,7 @@ class NotPureError(BaseError):
 
 class IncompatibleDimensionError(BaseError):
     """操作時次元不整合エラー"""
+
+
+class NotCompleteError(BaseError):
+    """不完全時エラー"""
