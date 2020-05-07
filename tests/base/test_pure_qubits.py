@@ -189,9 +189,7 @@ class TestOrthogonalSystem:
             OrthogonalSystem(qubits_list)
         assert "与えられたQubit群のリストは互いに直交しません" in str(error.value)
 
-    def test_for_success_is_onb(
-        self, dict_for_test_success_onb
-    ):
+    def test_for_success_is_onb(self, dict_for_test_success_onb):
         """
         onbメソッドの正常系テスト (True)
         """
@@ -199,9 +197,7 @@ class TestOrthogonalSystem:
         ons = OrthogonalSystem(qubits_list)
         assert ons.is_onb()
 
-    def test_for_failure_is_onb(
-        self, dict_for_test_failure_onb
-    ):
+    def test_for_failure_is_onb(self, dict_for_test_failure_onb):
         """
         onbメソッドの正常系テスト (False)
         """

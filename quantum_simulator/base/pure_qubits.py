@@ -186,9 +186,7 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     return new_qubits
 
 
-def combine_ons(
-    ons_0: OrthogonalSystem, ons_1: OrthogonalSystem
-) -> OrthogonalSystem:
+def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalSystem:
     """二つのOrthogonalSystemを結合する"""
     new_qubits = [
         combine(qubits_0, qubits_1)

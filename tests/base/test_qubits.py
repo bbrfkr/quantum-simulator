@@ -9,15 +9,15 @@ from quantum_simulator.base.error import (
 )
 from quantum_simulator.base.qubits import (
     Qubits,
-    generalize,
-    specialize,
     combine,
     convex_combination,
+    create_from_ons,
+    generalize,
     is_qubits_dim,
     reduction,
     resolve_arrays,
     resolve_eigen,
-    create_from_ons,
+    specialize,
 )
 from quantum_simulator.base.utils import allclose, isclose
 

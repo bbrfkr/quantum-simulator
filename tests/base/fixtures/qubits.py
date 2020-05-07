@@ -2,8 +2,8 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalSystem
-from quantum_simulator.base.qubits import Qubits, combine
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
+from quantum_simulator.base.qubits import Qubits, combine, generalize
 
 
 @pytest.fixture(
@@ -403,8 +403,8 @@ def dict_for_test_specialize(request):
         {
             "probabilities": [0.5, 0.3, 0.2],
             "qubits_list": [
-                PureQubits([1.0 + 0j, 0j]),
-                PureQubits([0j, 1.0 + 0j]),
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
                 Qubits([[0j, 0j], [0j, 1.0 + 0j]]),
             ],
             "eigen_values": [0.5, 0.5],
@@ -418,7 +418,7 @@ def dict_for_test_specialize(request):
         {
             "probabilities": [0.5, 0.5],
             "qubits_list": [
-                PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
+                generalize(PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j])),
                 Qubits(
                     [
                         [0.5 + 0j, 0j, 0j, 0.5 + 0j],
@@ -455,11 +455,17 @@ def dict_for_test_convex_combination(request):
     params=[
         {
             "probabilities": [0.2, 0.5],
-            "qubits_list": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
         },
         {
             "probabilities": [-0.1, 0.4],
-            "qubits_list": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
         },
     ]
 )
@@ -475,11 +481,17 @@ def invalid_probabilities_and_qubits_list(request):
     params=[
         {
             "probabilities": [0.5, 0.3, 0.2],
-            "qubits_list": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
         },
         {
             "probabilities": [1.0],
-            "qubits_list": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
         },
     ]
 )
@@ -497,7 +509,7 @@ def not_match_count_probabilities_and_qubits_list(request):
         {
             "probabilities": [0.3, 0.7],
             "ons": OrthogonalSystem(
-                [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j]),]
+                [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
             ),
             "eigen_values": [0.3, 0.7],
             "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
@@ -536,7 +548,10 @@ def dict_for_test_create_from_ons(request):
 @pytest.fixture(
     params=[
         {
-            "qubits_list": [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])],
+            "qubits_list": [
+                generalize(PureQubits([1.0 + 0j, 0j])),
+                generalize(PureQubits([0j, 1.0 + 0j])),
+            ],
             "eigen_values": [1.0],
             "eigen_states": [[0j, 1.0 + 0j, 0j, 0j]],
             "matrix": [
@@ -555,7 +570,7 @@ def dict_for_test_create_from_ons(request):
         },
         {
             "qubits_list": [
-                PureQubits([1.0 + 0j, 0j]),
+                generalize(PureQubits([1.0 + 0j, 0j])),
                 Qubits(
                     [
                         [0.25 + 0j, 0j, 0j, 0.25 + 0j],
@@ -617,7 +632,10 @@ def dict_for_test_qubits_combine(request):
     params=[
         {
             "qubits": combine(
-                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 1,
@@ -639,7 +657,10 @@ def dict_for_test_qubits_combine(request):
         },
         {
             "qubits": combine(
-                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 0,
@@ -661,7 +682,10 @@ def dict_for_test_qubits_combine(request):
         },
         {
             "qubits": combine(
-                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 2,
@@ -692,14 +716,20 @@ def dict_for_test_reduction(request):
     params=[
         {
             "qubits": combine(
-                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": -1,
         },
         {
             "qubits": combine(
-                combine(PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])),
+                combine(
+                    generalize(PureQubits([1.0 + 0j, 0j])),
+                    generalize(PureQubits([0j, 1.0 + 0j])),
+                ),
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 3,

@@ -12,10 +12,10 @@ from quantum_simulator.base.error import (
     InitializeError,
     InvalidProbabilitiesError,
     NotMatchCountError,
-    ReductionError,
     NotPureError,
+    ReductionError,
 )
-from quantum_simulator.base.pure_qubits import PureQubits, OrthogonalSystem
+from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.utils import (
     around,
     is_pow2,
@@ -217,9 +217,7 @@ def specialize(qubits: Qubits) -> PureQubits:
     return qubits.eigen_states[pure_index]
 
 
-def convex_combination(
-    probabilities: List[float], qubits_list: List[Union[PureQubits, Qubits]]
-) -> Qubits:
+def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) -> Qubits:
     """確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する"""
 
     # 確率リストが確率分布であるかチェック
@@ -229,27 +227,16 @@ def convex_combination(
 
     len_qubits_list = len(qubits_list)
 
-    # 確率リストと純粋状態リストの要素数同士が一致するかチェック
+    # 確率リストとQubitsリストの要素数同士が一致するかチェック
     if len_qubits_list != len(probabilities):
         message = "[ERROR]: 与えられた確率リストと純粋状態リストの要素数が一致しません"
         raise NotMatchCountError(message)
 
     # 密度行列から再度密度行列を導出する
-    density_matrix = None
-
-    if isinstance(qubits_list[-1], PureQubits):
-        density_matrix = probabilities[-1] * qubits_list[-1].projection_matrix
-    else:
-        density_matrix = probabilities[-1] * qubits_list[-1].matrix
+    density_matrix = probabilities[-1] * qubits_list[-1].matrix
 
     for index in range(len_qubits_list - 1):
-        added_matrix = None
-
-        if isinstance(qubits_list[index], PureQubits):
-            added_matrix = probabilities[index] * qubits_list[index].projection_matrix
-        else:
-            added_matrix = probabilities[index] * qubits_list[index].matrix
-
+        added_matrix = probabilities[index] * qubits_list[index].matrix
         density_matrix = np.add(density_matrix, added_matrix)
 
     qubits = Qubits(density_matrix)
@@ -258,11 +245,16 @@ def convex_combination(
 
 def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits:
     """確率リストと直交基底からQubitsオブジェクトを作成する"""
-    qubits = convex_combination(probabilities, ons.qubits_list)
+    # PureQubitsのgeneralizeリストを作る
+    generalized_pure_qubits_list = [
+        generalize(pure_qubits) for pure_qubits in ons.qubits_list
+    ]
+
+    qubits = convex_combination(probabilities, generalized_pure_qubits_list)
     return qubits
 
 
-def reduction(target_qubits: Union[Qubits, PureQubits], target_particle: int) -> Qubits:
+def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
     """target番目のQubitを縮約した局所Qubit群を返す"""
 
     qubit_count = target_qubits.qubit_count
@@ -278,10 +270,7 @@ def reduction(target_qubits: Union[Qubits, PureQubits], target_particle: int) ->
         raise ReductionError(message)
 
     # 縮約の実施
-    if isinstance(target_qubits, PureQubits):
-        reduced_array = target_qubits.projection
-    else:
-        reduced_array = target_qubits.ndarray
+    reduced_array = target_qubits.ndarray
 
     axis1 = target_particle
     axis2 = target_qubits.qubit_count + target_particle
@@ -290,28 +279,12 @@ def reduction(target_qubits: Union[Qubits, PureQubits], target_particle: int) ->
     return Qubits(reduced_array)
 
 
-def combine(
-    qubit_0: Union[Qubits, PureQubits], qubit_1: Union[Qubits, PureQubits]
-) -> Qubits:
+def combine(qubit_0: Qubits, qubit_1: Qubits) -> Qubits:
     """２つのQubit系を結合して新たなQubit系を作る"""
-    # 純粋状態を考慮し、結合する情報を整理
-    eigen_values_0 = None
-    eigen_states_0 = None
-    eigen_values_1 = None
-    eigen_states_1 = None
-
-    if isinstance(qubit_0, PureQubits):
-        eigen_values_0 = [1.0]
-        eigen_states_0 = [qubit_0]
-    else:
-        eigen_values_0 = qubit_0.eigen_values
-        eigen_states_0 = qubit_0.eigen_states
-    if isinstance(qubit_1, PureQubits):
-        eigen_values_1 = [1.0]
-        eigen_states_1 = [qubit_1]
-    else:
-        eigen_values_1 = qubit_1.eigen_values
-        eigen_states_1 = qubit_1.eigen_states
+    eigen_values_0 = qubit_0.eigen_values
+    eigen_states_0 = qubit_0.eigen_states
+    eigen_values_1 = qubit_1.eigen_values
+    eigen_states_1 = qubit_1.eigen_states
 
     # 確率分布の結合
     probabilities = [
@@ -319,12 +292,12 @@ def combine(
     ]
 
     # 固有状態の結合
-    eigen_states = [
-        pure_qubits.combine(state_0, state_1)
+    generalized_eigen_states = [
+        generalize(pure_qubits.combine(state_0, state_1))
         for state_1 in eigen_states_1
         for state_0 in eigen_states_0
     ]
 
     # 新しい状態の生成
-    new_qubits = convex_combination(probabilities, eigen_states)
+    new_qubits = convex_combination(probabilities, generalized_eigen_states)
     return new_qubits
