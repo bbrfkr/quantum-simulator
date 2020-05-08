@@ -20,15 +20,17 @@ from quantum_simulator.base.utils import allclose
 class UnitaryTransformer:
     """
     ユニタリ変換による自然な状態変換のクラス
+
+    Attributes:
         ndarray: ndarray形式のユニタリ変換
         matrix: 行列形式のユニタリ変換
-        matrix_dim: 行列形式における行列の次元
+        matrix_dim: ユニタリ変換の行列の次元
     """
 
     def __init__(self, unitary_array: list):
         """
-        初期化
-            unitary_array: ユニタリ変換のリスト表現。行列形式とndarray形式を許容する
+        Args:
+            unitary_array: ユニタリ変換の候補となるリスト。行列形式とndarray形式を許容する
         """
 
         tmp_array = np.array(unitary_array, dtype=complex)
@@ -53,15 +55,30 @@ class UnitaryTransformer:
         self.matrix_dim = matrix_dim
 
     def __str__(self):
-        """ユニタリ変換の二次元行列表現を出力"""
+        """
+        ユニタリ変換の行列表現の文字列を返す
+
+        Returns:
+            str: ユニタリ変換の行列表現の文字列
+        """
         return str(self.matrix)
 
     def print_ndarray(self):
-        """ユニタリ変換のndarray表現を出力"""
+        """
+        ユニタリ変換のndarray表現を出力する
+        """
         print(str(self.array))
 
     def operate(self, qubits: Qubits) -> Qubits:
-        """ユニタリ変換によるQubit群の操作"""
+        """
+        対象Qubitsをユニタリ変換によって別のQubitsに変換し、変換後のQubitsを返す
+
+        Args:
+            qubits (Qubits): 変換対象のQubits
+
+        Returns:
+            Qubits: 変換後のQubits
+        """
         if self.matrix_dim != qubits.matrix_dim:
             message = "[ERROR]: 変換対象のQubit数が不正です"
             raise IncompatibleDimensionError(message)
@@ -76,7 +93,16 @@ class UnitaryTransformer:
 def create_from_onb(
     pre_ons: OrthogonalSystem, post_ons: OrthogonalSystem
 ) -> UnitaryTransformer:
-    """変換元基底と変換後基底を指定して、ユニタリ変換を作る"""
+    """
+    変換元基底と変換後基底を指定して、対応するユニタリ変換を作る
+
+    Args:
+        pre_ons (OrthogonalSystem): 変換前の正規直交系。基底である必要がある
+        post_ons (OrthogonalSystem): 変換後の正規直交系。基底である必要がある
+
+    Returns:
+        UnitaryTransformer: 導出されたユニタリ変換
+    """
 
     # 指定されたONSが全てONBでなければエラー
     if not (pre_ons.is_onb() and post_ons.is_onb()):
@@ -108,7 +134,16 @@ def create_from_onb(
 def combine(
     unitary_0: UnitaryTransformer, unitary_1: UnitaryTransformer
 ) -> UnitaryTransformer:
-    """二つのユニタリ変換から合成系のユニタリ変換を作る"""
+    """
+    2つのユニタリ変換を結合して合成系のユニタリ変換を作る
+
+    Args:
+        unitary_0 (UnitaryTransformer): 結合される側のユニタリ変換
+        unitary_1 (UnitaryTransformer): 結合する側のユニタリ変換
+
+    Returns:
+        UnitaryTransformer: 結合後のユニタリ変換
+    """
 
     # 各ユニタリ行列を標準基底からの基底変換とみなして、ONBを抽出する
     matrix_0 = unitary_0.matrix
@@ -145,7 +180,15 @@ def combine(
 
 
 def multiple_combine(unitaries: List[UnitaryTransformer]) -> UnitaryTransformer:
-    """一般的に二つ以上のユニタリ変換から合成系のユニタリ変換を作る"""
+    """
+    一般的に2つ以上ののユニタリ変換を結合して合成系のユニタリ変換を作る
+
+    Args:
+        unitaries (List[UnitaryTransformer]): 結合対象のユニタリ変換のリスト
+
+    Returns:
+        UnitaryTransformer: 結合後のユニタリ変換
+    """
     combined_unitary = unitaries[0]
 
     for index in range(len(unitaries) - 1):
