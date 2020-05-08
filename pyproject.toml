@@ -6,7 +6,6 @@ authors = ["bbrfkr <bbrfkr@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-
 numpy = "^1.18.3"
 typing = "^3.7.4"
 
