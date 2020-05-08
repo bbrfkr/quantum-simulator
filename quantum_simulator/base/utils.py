@@ -15,7 +15,7 @@ AROUNDED_DECIMALS = 5
 def isclose(a: np.array, b: np.array) -> np.array:
     """
     numpy.iscloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、比較結果をnumpy.arrayで返す。
-    
+
     Args:
         a (numpy.array): 比較対象1つ目
         b (numpy.array): 比較対象2つ目
