@@ -26,17 +26,19 @@ from quantum_simulator.base.utils import is_real, isclose
 class Observable:  # pylint: disable=too-few-public-methods
     """
     観測量のクラス
-        eigen_values: 固有値のリスト
-        eigen_states: 固有状態のリスト
+
+    Attributes:
+        eigen_values (List[float]): 観測量の固有値のリスト
+        eigen_states (List[PureQubits]): 観測量の固有状態のリスト
         ndarray: ndarray形式の観測量
         matrix: 行列形式の観測量
-        matrix_dim: 行列形式における行列の次元
+        matrix_dim: 観測料の行列の次元
     """
 
     def __init__(self, hermite_array: list):
         """
-        初期化
-            hermite_array: 観測量のリスト表現。行列形式とndarray形式を許容する
+        Args:
+            hermite_array (list): 観測量の候補となるリスト。行列形式とndarray形式を許容する
         """
 
         tmp_array = np.array(hermite_array, dtype=complex)
@@ -69,15 +71,30 @@ class Observable:  # pylint: disable=too-few-public-methods
         self.matrix_dim = matrix_dim
 
     def __str__(self):
-        """観測量の二次元行列表現を出力"""
+        """
+        観測量の行列表現の文字列を返す
+
+        Returns:
+            str: 観測量の行列表現の文字列
+        """
         return str(self.matrix)
 
     def print_ndarray(self):
-        """観測量のndarray表現を出力"""
+        """
+        観測量のndarray表現を出力する
+        """
         print(str(self.ndarray))
 
     def expected_value(self, target: Qubits) -> float:
-        """対象Qubit群に対する観測量の期待値を返す"""
+        """
+        対象Qubitsに対する観測量の期待値を返す
+
+        Args:
+            target (Qbubits): 計算対象のQubits
+
+        Returns:
+            float: 観測量の期待値
+        """
 
         # 観測量の対象空間内にQubitが存在するかチェック
         if target.qubit_count != self.eigen_states[0].qubit_count:
@@ -92,7 +109,16 @@ class Observable:  # pylint: disable=too-few-public-methods
 def _resolve_observed_results(
     eigen_values: List[float], eigen_states: List[PureQubits]
 ) -> Tuple[List[float], List[Observable]]:
-    """固有値の縮退を検知し、観測に対して取りうる観測結果(固有値と射影行列の組)を返す"""
+    """
+    与えられた固有値リストと固有状態リストから、取りうる観測結果 (固有値と射影の組) を返す
+
+    Args:
+        eigen_values (List[float]): 固有値リスト
+        eigen_states: (List[PureQubits]): 固有状態のリスト
+
+    Returns:
+        Tuple[List[float], List[Observable]]: 固有値と射影観測量の組
+    """
 
     # 固有値の近似的に一意のリストと一致していたインデックスのリストを作る
     unique_eigen_values = []
@@ -135,8 +161,17 @@ def _resolve_observed_results(
     return (unique_eigen_values, projections)
 
 
-def create_from_ons(observed_values: List[float], ons: OrthogonalSystem):
-    """正規直交系と観測値リストから観測量を作る"""
+def create_from_ons(observed_values: List[float], ons: OrthogonalSystem) -> Observable:
+    """
+    観測値リストと正規直交系から観測量を作る
+
+    Args:
+        observed_values (List[float]): 観測値のリスト
+        ons (OrthogonalSystem): 正規直交系
+
+    Returns:
+        Observable: 導出された観測量
+    """
     len_qubits_list = len(ons.qubits_list)
 
     # 観測値リストとONS内のPureQubitsリストの要素数同士が一致するかチェック
@@ -156,7 +191,16 @@ def create_from_ons(observed_values: List[float], ons: OrthogonalSystem):
 
 
 def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
-    """観測を実施して観測値および収束後のQubitsを取得する"""
+    """
+    Qubit系に対して観測を実施し、観測値および収束後のQubitsを返す
+
+    Args:
+        observable (Observable): 使用する観測量
+        target (Qubits): 観測対象のQubits
+
+    Returns:
+        Tuple[float, Qubits]: 観測値と収束後のQubits
+    """
 
     # 観測の取りうる結果のリストを作る
     # まず近似的に一意な固有値リストと射影行列のリストを導出
@@ -191,7 +235,16 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
 
 
 def combine(observable_0: Observable, observable_1: Observable) -> Observable:
-    """二つの観測量から合成系の観測量を作る"""
+    """
+    2つの観測量を結合して合成系の観測量を作る
+
+    Args:
+        observable_0 (Observable): 結合される側の観測量
+        observable_1 (Observable): 結合する側の観測量
+
+    Returns:
+        Observable: 結合後の観測量
+    """
 
     # 固有値および固有状態を結合したリストを作成
     new_elements = [
@@ -212,7 +265,15 @@ def combine(observable_0: Observable, observable_1: Observable) -> Observable:
 
 
 def multiple_combine(observables: List[Observable]) -> Observable:
-    """一般的に二つ以上の観測量から合成系の観測量を作る"""
+    """
+    一般的に2つ以上のの観測量を結合して合成系の観測量を作る
+
+    Args:
+        observables (List[Observable]): 結合対象の観測量のリスト
+
+    Returns:
+        Observable: 結合後の観測量
+    """
     combined_observable = observables[0]
 
     for index in range(len(observables) - 1):

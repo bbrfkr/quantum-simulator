@@ -30,8 +30,8 @@ class Qubits:
     一般的に混合状態で複数粒子のQubit系クラス
 
     Attributes:
-        eigen_values (List[float]): Qubitsの固有値
-        eigen_states (List[numpy.array]): Qubitsの固有状態
+        eigen_values (List[float]): Qubitsの固有値のリスト
+        eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
         ndarray (numpy.array): ndarray形式のQubits
         matrix (numpy.array): 行列形式のQubits
         matrix_dim (int): Qubitsの行列の次元
