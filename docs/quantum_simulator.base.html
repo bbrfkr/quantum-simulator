@@ -603,109 +603,35 @@ matrix_dim: 行列形式における行列の次元</p>
 </div>
 <div class="section" id="module-quantum_simulator.base.qubits">
 <span id="quantum-simulator-base-qubits-module"></span><h2>quantum_simulator.base.qubits module<a class="headerlink" href="#module-quantum_simulator.base.qubits" title="Permalink to this headline">¶</a></h2>
-<p>一般的に混合状態のQubit系に関するクラス群</p>
+<p>一般的なQubit系の定義</p>
 <dl class="py class">
 <dt id="quantum_simulator.base.qubits.Qubits">
 <em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">Qubits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">density_array</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#Qubits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>一般的に混合状態で複数粒子のQubit系クラス</p>
-<dl class="py attribute">
-<dt id="quantum_simulator.base.qubits.Qubits.eigen_values">
-<code class="sig-name descname">eigen_values</code><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.eigen_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Qubitsの固有値</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>List[float]</p>
+<dl class="simple">
+<dt>一般的に複数かつ混合状態のQubit群のクラス</dt><dd><p>eigen_values: 固有値のリスト
+eigen_states: 固有状態のリスト
+ndarray: ndarray形式のQubits
+matrix: 行列形式のQubits
+matrix_dim: 行列形式における行列の次元
+qubit_count: 内包されているQubitの数</p>
+</dd>
+<dt>初期化</dt><dd><dl class="simple">
+<dt>density_array: 密度行列に対応するnp.arrayインスタンス。</dt><dd><p>行列形式とndarray形式を許容する。</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="quantum_simulator.base.qubits.Qubits.eigen_states">
-<code class="sig-name descname">eigen_states</code><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.eigen_states" title="Permalink to this definition">¶</a></dt>
-<dd><p>Qubitsの固有状態</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>List[numpy.array]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="quantum_simulator.base.qubits.Qubits.ndarray">
-<code class="sig-name descname">ndarray</code><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.ndarray" title="Permalink to this definition">¶</a></dt>
-<dd><p>ndarray形式のQubits</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="quantum_simulator.base.qubits.Qubits.matrix">
-<code class="sig-name descname">matrix</code><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>行列形式のQubits</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="quantum_simulator.base.qubits.Qubits.matrix_dim">
-<code class="sig-name descname">matrix_dim</code><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.matrix_dim" title="Permalink to this definition">¶</a></dt>
-<dd><p>Qubitsの行列の次元</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="quantum_simulator.base.qubits.Qubits.qubit_count">
-<code class="sig-name descname">qubit_count</code><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.qubit_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>Qubitsに内包されているQubitの数</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>density_array</strong> (<em>list</em>) – 密度行列の候補となるリスト。行列形式もしくはndarray形式が許容される</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="quantum_simulator.base.qubits.Qubits.__str__">
 <code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#Qubits.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Qubitsの行列表現に対する文字列を返す</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Qubitsの行列表現に対する文字列</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
+<dd><p>Qubitsの行列表現を出力</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="quantum_simulator.base.qubits.Qubits.is_pure">
 <code class="sig-name descname">is_pure</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#Qubits.is_pure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.Qubits.is_pure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Qubitsが純粋状態であるか判定する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>判定結果</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
+<dd><p>Qubitsが純粋状態か判定する</p>
 </dd></dl>
 
 <dl class="py method">
@@ -719,203 +645,67 @@ matrix_dim: 行列形式における行列の次元</p>
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.combine">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">combine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits_0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em>, <em class="sig-param"><span class="n">qubits_1</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.combine" title="Permalink to this definition">¶</a></dt>
-<dd><p>2つのQubitsを結合した合成系としてのQubitsを作る</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>qubits_0</strong> (<a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – 結合される側のQubits</p></li>
-<li><p><strong>qubits_1</strong> (<a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – 結合する側のQubits</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>結合結果としてのQubits</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
+<dd><p>２つのQubit系を結合して新たなQubit系を作る</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.convex_combination">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">convex_combination</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">probabilities</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">qubits_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#convex_combination"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.convex_combination" title="Permalink to this definition">¶</a></dt>
-<dd><p>確率のリストとQubitsのリストから凸結合によって、Qubitsオブジェクトを作成する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>probabilities</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – 総和が1の正数のリスト</p></li>
-<li><p><strong>qubits_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a><em>]</em>) – 結合対象のQubitsのリスト</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>結合結果としてのQubits</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
+<dd><p>確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.create_from_ons">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">create_from_ons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">probabilities</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">ons</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.pure_qubits.OrthogonalSystem" title="quantum_simulator.base.pure_qubits.OrthogonalSystem">quantum_simulator.base.pure_qubits.OrthogonalSystem</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#create_from_ons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.create_from_ons" title="Permalink to this definition">¶</a></dt>
-<dd><p>確率のリストと正規直交系からQubitsオブジェクトを作成する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>probabilities</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – 総和が1の正数のリスト</p></li>
-<li><p><strong>qubits_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a><em>]</em>) – 結合対象の正規直交系</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>結合結果としてのQubits</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
+<dd><p>確率リストと直交基底からQubitsオブジェクトを作成する</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.generalize">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">generalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pure_qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">quantum_simulator.base.pure_qubits.PureQubits</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#generalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.generalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>与えられたPureQubitsオブジェクトに対応するQubitsオブジェクトを返す</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pure_qubits</strong> (<a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits"><em>PureQubits</em></a>) – 一般化対象の純粋状態</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>一般化後の純粋状態</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
+<dd><p>PureQubitsから対応するQubitsを作る</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.is_qubits_dim">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">is_qubits_dim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#is_qubits_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.is_qubits_dim" title="Permalink to this definition">¶</a></dt>
-<dd><p>与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>numpy.array</em>) – 判定対象のnumpy.array</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>判定結果</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
+<dd><p>与えられたarrayの形がQubit系を表現しているか判定する</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.multiple_combine">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">multiple_combine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#multiple_combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.multiple_combine" title="Permalink to this definition">¶</a></dt>
 <dd><p>一般的に２つ以上のQubits同士を結合する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>qubits_list</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a><em>]</em>) – 結合対象のQubitsのリスト</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>結合結果としてのQubits</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.multiple_reduction">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">multiple_reduction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em>, <em class="sig-param"><span class="n">target_particles</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#multiple_reduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.multiple_reduction" title="Permalink to this definition">¶</a></dt>
-<dd><p>指定された全ての系を縮約したQubitsを返す</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>qubits</strong> (<a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – 縮約対象Qubits</p></li>
-<li><p><strong>target_particles</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 縮約対象の系番号のリスト</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>縮約後のQubits</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
+<dd><p>指定された番号全てのQubitを縮約した新しいQubitsを返す</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.reduction">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">reduction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em>, <em class="sig-param"><span class="n">target_particle</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#reduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.reduction" title="Permalink to this definition">¶</a></dt>
-<dd><p>指定した系を縮約したQubit系を返す</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>target_qubits</strong> (<a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – 縮約対象Qubits</p></li>
-<li><p><strong>target_particle</strong> (<em>int</em>) – 縮約対象の系の番号</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>縮約後のQubits</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
-</dd>
-</dl>
+<dd><p>target番目のQubitを縮約した局所Qubit群を返す</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.resolve_arrays">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">resolve_arrays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.array<span class="p">, </span>numpy.array<span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#resolve_arrays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.resolve_arrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>numpy.array</em>) – 計算対象のnumpy.array</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>行列形式のnumy.arrayとndarray形式のnumy.array</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[numy.array, numy.array]</p>
-</dd>
-</dl>
+<dd><p>Qubit系の空間上のnp.arrayを仮定し、行列表現とndarray表現を導出して返す</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.resolve_eigen">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">resolve_eigen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>complex<span class="p">]</span><span class="p">, </span>List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">quantum_simulator.base.pure_qubits.PureQubits</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#resolve_eigen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.resolve_eigen" title="Permalink to this definition">¶</a></dt>
-<dd><p>行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>matrix</strong> (<em>numpy.array</em>) – 計算対象のnumpy.array</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>導かれた固有値および固有状態のリストの組</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[List[complex], List[<a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a>]]</p>
-</dd>
-</dl>
+<dd><p>行列表現のarrayを仮定し、固有値・固有状態を導出する</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.specialize">
 <code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">specialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">quantum_simulator.base.pure_qubits.PureQubits</a><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#specialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.specialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>純粋状態を表しているQubitsオブジェクトから、対応するPureQubitsオブジェクトを返す</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>qubits</strong> (<a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – 特殊化対象の純粋状態</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>特殊化後の純粋状態</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
-</dd>
-</dl>
+<dd><p>固有値1を持つQubitsから対応するPureQubitsを作る</p>
 </dd></dl>
 
 </div>
