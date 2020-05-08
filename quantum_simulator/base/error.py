@@ -8,40 +8,40 @@ class BaseError(Exception):
 
 
 class InitializeError(BaseError):
-    """初期化エラー"""
+    """インスタンスの初期化時エラー"""
 
 
 class QubitCountNotMatchError(BaseError):
-    """演算するQubit群同士のQubit数が一致しないエラー"""
+    """演算対象Qubit群同士のQubit数が一致しない場合のエラー"""
 
 
 class NoQubitsInputError(BaseError):
-    """Qubit群の未入力時エラー"""
+    """演算対象Qubit群の未入力時エラー"""
 
 
 class NotMatchCountError(BaseError):
-    """要素数が一致しないエラー"""
+    """リストの要素数が一致しない場合のエラー"""
 
 
 class NotMatchDimensionError(BaseError):
-    """要素数が一致しないエラー"""
+    """２つの要素の空間次元数が一致しない場合のエラー"""
 
 
 class InvalidProbabilitiesError(BaseError):
-    """不正な確率リストエラー"""
+    """不正な確率リストが与えられた場合のエラー"""
 
 
 class ReductionError(BaseError):
-    """縮約時エラー"""
+    """密度行列の不正縮約時エラー"""
 
 
 class NotPureError(BaseError):
-    """不純粋時エラー"""
+    """Qubitが純粋状態でない場合のエラー"""
 
 
 class IncompatibleDimensionError(BaseError):
-    """操作時次元不整合エラー"""
+    """Qubit操作時の空間次元の不整合エラー"""
 
 
 class NotCompleteError(BaseError):
-    """不完全時エラー"""
+    """正規直交系の不完全時エラー"""
