@@ -31,28 +31,12 @@ class InvalidProbabilitiesError(BaseError):
     """不正な確率リストが与えられた場合のエラー"""
 
 
-class NotMatchCountError(BaseError):
-    """要素数が一致しないエラー"""
-
-
-class NotMatchDimensionError(BaseError):
-    """要素数が一致しないエラー"""
-
-
-class InvalidProbabilitiesError(BaseError):
-    """不正な確率リストエラー"""
-
-
 class ReductionError(BaseError):
     """密度行列の不正縮約時エラー"""
 
 
 class NotPureError(BaseError):
     """Qubitが純粋状態でない場合のエラー"""
-
-
-class NotPureError(BaseError):
-    """不純粋時エラー"""
 
 
 class IncompatibleDimensionError(BaseError):
