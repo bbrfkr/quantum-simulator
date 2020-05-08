@@ -295,11 +295,11 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
     PureQubits同士の内積を返す。
 
     Args:
-        qubits_0 (PureQubits): ブラベクトルに対応するPureQubits。<qubits_0|
-        qubits_1 (PureQubits): ケットベクトルに対応するPureQubits。|qubits_1>
+        qubits_0 (PureQubits): ブラベクトルに対応するPureQubits ＜qubits_0｜
+        qubits_1 (PureQubits): ケットベクトルに対応するPureQubits。｜qubits_1＞
 
     Returns:
-        complex: qubits_0とqubits_1の内積。<qubits_0|qubits_1>
+        complex: qubits_0とqubits_1の内積。＜qubits_0｜qubits_1＞
     """
     # 内積をとるQubit群同士のQubit数が一致してなければエラー
     if qubits_0.qubit_count != qubits_1.qubit_count:
