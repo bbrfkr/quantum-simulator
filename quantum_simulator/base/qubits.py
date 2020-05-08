@@ -1,5 +1,5 @@
 """
-一般的なQubit系の定義
+一般的に混合状態のQubit系に関するクラス群
 """
 
 from typing import List, Tuple
@@ -27,20 +27,21 @@ from quantum_simulator.base.utils import (
 
 class Qubits:
     """
-    一般的に複数かつ混合状態のQubit群のクラス
-        eigen_values: 固有値のリスト
-        eigen_states: 固有状態のリスト
-        ndarray: ndarray形式のQubits
-        matrix: 行列形式のQubits
-        matrix_dim: 行列形式における行列の次元
-        qubit_count: 内包されているQubitの数
+    一般的に混合状態で複数粒子のQubit系クラス
+
+    Attributes:
+        eigen_values (List[float]): Qubitsの固有値のリスト
+        eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
+        ndarray (numpy.array): ndarray形式のQubits
+        matrix (numpy.array): 行列形式のQubits
+        matrix_dim (int): Qubitsの行列の次元
+        qubit_count (int): Qubitsに内包されているQubitの数
     """
 
     def __init__(self, density_array: list):
         """
-        初期化
-            density_array: 密度行列に対応するnp.arrayインスタンス。
-                           行列形式とndarray形式を許容する。
+        Args:
+            density_array (list): 密度行列の候補となるリスト。行列形式もしくはndarray形式が許容される
         """
 
         # arrayの次元をチェック
@@ -82,15 +83,27 @@ class Qubits:
         self.qubit_count = qubit_count
 
     def __str__(self):
-        """Qubitsの行列表現を出力"""
+        """
+        Qubitsの行列表現に対する文字列を返す
+
+        Returns:
+            str: Qubitsの行列表現に対する文字列
+        """
         return str(self.matrix)
 
     def print_ndarray(self):
-        """Qubitsのndarray表現を出力"""
+        """
+        Qubitsのndarray表現を出力
+        """
         print(self.ndarray)
 
     def is_pure(self) -> bool:
-        """Qubitsが純粋状態か判定する"""
+        """
+        Qubitsが純粋状態であるか判定する
+
+        Returns:
+            bool: 判定結果
+        """
         for eigen_value in self.eigen_values:
             if isclose(eigen_value, 1.0 + 0j):
                 return True
@@ -99,7 +112,15 @@ class Qubits:
 
 
 def is_qubits_dim(array: np.array) -> bool:
-    """与えられたarrayの形がQubit系を表現しているか判定する"""
+    """
+    与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
+
+    Args:
+        array (numpy.array): 判定対象のnumpy.array
+
+    Returns:
+        bool: 判定結果
+    """
 
     # 次元のチェック
 
@@ -144,7 +165,13 @@ def is_qubits_dim(array: np.array) -> bool:
 
 def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
     """
-    Qubit系の空間上のnp.arrayを仮定し、行列表現とndarray表現を導出して返す
+    与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
+
+    Args:
+        array (numpy.array): 計算対象のnumpy.array
+
+    Returns:
+        Tuple[numy.array, numy.array]: 行列形式のnumy.arrayとndarray形式のnumy.array
     """
     matrix = None
     ndarray = None
@@ -170,7 +197,13 @@ def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
 
 def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
     """
-    行列表現のarrayを仮定し、固有値・固有状態を導出する
+    行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する
+
+    Args:
+        matrix (numpy.array): 計算対象のnumpy.array
+
+    Returns:
+        Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組
     """
 
     # 固有値・固有状態の導出
@@ -197,13 +230,29 @@ def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
 
 
 def generalize(pure_qubits: PureQubits) -> Qubits:
-    """PureQubitsから対応するQubitsを作る"""
+    """
+    与えられたPureQubitsオブジェクトに対応するQubitsオブジェクトを返す
+
+    Args:
+        pure_qubits (PureQubits): 一般化対象の純粋状態
+
+    Returns:
+        Qubits: 一般化後の純粋状態
+    """
     density_array = pure_qubits.projection
     return Qubits(density_array)
 
 
 def specialize(qubits: Qubits) -> PureQubits:
-    """固有値1を持つQubitsから対応するPureQubitsを作る"""
+    """
+    純粋状態を表しているQubitsオブジェクトから、対応するPureQubitsオブジェクトを返す
+
+    Args:
+        qubits (Qubits): 特殊化対象の純粋状態
+
+    Returns:
+        PureQubits: 特殊化後の純粋状態
+    """
     # Qubitsが純粋状態かチェックし、対応するインデックスを取り出す
     pure_index = -1
     for index in range(len(qubits.eigen_values)):
@@ -218,7 +267,16 @@ def specialize(qubits: Qubits) -> PureQubits:
 
 
 def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) -> Qubits:
-    """確率リストと(Pure)QubitsリストからQubitsオブジェクトを作成する"""
+    """
+    確率のリストとQubitsのリストから凸結合によって、Qubitsオブジェクトを作成する
+
+    Args:
+        probabilities (List[float]): 総和が1の正数のリスト
+        qubits_list (List[Qubits]): 結合対象のQubitsのリスト
+
+    Returns:
+        Qubits: 結合結果としてのQubits
+    """
 
     # 確率リストが確率分布であるかチェック
     if not is_probabilities(probabilities):
@@ -244,7 +302,16 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
 
 
 def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits:
-    """確率リストと直交基底からQubitsオブジェクトを作成する"""
+    """
+    確率のリストと正規直交系からQubitsオブジェクトを作成する
+
+    Args:
+        probabilities (List[float]): 総和が1の正数のリスト
+        qubits_list (List[Qubits]): 結合対象の正規直交系
+
+    Returns:
+        Qubits: 結合結果としてのQubits
+    """
     # PureQubitsのgeneralizeリストを作る
     generalized_pure_qubits_list = [
         generalize(pure_qubits) for pure_qubits in ons.qubits_list
@@ -255,7 +322,16 @@ def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits
 
 
 def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
-    """target番目のQubitを縮約した局所Qubit群を返す"""
+    """
+    指定した系を縮約したQubit系を返す
+
+    Args:
+        target_qubits (Qubits): 縮約対象Qubits
+        target_particle (int): 縮約対象の系の番号
+
+    Returns:
+        Qubits: 縮約後のQubits
+    """
 
     qubit_count = target_qubits.qubit_count
 
@@ -280,7 +356,16 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
 
 
 def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
-    """２つのQubit系を結合して新たなQubit系を作る"""
+    """
+    2つのQubitsを結合した合成系としてのQubitsを作る
+
+    Args:
+        qubits_0 (Qubits): 結合される側のQubits
+        qubits_1 (Qubits): 結合する側のQubits
+
+    Returns:
+        Qubits: 結合結果としてのQubits
+    """
     eigen_values_0 = qubits_0.eigen_values
     eigen_states_0 = qubits_0.eigen_states
     eigen_values_1 = qubits_1.eigen_values
@@ -304,7 +389,15 @@ def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
 
 
 def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
-    """一般的に２つ以上のQubits同士を結合する"""
+    """
+    一般的に２つ以上のQubits同士を結合する
+
+    Args:
+        qubits_list (List[Qubits]): 結合対象のQubitsのリスト
+
+    Returns:
+        Qubits: 結合結果としてのQubits
+    """
     combined_qubits = qubits_list[0]
 
     for index in range(len(qubits_list) - 1):
@@ -314,7 +407,16 @@ def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
 
 
 def multiple_reduction(qubits: Qubits, target_particles: List[int]) -> Qubits:
-    """指定された番号全てのQubitを縮約した新しいQubitsを返す"""
+    """
+    指定された全ての系を縮約したQubitsを返す
+
+    Args:
+        qubits (Qubits): 縮約対象Qubits
+        target_particles (List[int]): 縮約対象の系番号のリスト
+
+    Returns:
+        Qubits: 縮約後のQubits
+    """
     reduced_qubits = qubits
     list.sort(target_particles, reverse=True)
 
