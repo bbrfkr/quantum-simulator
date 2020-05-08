@@ -441,11 +441,11 @@
 <span class="sd">    PureQubits同士の内積を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        qubits_0 (PureQubits): ブラベクトルに対応するPureQubits。&lt;qubits_0|</span>
-<span class="sd">        qubits_1 (PureQubits): ケットベクトルに対応するPureQubits。|qubits_1&gt;</span>
+<span class="sd">        qubits_0 (PureQubits): ブラベクトルに対応するPureQubits ＜qubits_0｜</span>
+<span class="sd">        qubits_1 (PureQubits): ケットベクトルに対応するPureQubits。｜qubits_1＞</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        complex: qubits_0とqubits_1の内積。&lt;qubits_0|qubits_1&gt;</span>
+<span class="sd">        complex: qubits_0とqubits_1の内積。＜qubits_0｜qubits_1＞</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># 内積をとるQubit群同士のQubit数が一致してなければエラー</span>
     <span class="k">if</span> <span class="n">qubits_0</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">!=</span> <span class="n">qubits_1</span><span class="o">.</span><span class="n">qubit_count</span><span class="p">:</span>

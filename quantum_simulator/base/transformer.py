@@ -32,7 +32,6 @@ class UnitaryTransformer:
         Args:
             unitary_array: ユニタリ変換の候補となるリスト。行列形式とndarray形式を許容する
         """
-
         tmp_array = np.array(unitary_array, dtype=complex)
 
         # 次元のチェック
@@ -103,7 +102,6 @@ def create_from_onb(
     Returns:
         UnitaryTransformer: 導出されたユニタリ変換
     """
-
     # 指定されたONSが全てONBでなければエラー
     if not (pre_ons.is_onb() and post_ons.is_onb()):
         message = "[ERROR]: 正規直交基底を指定してください"
@@ -144,7 +142,6 @@ def combine(
     Returns:
         UnitaryTransformer: 結合後のユニタリ変換
     """
-
     # 各ユニタリ行列を標準基底からの基底変換とみなして、ONBを抽出する
     matrix_0 = unitary_0.matrix
     matrix_0_dim = unitary_0.matrix_dim

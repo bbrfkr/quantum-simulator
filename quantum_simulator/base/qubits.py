@@ -43,7 +43,6 @@ class Qubits:
         Args:
             density_array (list): 密度行列の候補となるリスト。行列形式もしくはndarray形式が許容される
         """
-
         # arrayの次元をチェック
         tmp_array = np.array(density_array, dtype=complex)
         if not is_qubits_dim(tmp_array):
