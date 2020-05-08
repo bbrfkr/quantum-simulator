@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "quantum-simulator"
 version = "0.1.0"
-description = ""
+description = "Qunantum Computing Simulator by BBRFKR"
 authors = ["bbrfkr <bbrfkr@gmail.com>"]
 
 [tool.poetry.dependencies]
