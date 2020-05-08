@@ -1,5 +1,5 @@
 """
-baseパッケージ内で利用する定数群
+baseパッケージ内で利用するユーティリティメソッド群
 """
 
 from typing import List
