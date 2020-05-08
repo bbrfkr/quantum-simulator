@@ -316,7 +316,7 @@ def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
     Args:
         qubits_0 (PureQubits): 計算対象の1つめのPureQubits
         qubits_1 (PureQubits): 計算対象の2つめのPureQubits
-    
+
     Returns:
         bool: qubits_0とqubits_1の内積が0か否か
     """
