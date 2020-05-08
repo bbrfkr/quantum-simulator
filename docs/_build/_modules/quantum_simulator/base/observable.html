@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>quantum_simulator.base.observable &mdash; quantum-simulator  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> quantum-simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quantum_simulator.html">quantum_simulator package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">quantum-simulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>quantum_simulator.base.observable</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for quantum_simulator.base.observable</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">観測量に関するクラス群</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choices</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="k">as</span> <span class="nn">pure_qubits</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InitializeError</span><span class="p">,</span>
+    <span class="n">NotMatchCountError</span><span class="p">,</span>
+    <span class="n">NotMatchDimensionError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">PureQubits</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Qubits</span><span class="p">,</span>
+    <span class="n">is_qubits_dim</span><span class="p">,</span>
+    <span class="n">resolve_arrays</span><span class="p">,</span>
+    <span class="n">resolve_eigen</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">is_real</span><span class="p">,</span> <span class="n">isclose</span>
+
+
+<div class="viewcode-block" id="Observable"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable">[docs]</a><span class="k">class</span> <span class="nc">Observable</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-few-public-methods</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    観測量のクラス</span>
+<span class="sd">        eigen_values: 固有値のリスト</span>
+<span class="sd">        eigen_states: 固有状態のリスト</span>
+<span class="sd">        ndarray: ndarray形式の観測量</span>
+<span class="sd">        matrix: 行列形式の観測量</span>
+<span class="sd">        matrix_dim: 行列形式における行列の次元</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hermite_array</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        初期化</span>
+<span class="sd">            hermite_array: 観測量のリスト表現。行列形式とndarray形式を許容する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tmp_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hermite_array</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+
+        <span class="c1"># 次元のチェック</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_qubits_dim</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはQubit系上の作用素ではありません&quot;</span>
+
+        <span class="c1"># 行列表現とndarray表現を導出</span>
+        <span class="n">matrix</span><span class="p">,</span> <span class="n">ndarray</span> <span class="o">=</span> <span class="n">resolve_arrays</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">)</span>
+
+        <span class="c1"># 固有値、固有状態の導出</span>
+        <span class="n">tmp_eigen_values</span><span class="p">,</span> <span class="n">eigen_states</span> <span class="o">=</span> <span class="n">resolve_eigen</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+
+        <span class="c1"># 固有値の虚部の有無をチェックし、floatに変換</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_real</span><span class="p">(</span><span class="n">tmp_eigen_values</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストには虚数の固有値が存在します&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="n">eigen_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp_eigen_values</span><span class="p">)</span>
+
+        <span class="c1"># 行列の次元を導出</span>
+        <span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># 初期化</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigen_values</span> <span class="o">=</span> <span class="n">eigen_values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigen_states</span> <span class="o">=</span> <span class="n">eigen_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix_dim</span>
+
+<div class="viewcode-block" id="Observable.__str__"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;観測量の二次元行列表現を出力&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Observable.print_ndarray"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable.print_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">print_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;観測量のndarray表現を出力&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Observable.expected_value"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable.expected_value">[docs]</a>    <span class="k">def</span> <span class="nf">expected_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;対象Qubit群に対する観測量の期待値を返す&quot;&quot;&quot;</span>
+
+        <span class="c1"># 観測量の対象空間内にQubitが存在するかチェック</span>
+        <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigen_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubit_count</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 観測量の対象空間にQubit群が存在しません&quot;</span>
+            <span class="k">raise</span> <span class="n">NotMatchDimensionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># 期待値の導出</span>
+        <span class="n">expected_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">matrix</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">expected_value</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_resolve_observed_results</span><span class="p">(</span>
+    <span class="n">eigen_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">eigen_states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Observable</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;固有値の縮退を検知し、観測に対して取りうる観測結果(固有値と射影行列の組)を返す&quot;&quot;&quot;</span>
+
+    <span class="c1"># 固有値の近似的に一意のリストと一致していたインデックスのリストを作る</span>
+    <span class="n">unique_eigen_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">degrated_indice_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">index_0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">)):</span>
+        <span class="c1"># 既に走査した固有値はスキップ</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">unique_eigen_values</span><span class="p">:</span>
+            <span class="c1"># 最初に自分自身をインデックスに登録する</span>
+            <span class="n">degrated_indice</span> <span class="o">=</span> <span class="p">[</span><span class="n">index_0</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">index_1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">)</span> <span class="o">-</span> <span class="n">index_0</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">isclose</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">],</span> <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]):</span>
+                    <span class="c1"># 固有値が近似的に等しいときは、全ての固有値を一致させ、インデックスに登録</span>
+                    <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">]</span>
+                    <span class="n">degrated_indice</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">unique_eigen_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">])</span>
+            <span class="n">degrated_indice_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">degrated_indice</span><span class="p">)</span>
+
+    <span class="c1"># リストから固有値に対応する射影作用素のリストを作る</span>
+    <span class="n">projections</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index_0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_eigen_values</span><span class="p">)):</span>
+        <span class="c1"># 固有値に対応する射影作用素を作る</span>
+        <span class="c1"># まず固有値が一致しているインデックスリストから</span>
+        <span class="c1"># 最後のインデックスを取得し、対応する1次元射影行列を取り出す</span>
+        <span class="n">last_index</span> <span class="o">=</span> <span class="n">degrated_indice_list</span><span class="p">[</span><span class="n">index_0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">eigen_states</span><span class="p">[</span><span class="n">last_index</span><span class="p">]</span><span class="o">.</span><span class="n">projection_matrix</span>
+
+        <span class="k">for</span> <span class="n">index_1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">degrated_indice_list</span><span class="p">[</span><span class="n">index_0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># インデックスリストからインデックスを取り出し</span>
+            <span class="c1"># 射影行列同士を足して、目的の射影行列を作る</span>
+            <span class="n">target_index</span> <span class="o">=</span> <span class="n">degrated_indice_list</span><span class="p">[</span><span class="n">index_0</span><span class="p">][</span><span class="n">index_1</span><span class="p">]</span>
+            <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">projection</span><span class="p">,</span> <span class="n">eigen_states</span><span class="p">[</span><span class="n">target_index</span><span class="p">]</span><span class="o">.</span><span class="n">projection_matrix</span>
+            <span class="p">)</span>
+
+        <span class="n">projections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Observable</span><span class="p">(</span><span class="n">projection</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">unique_eigen_values</span><span class="p">,</span> <span class="n">projections</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_from_ons"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.create_from_ons">[docs]</a><span class="k">def</span> <span class="nf">create_from_ons</span><span class="p">(</span><span class="n">observed_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">ons</span><span class="p">:</span> <span class="n">OrthogonalSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;正規直交系と観測値リストから観測量を作る&quot;&quot;&quot;</span>
+    <span class="n">len_qubits_list</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">)</span>
+
+    <span class="c1"># 観測値リストとONS内のPureQubitsリストの要素数同士が一致するかチェック</span>
+    <span class="k">if</span> <span class="n">len_qubits_list</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">observed_values</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられた観測値リストと正規直交系を構成するQubitsリストの要素数が一致しません&quot;</span>
+        <span class="k">raise</span> <span class="n">NotMatchCountError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="n">qubits_list</span> <span class="o">=</span> <span class="n">ons</span><span class="o">.</span><span class="n">qubits_list</span>
+    <span class="n">new_hermite_array</span> <span class="o">=</span> <span class="n">observed_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">qubits_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">projection_matrix</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observed_values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">new_hermite_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">new_hermite_array</span><span class="p">,</span>
+            <span class="n">observed_values</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Observable</span><span class="p">(</span><span class="n">new_hermite_array</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="observe"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.observe">[docs]</a><span class="k">def</span> <span class="nf">observe</span><span class="p">(</span><span class="n">observable</span><span class="p">:</span> <span class="n">Observable</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Qubits</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;観測を実施して観測値および収束後のQubitsを取得する&quot;&quot;&quot;</span>
+
+    <span class="c1"># 観測の取りうる結果のリストを作る</span>
+    <span class="c1"># まず近似的に一意な固有値リストと射影行列のリストを導出</span>
+    <span class="n">observed_results_tuple</span> <span class="o">=</span> <span class="n">_resolve_observed_results</span><span class="p">(</span>
+        <span class="n">observable</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">,</span> <span class="n">observable</span><span class="o">.</span><span class="n">eigen_states</span>
+    <span class="p">)</span>
+    <span class="n">observed_results</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">observed_results_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">],</span> <span class="n">observed_results_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">index</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observed_results_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="p">]</span>
+
+    <span class="c1"># 各観測結果に対する射影観測の期待値(観測確率)を求める</span>
+    <span class="n">observed_probabilities</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">observed_results</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">expected_value</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observed_results</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="c1"># 観測結果のランダムサンプリング</span>
+    <span class="n">observed_result</span> <span class="o">=</span> <span class="n">choices</span><span class="p">(</span><span class="n">observed_results</span><span class="p">,</span> <span class="n">observed_probabilities</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># 観測によるQubitの収束 - 射影の適用と規格化</span>
+    <span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">observed_result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">matrix</span>
+    <span class="n">target_matrix</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">matrix</span>
+
+    <span class="c1"># 射影行列を両側から挟み、かつトレース値で割って規格化する</span>
+    <span class="n">post_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">projection_matrix</span><span class="p">,</span> <span class="n">target_matrix</span><span class="p">),</span> <span class="n">projection_matrix</span><span class="p">)</span>
+    <span class="n">observed_probability</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">post_matrix</span><span class="p">)</span>
+    <span class="n">normalized_post_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">observed_probability</span><span class="p">)</span> <span class="o">*</span> <span class="n">post_matrix</span>
+
+    <span class="c1"># 観測値の返却</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">observed_result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Qubits</span><span class="p">(</span><span class="n">normalized_post_matrix</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.combine">[docs]</a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">observable_0</span><span class="p">:</span> <span class="n">Observable</span><span class="p">,</span> <span class="n">observable_1</span><span class="p">:</span> <span class="n">Observable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Observable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;二つの観測量から合成系の観測量を作る&quot;&quot;&quot;</span>
+
+    <span class="c1"># 固有値および固有状態を結合したリストを作成</span>
+    <span class="n">new_elements</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">observable_0</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">]</span> <span class="o">*</span> <span class="n">observable_1</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_1</span><span class="p">])</span>
+        <span class="o">*</span> <span class="n">pure_qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
+            <span class="n">observable_0</span><span class="o">.</span><span class="n">eigen_states</span><span class="p">[</span><span class="n">index_0</span><span class="p">],</span> <span class="n">observable_1</span><span class="o">.</span><span class="n">eigen_states</span><span class="p">[</span><span class="n">index_1</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">projection_matrix</span>
+        <span class="k">for</span> <span class="n">index_0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observable_0</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">index_1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observable_1</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="n">new_hermite_array</span> <span class="o">=</span> <span class="n">new_elements</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_elements</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">new_hermite_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_hermite_array</span><span class="p">,</span> <span class="n">new_elements</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+    <span class="n">new_observable</span> <span class="o">=</span> <span class="n">Observable</span><span class="p">(</span><span class="n">new_hermite_array</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_observable</span></div>
+
+
+<div class="viewcode-block" id="multiple_combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.multiple_combine">[docs]</a><span class="k">def</span> <span class="nf">multiple_combine</span><span class="p">(</span><span class="n">observables</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Observable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Observable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;一般的に二つ以上の観測量から合成系の観測量を作る&quot;&quot;&quot;</span>
+    <span class="n">combined_observable</span> <span class="o">=</span> <span class="n">observables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observables</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">combined_observable</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_observable</span><span class="p">,</span> <span class="n">observables</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">combined_observable</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Tatsunori Saito
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 """
-純粋状態のQubit系の定義
+純粋状態のQubit系に関するクラス群
 """
 
 from math import ceil
@@ -18,19 +18,21 @@ from quantum_simulator.base.utils import is_pow2, isclose
 
 class PureQubits:
     """
-    一般的に複数かつ純粋状態のQubit群
-      ndarray: ndarray形式のQubits
-      vector: ベクトル形式のQubits
-      qubit_count: 内包されているQubitの数
-      projection: Qubitに対応する射影のndarray
-      projection_matrix: Qubitに対応する射影行列
-      projection_matrix_dim: 射影行列の次元
+    純粋状態で一般的に複数粒子のQubit系クラス
+
+    Attributes:
+        ndarray (numpy.array): ndarray形式のPureQubits
+        vector (numpy.array): ベクトル形式のPureQubits
+        qubit_count (int): PureQubitsに内包されているQubitの数
+        projection (numpy.array): PureQubitsに対応する射影のndarray
+        projection_matrix (numpy.array): PureQubitsに対応する射影行列
+        projection_matrix_dim (int): 射影行列の次元
     """
 
     def __init__(self, amplitudes: list):
         """
-        初期化
-            amplitudes: 確率振幅のリスト。ベクトル形式とndarray形式を許容する
+        Args:
+            amplitudes (list): 一般的に複素数の確率振幅のリスト。ベクトル形式とndarray形式を許容。
         """
 
         # Qubit系であるかチェック
@@ -63,23 +65,36 @@ class PureQubits:
         self.projection_matrix_dim = projection_matrix_dim
 
     def __str__(self):
-        """PureQubitsのベクトル表現を出力"""
+        """
+        PureQubitsのベクトル表現を返す
+
+        Returns:
+            str: PureQubitsのベクトル表現
+        """
         return str(self.vector)
 
     def print_ndarray(self):
-        """PureQubitsのndarray表現を出力"""
+        """
+        PureQubitsのndarray表現を出力
+        """
         print(self.ndarray)
 
     def print_projection_matrix(self):
-        """PureQubitsの射影行列を出力"""
+        """
+        PureQubitsの射影行列を出力
+        """
         print(self.projection_matrix)
 
     def print_projection(self):
-        """PureQubitsの射影行列に対するndarray表現を出力"""
+        """
+        PureQubitsの射影行列に対応するndarray表現を出力
+        """
         print(self.projection)
 
     def dirac_notation(self):
-        """PureQubitsのDirac表記を出力"""
+        """
+        PureQubitsのDirac表記を出力
+        """
         notation = ""
         vec_size = self.vector.size
         for index in range(vec_size):
@@ -95,14 +110,16 @@ class PureQubits:
 
 class OrthogonalSystem:
     """
-    互いに直交する純粋状態である複数のQubit群
-        qubits_list: PureQubitsのリスト
+    互いに直交する複数のPureQubits。正規直交系。
+
+    Attributes:
+        qubits_list (List[PureQubits]): 正規直交系を構成するPureQubitsのリスト
     """
 
     def __init__(self, qubits_list: List[PureQubits]):
         """
-        初期化
-            qubits_list: PureQubitsのリスト
+        Args:
+            qubits_list (List[PureQubits]): 正規直交系を構成するPureQubitsのリスト
         """
         # 直交性の確認(相互にQubit数の確認も兼ねる)
         if not all_orthogonal(qubits_list):
@@ -112,7 +129,12 @@ class OrthogonalSystem:
         self.qubits_list = qubits_list
 
     def is_onb(self):
-        """ONSが基底であるか判定する"""
+        """
+        正規直交系が正規直交基底であるか判定する。
+
+        Returns:
+            bool: 判定結果
+        """
         # 基底を構成するQubit群の個数の確認
         if len(self.qubits_list) != self.qubits_list[0].vector.size:
             return False
@@ -121,7 +143,15 @@ class OrthogonalSystem:
 
 
 def _is_pure_qubits(array: np.array) -> bool:
-    """与えられたarrayがQubit系を表現しているか判定する"""
+    """
+    与えられたnumpy.arrayがQubit系を表現しているか判定する。
+
+    Args:
+        array (numpy.array): 判定対象のnumpy.array
+
+    Returns:
+        bool: 判定結果
+    """
 
     # 要素数が2の累乗個であるかチェック
     size = array.size
@@ -145,8 +175,13 @@ def _is_pure_qubits(array: np.array) -> bool:
 
 def _count_qubits(pure_qubits: np.array) -> int:
     """
-    与えられたarrayがQubit系であることを仮定し
-    Qubitの個数を返す
+    与えられたnumpy.arrayがQubit系であることを仮定し、内包するQubit数を返す。
+
+    Args:
+        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+
+    Returns:
+        int: 内包するQubit数
     """
     size = pure_qubits.size
     count = 0
@@ -160,8 +195,13 @@ def _count_qubits(pure_qubits: np.array) -> int:
 
 def _resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
     """
-    与えられたarrayがQubit系であることを仮定し、
-    ベクトル表現とndarray表現の組を返す
+    与えられたnumpy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
+
+    Args:
+        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+
+    Returns:
+        Tuple[numpy.array, numpy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
     """
     vector = None
     ndarray = None
@@ -179,7 +219,16 @@ def _resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
 
 
 def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
-    """二つのPureQubitsを結合する"""
+    """
+    二つのPureQubitsを結合し、その結果を返す。
+
+    Args:
+        qubits_0 (PureQubits): 結合される側のPureQubits
+        qubits_1 (PureQubits): 結合する側のPureQubits
+
+    Returns:
+        PureQubits: 結合後のPureQubits。qubits_0 ⊗ qubits_1
+    """
     new_ndarray = np.tensordot(qubits_0.ndarray, qubits_1.ndarray, 0)
     new_qubits = PureQubits(new_ndarray)
 
@@ -187,7 +236,16 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
 
 
 def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalSystem:
-    """二つのOrthogonalSystemを結合する"""
+    """
+    二つのOrthogonalSystemを要素順にを結合し、その結果を返す。
+
+    Args:
+        ons_0 (OrthogonalSystem): 結合される側のOrthogonalSystem
+        ons_1 (OrthogonalSystem): 結合する側のOrthogonalSystem
+
+    Returns:
+        OrthogonalSystem: 結合後のOrthogonalSystem
+    """
     new_qubits = [
         combine(qubits_0, qubits_1)
         for qubits_0 in ons_0.qubits_list
@@ -199,7 +257,15 @@ def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalS
 
 
 def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
-    """一般的に二つ以上のPureQubitsを結合する"""
+    """
+    与えられたPureQubitsのリストを前方から順にを結合し、その結果を返す。
+
+    Args:
+        qubits_list (List[PureQubits]): 結合対象のPureQubitsのリスト
+
+    Returns:
+        PureQubits: 結合後のPureQubits。qubits_list[0] ⊗ ... ⊗ qubits_list[n]
+    """
     combined_qubits = qubits_list[0]
     for index in range(len(qubits_list) - 1):
         combined_qubits = combine(combined_qubits, qubits_list[index + 1])
@@ -208,7 +274,15 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
 
 
 def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
-    """一般的に二つ以上のOrthogonalSystemを結合する"""
+    """
+    与えられたOrthogonalSystemのリストを前方から順にを結合し、その結果を返す。
+
+    Args:
+        ons_lit (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト
+
+    Returns:
+        OrthogonalSystem: 結合後のOrthogonalSystem
+    """
     combined_ons = ons_list[0]
     for index in range(len(ons_list) - 1):
         combined_ons = combine_ons(combined_ons, ons_list[index + 1])
@@ -217,7 +291,16 @@ def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
 
 
 def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
-    """PureQubit同士の内積 <qubit_0 | qubit_1>"""
+    """
+    PureQubits同士の内積を返す。
+
+    Args:
+        qubits_0 (PureQubits): ブラベクトルに対応するPureQubits。<qubits_0|
+        qubits_1 (PureQubits): ケットベクトルに対応するPureQubits。|qubits_1>
+
+    Returns:
+        complex: qubits_0とqubits_1の内積。<qubits_0|qubits_1>
+    """
     # 内積をとるQubit群同士のQubit数が一致してなければエラー
     if qubits_0.qubit_count != qubits_1.qubit_count:
         message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
@@ -227,12 +310,29 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
 
 
 def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
-    """二つのPureQubits同士が直交しているか"""
+    """
+    二つのPureQubits同士が直交しているかを判定する。
+
+    Args:
+        qubits_0 (PureQubits): 計算対象の1つめのPureQubits
+        qubits_1 (PureQubits): 計算対象の2つめのPureQubits
+
+    Returns:
+        bool: qubits_0とqubits_1の内積が0か否か
+    """
     return isclose(inner(qubits_0, qubits_1), 0.0)
 
 
 def all_orthogonal(qubits_list: List[PureQubits]) -> bool:
-    """複数のPureQubits同士が互い直交しているか"""
+    """
+    複数のPureQubits同士が互いに直交しているかを判定する。
+
+    Args:
+        qubits_list (List[PureQubits]): 計算対象のPureQubitsのリスト
+
+    Returns:
+        bool: qubits_list内のPureQubits同士の内積が全て0か否か
+    """
 
     len_qubits_list = len(qubits_list)
 

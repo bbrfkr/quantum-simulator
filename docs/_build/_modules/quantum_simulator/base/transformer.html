@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>quantum_simulator.base.transformer &mdash; quantum-simulator  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> quantum-simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quantum_simulator.html">quantum_simulator package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">quantum-simulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>quantum_simulator.base.transformer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for quantum_simulator.base.transformer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">状態変換を行うクラス群</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">conjugate</span>
+
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IncompatibleDimensionError</span><span class="p">,</span>
+    <span class="n">InitializeError</span><span class="p">,</span>
+    <span class="n">NotCompleteError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">PureQubits</span><span class="p">,</span> <span class="n">combine_ons</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="n">Qubits</span><span class="p">,</span> <span class="n">is_qubits_dim</span><span class="p">,</span> <span class="n">resolve_arrays</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span>
+
+
+<div class="viewcode-block" id="UnitaryTransformer"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.UnitaryTransformer">[docs]</a><span class="k">class</span> <span class="nc">UnitaryTransformer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ユニタリ変換による自然な状態変換のクラス</span>
+<span class="sd">        ndarray: ndarray形式のユニタリ変換</span>
+<span class="sd">        matrix: 行列形式のユニタリ変換</span>
+<span class="sd">        matrix_dim: 行列形式における行列の次元</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unitary_array</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        初期化</span>
+<span class="sd">            unitary_array: ユニタリ変換のリスト表現。行列形式とndarray形式を許容する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tmp_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">unitary_array</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+
+        <span class="c1"># 次元のチェック</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_qubits_dim</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはQubit系上の作用素ではありません&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># 行列表現とndarray表現の導出</span>
+        <span class="n">matrix</span><span class="p">,</span> <span class="n">ndarray</span> <span class="o">=</span> <span class="n">resolve_arrays</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">)</span>
+        <span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># ユニタリ性のチェック</span>
+        <span class="n">hermite_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">conjugate</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">hermite_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">matrix_dim</span><span class="p">)):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはユニタリ変換ではありません&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># 初期化</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix_dim</span>
+
+<div class="viewcode-block" id="UnitaryTransformer.__str__"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.UnitaryTransformer.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;ユニタリ変換の二次元行列表現を出力&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitaryTransformer.print_ndarray"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.UnitaryTransformer.print_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">print_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;ユニタリ変換のndarray表現を出力&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UnitaryTransformer.operate"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.UnitaryTransformer.operate">[docs]</a>    <span class="k">def</span> <span class="nf">operate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">Qubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Qubits</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;ユニタリ変換によるQubit群の操作&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_dim</span> <span class="o">!=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">matrix_dim</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 変換対象のQubit数が不正です&quot;</span>
+            <span class="k">raise</span> <span class="n">IncompatibleDimensionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="n">transformed_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">qubits</span><span class="o">.</span><span class="n">matrix</span><span class="p">),</span> <span class="n">conjugate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Qubits</span><span class="p">(</span><span class="n">transformed_matrix</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="create_from_onb"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.create_from_onb">[docs]</a><span class="k">def</span> <span class="nf">create_from_onb</span><span class="p">(</span>
+    <span class="n">pre_ons</span><span class="p">:</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">post_ons</span><span class="p">:</span> <span class="n">OrthogonalSystem</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitaryTransformer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;変換元基底と変換後基底を指定して、ユニタリ変換を作る&quot;&quot;&quot;</span>
+
+    <span class="c1"># 指定されたONSが全てONBでなければエラー</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">is_onb</span><span class="p">()</span> <span class="ow">and</span> <span class="n">post_ons</span><span class="o">.</span><span class="n">is_onb</span><span class="p">()):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 正規直交基底を指定してください&quot;</span>
+        <span class="k">raise</span> <span class="n">NotCompleteError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="c1"># 観測基底を構成するQubit群の個数同士が一致していなければエラー</span>
+    <span class="n">len_pre_ons</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">len_pre_ons</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">post_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 変換後のQubit数が変換前と異なります&quot;</span>
+        <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="c1"># 変換のndarrayの生成</span>
+    <span class="n">elements_matrices</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
+            <span class="n">post_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span>
+            <span class="n">conjugate</span><span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_pre_ons</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">elements_matrices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_pre_ons</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">elements_matrices</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">UnitaryTransformer</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.combine">[docs]</a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span>
+    <span class="n">unitary_0</span><span class="p">:</span> <span class="n">UnitaryTransformer</span><span class="p">,</span> <span class="n">unitary_1</span><span class="p">:</span> <span class="n">UnitaryTransformer</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitaryTransformer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;二つのユニタリ変換から合成系のユニタリ変換を作る&quot;&quot;&quot;</span>
+
+    <span class="c1"># 各ユニタリ行列を標準基底からの基底変換とみなして、ONBを抽出する</span>
+    <span class="n">matrix_0</span> <span class="o">=</span> <span class="n">unitary_0</span><span class="o">.</span><span class="n">matrix</span>
+    <span class="n">matrix_0_dim</span> <span class="o">=</span> <span class="n">unitary_0</span><span class="o">.</span><span class="n">matrix_dim</span>
+    <span class="n">onb_0</span> <span class="o">=</span> <span class="n">OrthogonalSystem</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">matrix_0</span><span class="p">)[:,</span> <span class="n">index</span><span class="p">])))</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix_0_dim</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">matrix_1</span> <span class="o">=</span> <span class="n">unitary_1</span><span class="o">.</span><span class="n">matrix</span>
+    <span class="n">matrix_1_dim</span> <span class="o">=</span> <span class="n">unitary_1</span><span class="o">.</span><span class="n">matrix_dim</span>
+    <span class="n">onb_1</span> <span class="o">=</span> <span class="n">OrthogonalSystem</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">matrix_1</span><span class="p">)[:,</span> <span class="n">index</span><span class="p">])))</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix_1_dim</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 合成系における変換後の基底を求める</span>
+    <span class="n">post_onb</span> <span class="o">=</span> <span class="n">combine_ons</span><span class="p">(</span><span class="n">onb_0</span><span class="p">,</span> <span class="n">onb_1</span><span class="p">)</span>
+
+    <span class="c1"># 合成系における変換前の基底である標準基底を求める</span>
+    <span class="n">identity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">matrix_0_dim</span> <span class="o">*</span> <span class="n">matrix_1_dim</span><span class="p">)</span>
+    <span class="n">pre_onb</span> <span class="o">=</span> <span class="n">OrthogonalSystem</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">identity</span><span class="p">[:,</span> <span class="n">index</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix_0_dim</span> <span class="o">*</span> <span class="n">matrix_1_dim</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">new_unitary</span> <span class="o">=</span> <span class="n">create_from_onb</span><span class="p">(</span><span class="n">pre_onb</span><span class="p">,</span> <span class="n">post_onb</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_unitary</span></div>
+
+
+<div class="viewcode-block" id="multiple_combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.multiple_combine">[docs]</a><span class="k">def</span> <span class="nf">multiple_combine</span><span class="p">(</span><span class="n">unitaries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UnitaryTransformer</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">UnitaryTransformer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;一般的に二つ以上のユニタリ変換から合成系のユニタリ変換を作る&quot;&quot;&quot;</span>
+    <span class="n">combined_unitary</span> <span class="o">=</span> <span class="n">unitaries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unitaries</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">combined_unitary</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_unitary</span><span class="p">,</span> <span class="n">unitaries</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">combined_unitary</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Tatsunori Saito
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
