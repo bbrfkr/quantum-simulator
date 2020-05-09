@@ -178,7 +178,7 @@ def combine(
 
 def multiple_combine(unitaries: List[UnitaryTransformer]) -> UnitaryTransformer:
     """
-    一般的に2つ以上ののユニタリ変換を結合して合成系のユニタリ変換を作る
+    一般的に2つ以上のユニタリ変換を結合して合成系のユニタリ変換を作る
 
     Args:
         unitaries (List[UnitaryTransformer]): 結合対象のユニタリ変換のリスト
@@ -192,3 +192,38 @@ def multiple_combine(unitaries: List[UnitaryTransformer]) -> UnitaryTransformer:
         combined_unitary = combine(combined_unitary, unitaries[index + 1])
 
     return combined_unitary
+
+
+def compose(
+    unitary_0: UnitaryTransformer, unitary_1: UnitaryTransformer
+) -> UnitaryTransformer:
+    """
+    2つのユニタリ変換を合成して同一系のユニタリ変換を作る
+
+    Args:
+        unitary_0 (UnitaryTransformer): 合成される側のユニタリ変換
+        unitary_1 (UnitaryTransformer): 合成する側のユニタリ変換
+
+    Returns:
+        UnitaryTransformer: 合成後のユニタリ変換
+    """
+    composed_matrix = np.dot(unitary_1.matrix, unitary_0.matrix)
+    return UnitaryTransformer(composed_matrix)
+
+
+def multiple_compose(unitaries: List[UnitaryTransformer]) -> UnitaryTransformer:
+    """
+    一般的に2つ以上のユニタリ変換を合成して同一系のユニタリ変換を作る
+
+    Args:
+        unitaries (List[UnitaryTransformer]): 合成対象のユニタリ変換のリスト。リストの前方に向かって合成される
+
+    Returns:
+        UnitaryTransformer: 合成後のユニタリ変換
+    """
+    composed_unitary = unitaries[0]
+
+    for index in range(len(unitaries) - 1):
+        composed_unitary = compose(composed_unitary, unitaries[index + 1])
+
+    return composed_unitary
