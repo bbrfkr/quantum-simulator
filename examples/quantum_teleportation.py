@@ -10,8 +10,8 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
 from quantum_simulator.base.transformer import create_from_onb
 from quantum_simulator.base.utils import around
-from quantum_simulator.major.pure_qubits import BELL_BASIS
 from quantum_simulator.major.observable import IDENT_OBSERVABLE
+from quantum_simulator.major.pure_qubits import BELL_BASIS
 
 # 初期状態の確率振幅
 alpha = sqrt(0.7) + 0j

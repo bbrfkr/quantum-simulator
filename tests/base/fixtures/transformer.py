@@ -307,18 +307,13 @@ def dict_for_test_unitary_compose(request):
     params=[
         {
             "unitary_list": [
-                UnitaryTransformer([
-                    [1.0 + 0j, 0j],
-                    [0j, -1.0 + 0j]
-                ]),
-                UnitaryTransformer([
-                    [0j, 1.0 + 0j],
-                    [1.0 + 0j, 0j]
-                ]),
-                UnitaryTransformer([
-                    [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                    [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]
-                ]
+                UnitaryTransformer([[1.0 + 0j, 0j], [0j, -1.0 + 0j]]),
+                UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
+                UnitaryTransformer(
+                    [
+                        [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                        [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                    ]
                 ),
             ],
             "matrix": [

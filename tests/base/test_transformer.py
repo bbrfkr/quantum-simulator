@@ -5,10 +5,10 @@ from quantum_simulator.base.error import InitializeError
 from quantum_simulator.base.transformer import (
     UnitaryTransformer,
     combine,
+    compose,
     create_from_onb,
     multiple_combine,
-    compose,
-    multiple_compose
+    multiple_compose,
 )
 from quantum_simulator.base.utils import allclose
 
