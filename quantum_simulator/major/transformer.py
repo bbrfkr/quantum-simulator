@@ -15,7 +15,7 @@ PAULI_MATRIX_X = UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]])
 PAULI_MATRIX_Y = UnitaryTransformer([[0j, -1.0j], [1.0j, 0j]])
 """UnitaryTransformer: Pauli行列 y"""
 
-PAULI_MATRIX_Z = UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]])
+PAULI_MATRIX_Z = UnitaryTransformer([[1.0 + 0j, 0j], [0j, -1.0 + 0j]])
 """UnitaryTransformer: Pauli行列 z"""
 
 HADAMARD_GATE = UnitaryTransformer(
