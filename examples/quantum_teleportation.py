@@ -4,12 +4,18 @@
 
 from math import sqrt
 
-from quantum_simulator.base import observable, pure_qubits
+from quantum_simulator.base import observable, pure_qubits, transformer
 from quantum_simulator.base.observable import observe
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
+from quantum_simulator.base.pure_qubits import PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
-from quantum_simulator.base.transformer import create_from_onb
 from quantum_simulator.base.utils import around
+from quantum_simulator.major.observable import IDENT_OBSERVABLE
+from quantum_simulator.major.pure_qubits import BELL_BASIS
+from quantum_simulator.major.transformer import (
+    IDENT_TRANSFORMER,
+    PAULI_MATRIX_X,
+    PAULI_MATRIX_Z,
+)
 
 # 初期状態の確率振幅
 alpha = sqrt(0.7) + 0j
@@ -18,6 +24,7 @@ beta = sqrt(0.3) + 0j
 # 転送したい初期状態を定義
 input_qubit = PureQubits([alpha, beta])
 print("##### 初期の入力状態 #####")
+print()
 
 print("### Matrix表示 ###")
 print(input_qubit.projection_matrix)
@@ -27,40 +34,26 @@ print("### Dirac表記表示 ###")
 input_qubit.dirac_notation()
 print()
 
-# Bell基底の定義
-bell_basis = [
-    PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
-    PureQubits([[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]),
-    PureQubits([[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]),
-    PureQubits([[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]),
-]
+# 転送用Bell状態の表示
 print("##### Qubit転送に利用するBell基底ベクトル #####")
-bell_basis[0].dirac_notation()
+BELL_BASIS.qubits_list[0].dirac_notation()
 print()
 
 # 合成系の構成と全系ベクトルのDirac表記
-whole_qubits = pure_qubits.combine(input_qubit, bell_basis[0])
+whole_qubits = pure_qubits.combine(input_qubit, BELL_BASIS.qubits_list[0])
 print("##### 全系の状態ベクトル #####")
 whole_qubits.dirac_notation()
 print()
 
-# 恒等観測量(作用素)の定義
-standard_basis_2x2 = OrthogonalSystem(
-    [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
-)
-identity_observable = observable.create_from_ons([1, 1], standard_basis_2x2)
-
 # Bell基底によるAlice側の観測量を定義
 print("##### Bell基底によるvon Neumann観測量 #####")
-alice_observable = observable.create_from_ons(
-    [0.0, 1.0, 2.0, 3.0], OrthogonalSystem(bell_basis)
-)
+alice_observable = observable.create_from_ons([0.0, 1.0, 2.0, 3.0], BELL_BASIS)
 print(alice_observable)
 print()
 
 # 全系に対する観測量を定義
 print("##### 全系に対するvon Neumann観測量 #####")
-whole_observable = observable.combine(alice_observable, identity_observable)
+whole_observable = observable.combine(alice_observable, IDENT_OBSERVABLE)
 print(whole_observable)
 print()
 
@@ -73,24 +66,11 @@ print()
 
 # Bobが適用するユニタリ変換の定義
 local_unitaries = [
-    create_from_onb(
-        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-    ),
-    create_from_onb(
-        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-        OrthogonalSystem([PureQubits([0j, 1.0 + 0j]), PureQubits([1.0 + 0j, 0j])]),
-    ),
-    create_from_onb(
-        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-        OrthogonalSystem([PureQubits([0j, -1.0 + 0j]), PureQubits([1.0 + 0j, 0j])]),
-    ),
-    create_from_onb(
-        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]),
-        OrthogonalSystem([PureQubits([1.0 + 0j, 0j]), PureQubits([0j, -1.0 + 0j])]),
-    ),
+    IDENT_TRANSFORMER,
+    PAULI_MATRIX_X,
+    transformer.compose(PAULI_MATRIX_X, PAULI_MATRIX_Z),
+    PAULI_MATRIX_Z,
 ]
-
 bob_unitary = local_unitaries[int_observed_value]
 bob_qubit = multiple_reduction(converged_qubits, [0, 1])
 

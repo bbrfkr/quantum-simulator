@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    quantum_simulator.base
+   quantum_simulator.major
 
 Module contents
 ---------------
