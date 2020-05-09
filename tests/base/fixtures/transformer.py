@@ -277,3 +277,62 @@ def dict_for_test_unitary_combine(request):
 def dict_for_test_unitary_multiple_combine(request):
     """multiple_combineメソッドに対する正常系テスト用fixture"""
     return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "unitary_0": UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
+            "unitary_1": UnitaryTransformer(
+                [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]]
+            ),
+            "matrix": [
+                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            ],
+            "ndarray": [
+                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            ],
+            "matrix_dim": 2,
+        },
+    ]
+)
+def dict_for_test_unitary_compose(request):
+    """combineメソッドに対する正常系テスト用fixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {
+            "unitary_list": [
+                UnitaryTransformer([
+                    [1.0 + 0j, 0j],
+                    [0j, -1.0 + 0j]
+                ]),
+                UnitaryTransformer([
+                    [0j, 1.0 + 0j],
+                    [1.0 + 0j, 0j]
+                ]),
+                UnitaryTransformer([
+                    [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                    [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]
+                ]
+                ),
+            ],
+            "matrix": [
+                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            ],
+            "ndarray": [
+                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            ],
+            "matrix_dim": 2,
+        },
+    ]
+)
+def dict_for_test_unitary_multiple_compose(request):
+    """combineメソッドに対する正常系テスト用fixture"""
+    return request.param

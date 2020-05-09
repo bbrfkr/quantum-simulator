@@ -324,7 +324,7 @@
 
 <div class="viewcode-block" id="multiple_combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.multiple_combine">[docs]</a><span class="k">def</span> <span class="nf">multiple_combine</span><span class="p">(</span><span class="n">unitaries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UnitaryTransformer</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">UnitaryTransformer</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    一般的に2つ以上ののユニタリ変換を結合して合成系のユニタリ変換を作る</span>
+<span class="sd">    一般的に2つ以上のユニタリ変換を結合して合成系のユニタリ変換を作る</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        unitaries (List[UnitaryTransformer]): 結合対象のユニタリ変換のリスト</span>
@@ -338,6 +338,41 @@
         <span class="n">combined_unitary</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_unitary</span><span class="p">,</span> <span class="n">unitaries</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">combined_unitary</span></div>
+
+
+<div class="viewcode-block" id="compose"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.compose">[docs]</a><span class="k">def</span> <span class="nf">compose</span><span class="p">(</span>
+    <span class="n">unitary_0</span><span class="p">:</span> <span class="n">UnitaryTransformer</span><span class="p">,</span> <span class="n">unitary_1</span><span class="p">:</span> <span class="n">UnitaryTransformer</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnitaryTransformer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2つのユニタリ変換を合成して同一系のユニタリ変換を作る</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        unitary_0 (UnitaryTransformer): 合成される側のユニタリ変換</span>
+<span class="sd">        unitary_1 (UnitaryTransformer): 合成する側のユニタリ変換</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        UnitaryTransformer: 合成後のユニタリ変換</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">composed_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">unitary_1</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">unitary_0</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">UnitaryTransformer</span><span class="p">(</span><span class="n">composed_matrix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="multiple_compose"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.transformer.multiple_compose">[docs]</a><span class="k">def</span> <span class="nf">multiple_compose</span><span class="p">(</span><span class="n">unitaries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UnitaryTransformer</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">UnitaryTransformer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    一般的に2つ以上のユニタリ変換を合成して同一系のユニタリ変換を作る</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        unitaries (List[UnitaryTransformer]): 合成対象のユニタリ変換のリスト。リストの前方に向かって合成される</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        UnitaryTransformer: 合成後のユニタリ変換</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">composed_unitary</span> <span class="o">=</span> <span class="n">unitaries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unitaries</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">composed_unitary</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">composed_unitary</span><span class="p">,</span> <span class="n">unitaries</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">composed_unitary</span></div>
 </pre></div>
 
            </div>

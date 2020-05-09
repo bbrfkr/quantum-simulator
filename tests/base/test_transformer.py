@@ -7,6 +7,8 @@ from quantum_simulator.base.transformer import (
     combine,
     create_from_onb,
     multiple_combine,
+    compose,
+    multiple_compose
 )
 from quantum_simulator.base.utils import allclose
 
@@ -111,6 +113,49 @@ class TestUnitaryTransformer:
         expected_matrix = np.array(dict_for_test_unitary_multiple_combine["matrix"])
         expected_matrix_dim = dict_for_test_unitary_multiple_combine["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_unitary_multiple_combine["ndarray"])
+
+        assert matrix_dim == expected_matrix_dim
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+
+    def test_for_compose(self, dict_for_test_unitary_compose):
+        """
+        combineメソッドの正常系テスト
+        """
+        unitary_0 = dict_for_test_unitary_compose["unitary_0"]
+        unitary_1 = dict_for_test_unitary_compose["unitary_1"]
+        unitary = compose(unitary_0, unitary_1)
+
+        matrix = unitary.matrix
+        matrix_dim = unitary.matrix_dim
+        ndarray = unitary.ndarray
+
+        expected_matrix = np.array(dict_for_test_unitary_compose["matrix"])
+        expected_matrix_dim = dict_for_test_unitary_compose["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_unitary_compose["ndarray"])
+
+        assert matrix_dim == expected_matrix_dim
+        assert allclose(matrix, expected_matrix)
+        assert allclose(ndarray, expected_ndarray)
+        assert allclose(matrix.shape, expected_matrix.shape)
+        assert allclose(ndarray.shape, expected_ndarray.shape)
+
+    def test_for_multiple_compose(self, dict_for_test_unitary_multiple_compose):
+        """
+        multiple_composeメソッドの正常系テスト
+        """
+        unitary_list = dict_for_test_unitary_multiple_compose["unitary_list"]
+        unitary = multiple_compose(unitary_list)
+
+        matrix = unitary.matrix
+        matrix_dim = unitary.matrix_dim
+        ndarray = unitary.ndarray
+
+        expected_matrix = np.array(dict_for_test_unitary_multiple_compose["matrix"])
+        expected_matrix_dim = dict_for_test_unitary_multiple_compose["matrix_dim"]
+        expected_ndarray = np.array(dict_for_test_unitary_multiple_compose["ndarray"])
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
