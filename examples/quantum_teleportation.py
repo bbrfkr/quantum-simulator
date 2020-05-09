@@ -9,10 +9,12 @@ from quantum_simulator.base.observable import observe
 from quantum_simulator.base.pure_qubits import PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
 from quantum_simulator.base.utils import around
-from quantum_simulator.major.pure_qubits import BELL_BASIS
 from quantum_simulator.major.observable import IDENT_OBSERVABLE
+from quantum_simulator.major.pure_qubits import BELL_BASIS
 from quantum_simulator.major.transformer import (
-    PAULI_MATRIX_X, PAULI_MATRIX_Z, IDENT_TRANSFORMER
+    IDENT_TRANSFORMER,
+    PAULI_MATRIX_X,
+    PAULI_MATRIX_Z,
 )
 
 # 初期状態の確率振幅
@@ -45,9 +47,7 @@ print()
 
 # Bell基底によるAlice側の観測量を定義
 print("##### Bell基底によるvon Neumann観測量 #####")
-alice_observable = observable.create_from_ons(
-    [0.0, 1.0, 2.0, 3.0], BELL_BASIS
-)
+alice_observable = observable.create_from_ons([0.0, 1.0, 2.0, 3.0], BELL_BASIS)
 print(alice_observable)
 print()
 
@@ -69,7 +69,7 @@ local_unitaries = [
     IDENT_TRANSFORMER,
     PAULI_MATRIX_X,
     transformer.compose(PAULI_MATRIX_X, PAULI_MATRIX_Z),
-    PAULI_MATRIX_Z
+    PAULI_MATRIX_Z,
 ]
 bob_unitary = local_unitaries[int_observed_value]
 bob_qubit = multiple_reduction(converged_qubits, [0, 1])
