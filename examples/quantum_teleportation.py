@@ -10,8 +10,6 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
 from quantum_simulator.base.transformer import create_from_onb
 from quantum_simulator.base.utils import around
-from quantum_simulator.major.observable import IDENT_OBSERVABLE
-from quantum_simulator.major.pure_qubits import BELL_BASIS
 
 # 初期状態の確率振幅
 alpha = sqrt(0.7) + 0j
@@ -29,20 +27,33 @@ print("### Dirac表記表示 ###")
 input_qubit.dirac_notation()
 print()
 
+# Bell基底の定義
+bell_basis = [
+    PureQubits([[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]]),
+    PureQubits([[0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, 0j]]),
+    PureQubits([[0j, sqrt(0.5) + 0j], [-sqrt(0.5) + 0j, 0j]]),
+    PureQubits([[sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]]),
+]
 print("##### Qubit転送に利用するBell基底ベクトル #####")
-BELL_BASIS[0].dirac_notation()
+bell_basis[0].dirac_notation()
 print()
 
 # 合成系の構成と全系ベクトルのDirac表記
-whole_qubits = pure_qubits.combine(input_qubit, BELL_BASIS[0])
+whole_qubits = pure_qubits.combine(input_qubit, bell_basis[0])
 print("##### 全系の状態ベクトル #####")
 whole_qubits.dirac_notation()
 print()
 
+# 恒等観測量(作用素)の定義
+standard_basis_2x2 = OrthogonalSystem(
+    [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
+)
+identity_observable = observable.create_from_ons([1, 1], standard_basis_2x2)
+
 # Bell基底によるAlice側の観測量を定義
 print("##### Bell基底によるvon Neumann観測量 #####")
 alice_observable = observable.create_from_ons(
-    [0.0, 1.0, 2.0, 3.0], OrthogonalSystem(BELL_BASIS)
+    [0.0, 1.0, 2.0, 3.0], OrthogonalSystem(bell_basis)
 )
 print(alice_observable)
 print()
