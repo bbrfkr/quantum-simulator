@@ -1,7 +1,7 @@
 from quantum_simulator.base.utils import is_pow2, is_probabilities
 
 
-class TestConf:
+class TestUtils:
     """
     baseパッケージ汎用メソッド群のテスト
         * 以下のロジックはテストしない
