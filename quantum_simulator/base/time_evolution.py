@@ -129,9 +129,7 @@ def create_from_onb(
     return TimeEvolution(matrix)
 
 
-def combine(
-    evolution_0: TimeEvolution, evolution_1: TimeEvolution
-) -> TimeEvolution:
+def combine(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolution:
     """
     2つの時間発展を結合して合成系の時間発展を作る
 
@@ -194,9 +192,7 @@ def multiple_combine(evolutions: List[TimeEvolution]) -> TimeEvolution:
     return combined_evolution
 
 
-def compose(
-    evolution_0: TimeEvolution, evolution_1: TimeEvolution
-) -> TimeEvolution:
+def compose(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolution:
     """
     2つの時間発展を合成して同一系の時間発展を作る
 
