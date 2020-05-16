@@ -90,7 +90,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base.observable">quantum_simulator.base.observable module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base.pure_qubits">quantum_simulator.base.pure_qubits module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base.qubits">quantum_simulator.base.qubits module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base.transformer">quantum_simulator.base.transformer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base.time_evolution">quantum_simulator.base.time_evolution module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base.utils">quantum_simulator.base.utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-quantum_simulator.base">Module contents</a></li>
 </ul>
@@ -1044,29 +1044,29 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-quantum_simulator.base.transformer">
-<span id="quantum-simulator-base-transformer-module"></span><h2>quantum_simulator.base.transformer module<a class="headerlink" href="#module-quantum_simulator.base.transformer" title="Permalink to this headline">¶</a></h2>
-<p>状態変換を行うクラス群</p>
+<div class="section" id="module-quantum_simulator.base.time_evolution">
+<span id="quantum-simulator-base-time-evolution-module"></span><h2>quantum_simulator.base.time_evolution module<a class="headerlink" href="#module-quantum_simulator.base.time_evolution" title="Permalink to this headline">¶</a></h2>
+<p>時間発展を記述するクラス群</p>
 <dl class="py class">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.base.transformer.</code><code class="sig-name descname">UnitaryTransformer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unitary_array</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#UnitaryTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.base.time_evolution.</code><code class="sig-name descname">TimeEvolution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unitary_array</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#TimeEvolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>ユニタリ変換による自然な状態変換のクラス</p>
+<p>ユニタリ変換による時間発展のクラス</p>
 <dl class="py attribute">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer.ndarray">
-<code class="sig-name descname">ndarray</code><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer.ndarray" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution.ndarray">
+<code class="sig-name descname">ndarray</code><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution.ndarray" title="Permalink to this definition">¶</a></dt>
 <dd><p>ndarray形式のユニタリ変換</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer.matrix">
-<code class="sig-name descname">matrix</code><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer.matrix" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution.matrix">
+<code class="sig-name descname">matrix</code><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution.matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>行列形式のユニタリ変換</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer.matrix_dim">
-<code class="sig-name descname">matrix_dim</code><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer.matrix_dim" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution.matrix_dim">
+<code class="sig-name descname">matrix_dim</code><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution.matrix_dim" title="Permalink to this definition">¶</a></dt>
 <dd><p>ユニタリ変換の行列の次元</p>
 </dd></dl>
 
@@ -1076,8 +1076,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#UnitaryTransformer.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer.__str__" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#TimeEvolution.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>ユニタリ変換の行列表現の文字列を返す</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -1090,9 +1090,9 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer.operate">
-<code class="sig-name descname">operate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#UnitaryTransformer.operate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer.operate" title="Permalink to this definition">¶</a></dt>
-<dd><p>対象Qubitsをユニタリ変換によって別のQubitsに変換し、変換後のQubitsを返す</p>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution.operate">
+<code class="sig-name descname">operate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#TimeEvolution.operate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution.operate" title="Permalink to this definition">¶</a></dt>
+<dd><p>対象Qubitsを時間発展によって別のQubitsに変換し、変換後のQubitsを返す</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>qubits</strong> (<a class="reference internal" href="#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – 変換対象のQubits</p>
@@ -1107,57 +1107,57 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="quantum_simulator.base.transformer.UnitaryTransformer.print_ndarray">
-<code class="sig-name descname">print_ndarray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#UnitaryTransformer.print_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.UnitaryTransformer.print_ndarray" title="Permalink to this definition">¶</a></dt>
+<dt id="quantum_simulator.base.time_evolution.TimeEvolution.print_ndarray">
+<code class="sig-name descname">print_ndarray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#TimeEvolution.print_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.TimeEvolution.print_ndarray" title="Permalink to this definition">¶</a></dt>
 <dd><p>ユニタリ変換のndarray表現を出力する</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="quantum_simulator.base.transformer.combine">
-<code class="sig-prename descclassname">quantum_simulator.base.transformer.</code><code class="sig-name descname">combine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unitary_0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a></span></em>, <em class="sig-param"><span class="n">unitary_1</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.combine" title="Permalink to this definition">¶</a></dt>
-<dd><p>2つのユニタリ変換を結合して合成系のユニタリ変換を作る</p>
+<dt id="quantum_simulator.base.time_evolution.combine">
+<code class="sig-prename descclassname">quantum_simulator.base.time_evolution.</code><code class="sig-name descname">combine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evolution_0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a></span></em>, <em class="sig-param"><span class="n">evolution_1</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>2つの時間発展を結合して合成系の時間発展を作る</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>unitary_0</strong> (<a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer"><em>UnitaryTransformer</em></a>) – 結合される側のユニタリ変換</p></li>
-<li><p><strong>unitary_1</strong> (<a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer"><em>UnitaryTransformer</em></a>) – 結合する側のユニタリ変換</p></li>
+<li><p><strong>evolution_0</strong> (<a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a>) – 結合される側の時間発展</p></li>
+<li><p><strong>evolution_1</strong> (<a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a>) – 結合する側の時間発展</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>結合後のユニタリ変換</p>
+<dd class="field-even"><p>結合後の時間発展</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">UnitaryTransformer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="quantum_simulator.base.transformer.compose">
-<code class="sig-prename descclassname">quantum_simulator.base.transformer.</code><code class="sig-name descname">compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unitary_0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a></span></em>, <em class="sig-param"><span class="n">unitary_1</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.compose" title="Permalink to this definition">¶</a></dt>
-<dd><p>2つのユニタリ変換を合成して同一系のユニタリ変換を作る</p>
+<dt id="quantum_simulator.base.time_evolution.compose">
+<code class="sig-prename descclassname">quantum_simulator.base.time_evolution.</code><code class="sig-name descname">compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evolution_0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a></span></em>, <em class="sig-param"><span class="n">evolution_1</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>2つの時間発展を合成して同一系の時間発展を作る</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>unitary_0</strong> (<a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer"><em>UnitaryTransformer</em></a>) – 合成される側のユニタリ変換</p></li>
-<li><p><strong>unitary_1</strong> (<a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer"><em>UnitaryTransformer</em></a>) – 合成する側のユニタリ変換</p></li>
+<li><p><strong>evolution_0</strong> (<a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a>) – 合成される側の時間発展</p></li>
+<li><p><strong>evolution_1</strong> (<a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a>) – 合成する側の時間発展</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>合成後のユニタリ変換</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">UnitaryTransformer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="quantum_simulator.base.transformer.create_from_onb">
-<code class="sig-prename descclassname">quantum_simulator.base.transformer.</code><code class="sig-name descname">create_from_onb</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pre_ons</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.pure_qubits.OrthogonalSystem" title="quantum_simulator.base.pure_qubits.OrthogonalSystem">quantum_simulator.base.pure_qubits.OrthogonalSystem</a></span></em>, <em class="sig-param"><span class="n">post_ons</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.pure_qubits.OrthogonalSystem" title="quantum_simulator.base.pure_qubits.OrthogonalSystem">quantum_simulator.base.pure_qubits.OrthogonalSystem</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#create_from_onb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.create_from_onb" title="Permalink to this definition">¶</a></dt>
-<dd><p>変換元基底と変換後基底を指定して、対応するユニタリ変換を作る</p>
+<dt id="quantum_simulator.base.time_evolution.create_from_onb">
+<code class="sig-prename descclassname">quantum_simulator.base.time_evolution.</code><code class="sig-name descname">create_from_onb</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pre_ons</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.pure_qubits.OrthogonalSystem" title="quantum_simulator.base.pure_qubits.OrthogonalSystem">quantum_simulator.base.pure_qubits.OrthogonalSystem</a></span></em>, <em class="sig-param"><span class="n">post_ons</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.base.pure_qubits.OrthogonalSystem" title="quantum_simulator.base.pure_qubits.OrthogonalSystem">quantum_simulator.base.pure_qubits.OrthogonalSystem</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#create_from_onb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.create_from_onb" title="Permalink to this definition">¶</a></dt>
+<dd><p>変換元基底と変換後基底を指定して、対応する時間発展を作る</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1166,44 +1166,44 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>導出されたユニタリ変換</p>
+<dd class="field-even"><p>導出された時間発展</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">UnitaryTransformer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="quantum_simulator.base.transformer.multiple_combine">
-<code class="sig-prename descclassname">quantum_simulator.base.transformer.</code><code class="sig-name descname">multiple_combine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unitaries</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#multiple_combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.multiple_combine" title="Permalink to this definition">¶</a></dt>
-<dd><p>一般的に2つ以上のユニタリ変換を結合して合成系のユニタリ変換を作る</p>
+<dt id="quantum_simulator.base.time_evolution.multiple_combine">
+<code class="sig-prename descclassname">quantum_simulator.base.time_evolution.</code><code class="sig-name descname">multiple_combine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evolutions</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#multiple_combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.multiple_combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>一般的に2つ以上のユニタリ変換を結合して合成系の時間発展を作る</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>unitaries</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer"><em>UnitaryTransformer</em></a><em>]</em>) – 結合対象のユニタリ変換のリスト</p>
+<dd class="field-odd"><p><strong>evolutions</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a><em>]</em>) – 結合対象の時間発展のリスト</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>結合後のユニタリ変換</p>
+<dd class="field-even"><p>結合後の時間発展</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">UnitaryTransformer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="quantum_simulator.base.transformer.multiple_compose">
-<code class="sig-prename descclassname">quantum_simulator.base.transformer.</code><code class="sig-name descname">multiple_compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unitaries</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">quantum_simulator.base.transformer.UnitaryTransformer</a><a class="reference internal" href="_modules/quantum_simulator/base/transformer.html#multiple_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.transformer.multiple_compose" title="Permalink to this definition">¶</a></dt>
-<dd><p>一般的に2つ以上のユニタリ変換を合成して同一系のユニタリ変換を作る</p>
+<dt id="quantum_simulator.base.time_evolution.multiple_compose">
+<code class="sig-prename descclassname">quantum_simulator.base.time_evolution.</code><code class="sig-name descname">multiple_compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evolutions</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a><a class="reference internal" href="_modules/quantum_simulator/base/time_evolution.html#multiple_compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.time_evolution.multiple_compose" title="Permalink to this definition">¶</a></dt>
+<dd><p>一般的に2つ以上のユニタリ変換を合成して同一系の時間発展を作る</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>unitaries</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer"><em>UnitaryTransformer</em></a><em>]</em>) – 合成対象のユニタリ変換のリスト。リストの前方に向かって合成される</p>
+<dd class="field-odd"><p><strong>evolutions</strong> (<em>List</em><em>[</em><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a><em>]</em>) – 合成対象の時間発展のリスト。リストの前方に向かって合成される</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>合成後のユニタリ変換</p>
+<dd class="field-even"><p>合成後の時間発展</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.transformer.UnitaryTransformer" title="quantum_simulator.base.transformer.UnitaryTransformer">UnitaryTransformer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,15 +4,15 @@
 
 from math import sqrt
 
-from quantum_simulator.base import observable, pure_qubits, transformer
+from quantum_simulator.base import observable, pure_qubits, time_evolution
 from quantum_simulator.base.observable import observe
 from quantum_simulator.base.pure_qubits import PureQubits
 from quantum_simulator.base.qubits import generalize, multiple_reduction, specialize
 from quantum_simulator.base.utils import around
 from quantum_simulator.major.observable import IDENT_OBSERVABLE
 from quantum_simulator.major.pure_qubits import BELL_BASIS
-from quantum_simulator.major.transformer import (
-    IDENT_TRANSFORMER,
+from quantum_simulator.major.time_evolution import (
+    IDENT_EVOLUTION,
     PAULI_MATRIX_X,
     PAULI_MATRIX_Z,
 )
@@ -66,9 +66,9 @@ print()
 
 # Bobが適用するユニタリ変換の定義
 local_unitaries = [
-    IDENT_TRANSFORMER,
+    IDENT_EVOLUTION,
     PAULI_MATRIX_X,
-    transformer.compose(PAULI_MATRIX_X, PAULI_MATRIX_Z),
+    time_evolution.compose(PAULI_MATRIX_X, PAULI_MATRIX_Z),
     PAULI_MATRIX_Z,
 ]
 bob_unitary = local_unitaries[int_observed_value]

@@ -36,10 +36,10 @@ quantum\_simulator.base.qubits module
    :undoc-members:
    :show-inheritance:
 
-quantum\_simulator.base.transformer module
-------------------------------------------
+quantum\_simulator.base.time\_evolution module
+----------------------------------------------
 
-.. automodule:: quantum_simulator.base.transformer
+.. automodule:: quantum_simulator.base.time_evolution
    :members:
    :undoc-members:
    :show-inheritance:
