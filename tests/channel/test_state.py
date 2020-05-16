@@ -1,5 +1,4 @@
 from quantum_simulator.channel.state import State
-import numpy as np
 
 
 class TestState:

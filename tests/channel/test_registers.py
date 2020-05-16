@@ -1,4 +1,4 @@
-from quantum_simulator.channel.registers import Registers 
+from quantum_simulator.channel.registers import Registers
 
 
 class TestRegisters:
@@ -23,7 +23,7 @@ class TestRegisters:
         registers.put(dict_for_test["insert_index"], dict_for_test["value"])
         for index in range(dict_for_test["count"]):
             if index == dict_for_test["insert_index"]:
-                assert registers.values[index] == dict_for_test["value"] 
+                assert registers.values[index] == dict_for_test["value"]
             else:
                 assert registers.values[index] is None
 
@@ -33,4 +33,3 @@ class TestRegisters:
         registers = Registers(dict_for_test["count"])
         registers.put(dict_for_test["insert_index"], dict_for_test["value"])
         assert registers.get(dict_for_test["insert_index"]) == dict_for_test["value"]
-

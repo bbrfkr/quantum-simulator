@@ -14,6 +14,7 @@ class State:
         qubits (Qubits): QPU内のQubit系
         registers (Registers): QPU内の古典レジスタ群
     """
+
     def __init__(self, qubits: Qubits, registers: Registers):
         """
         Args:
