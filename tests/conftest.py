@@ -4,4 +4,6 @@ pytest_plugins = (
     "tests.base.fixtures.qubits",
     "tests.base.fixtures.observable",
     "tests.base.fixtures.time_evolution",
+    "tests.channel.fixtures.registers",
+    "tests.channel.fixtures.state",
 )
