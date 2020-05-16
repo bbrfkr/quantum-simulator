@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.transformer import (
-    UnitaryTransformer,
+from quantum_simulator.base.time_evolution import (
+    TimeEvolution,
     combine,
     compose,
     create_from_onb,
@@ -13,15 +13,15 @@ from quantum_simulator.base.transformer import (
 from quantum_simulator.base.utils import allclose
 
 
-class TestUnitaryTransformer:
-    """UnitaryTransformerクラスと付随するメソッドのテスト"""
+class TestTimeEvolution:
+    """TimeEvolutionクラスと付随するメソッドのテスト"""
 
     def test_for_constructor(self, dict_for_test_unitary_constructor):
         """
         __init__メソッドの正常系テスト
         """
         target = dict_for_test_unitary_constructor["target"]
-        unitary = UnitaryTransformer(target)
+        unitary = TimeEvolution(target)
 
         matrix = unitary.matrix
         matrix_dim = unitary.matrix_dim
@@ -40,7 +40,7 @@ class TestUnitaryTransformer:
     def test_invalid_unitary(self, dict_for_test_invalid_unitary):
         """異なるQubit数の粒子系に対する観測基底をもつユニタリ変換のテスト"""
         with pytest.raises(InitializeError):
-            UnitaryTransformer(dict_for_test_invalid_unitary)
+            TimeEvolution(dict_for_test_invalid_unitary)
 
     def test_for_success_operate(self, test_for_success_operate):
         """

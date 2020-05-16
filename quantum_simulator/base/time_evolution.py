@@ -1,5 +1,5 @@
 """
-状態変換を行うクラス群
+時間発展を記述するクラス群
 """
 
 from typing import List
@@ -17,9 +17,9 @@ from quantum_simulator.base.qubits import Qubits, is_qubits_dim, resolve_arrays
 from quantum_simulator.base.utils import allclose
 
 
-class UnitaryTransformer:
+class TimeEvolution:
     """
-    ユニタリ変換による自然な状態変換のクラス
+    ユニタリ変換による時間発展のクラス
 
     Attributes:
         ndarray: ndarray形式のユニタリ変換
@@ -70,7 +70,7 @@ class UnitaryTransformer:
 
     def operate(self, qubits: Qubits) -> Qubits:
         """
-        対象Qubitsをユニタリ変換によって別のQubitsに変換し、変換後のQubitsを返す
+        対象Qubitsを時間発展によって別のQubitsに変換し、変換後のQubitsを返す
 
         Args:
             qubits (Qubits): 変換対象のQubits
@@ -91,16 +91,16 @@ class UnitaryTransformer:
 
 def create_from_onb(
     pre_ons: OrthogonalSystem, post_ons: OrthogonalSystem
-) -> UnitaryTransformer:
+) -> TimeEvolution:
     """
-    変換元基底と変換後基底を指定して、対応するユニタリ変換を作る
+    変換元基底と変換後基底を指定して、対応する時間発展を作る
 
     Args:
         pre_ons (OrthogonalSystem): 変換前の正規直交系。基底である必要がある
         post_ons (OrthogonalSystem): 変換後の正規直交系。基底である必要がある
 
     Returns:
-        UnitaryTransformer: 導出されたユニタリ変換
+        TimeEvolution: 導出された時間発展
     """
     # 指定されたONSが全てONBでなければエラー
     if not (pre_ons.is_onb() and post_ons.is_onb()):
@@ -126,33 +126,33 @@ def create_from_onb(
     for index in range(len_pre_ons - 1):
         matrix = np.add(matrix, elements_matrices[index])
 
-    return UnitaryTransformer(matrix)
+    return TimeEvolution(matrix)
 
 
 def combine(
-    unitary_0: UnitaryTransformer, unitary_1: UnitaryTransformer
-) -> UnitaryTransformer:
+    evolution_0: TimeEvolution, evolution_1: TimeEvolution
+) -> TimeEvolution:
     """
-    2つのユニタリ変換を結合して合成系のユニタリ変換を作る
+    2つの時間発展を結合して合成系の時間発展を作る
 
     Args:
-        unitary_0 (UnitaryTransformer): 結合される側のユニタリ変換
-        unitary_1 (UnitaryTransformer): 結合する側のユニタリ変換
+        evolution_0 (TimeEvolution): 結合される側の時間発展
+        evolution_1 (TimeEvolution): 結合する側の時間発展
 
     Returns:
-        UnitaryTransformer: 結合後のユニタリ変換
+        TimeEvolution: 結合後の時間発展
     """
     # 各ユニタリ行列を標準基底からの基底変換とみなして、ONBを抽出する
-    matrix_0 = unitary_0.matrix
-    matrix_0_dim = unitary_0.matrix_dim
+    matrix_0 = evolution_0.matrix
+    matrix_0_dim = evolution_0.matrix_dim
     onb_0 = OrthogonalSystem(
         [
             PureQubits(list(conjugate(conjugate(matrix_0)[:, index])))
             for index in range(matrix_0_dim)
         ]
     )
-    matrix_1 = unitary_1.matrix
-    matrix_1_dim = unitary_1.matrix_dim
+    matrix_1 = evolution_1.matrix
+    matrix_1_dim = evolution_1.matrix_dim
     onb_1 = OrthogonalSystem(
         [
             PureQubits(list(conjugate(conjugate(matrix_1)[:, index])))
@@ -172,58 +172,58 @@ def combine(
         ]
     )
 
-    new_unitary = create_from_onb(pre_onb, post_onb)
-    return new_unitary
+    new_evolution = create_from_onb(pre_onb, post_onb)
+    return new_evolution
 
 
-def multiple_combine(unitaries: List[UnitaryTransformer]) -> UnitaryTransformer:
+def multiple_combine(evolutions: List[TimeEvolution]) -> TimeEvolution:
     """
-    一般的に2つ以上のユニタリ変換を結合して合成系のユニタリ変換を作る
+    一般的に2つ以上のユニタリ変換を結合して合成系の時間発展を作る
 
     Args:
-        unitaries (List[UnitaryTransformer]): 結合対象のユニタリ変換のリスト
+        evolutions (List[TimeEvolution]): 結合対象の時間発展のリスト
 
     Returns:
-        UnitaryTransformer: 結合後のユニタリ変換
+        TimeEvolution: 結合後の時間発展
     """
-    combined_unitary = unitaries[0]
+    combined_evolution = evolutions[0]
 
-    for index in range(len(unitaries) - 1):
-        combined_unitary = combine(combined_unitary, unitaries[index + 1])
+    for index in range(len(evolutions) - 1):
+        combined_evolution = combine(combined_evolution, evolutions[index + 1])
 
-    return combined_unitary
+    return combined_evolution
 
 
 def compose(
-    unitary_0: UnitaryTransformer, unitary_1: UnitaryTransformer
-) -> UnitaryTransformer:
+    evolution_0: TimeEvolution, evolution_1: TimeEvolution
+) -> TimeEvolution:
     """
-    2つのユニタリ変換を合成して同一系のユニタリ変換を作る
+    2つの時間発展を合成して同一系の時間発展を作る
 
     Args:
-        unitary_0 (UnitaryTransformer): 合成される側のユニタリ変換
-        unitary_1 (UnitaryTransformer): 合成する側のユニタリ変換
+        evolution_0 (TimeEvolution): 合成される側の時間発展
+        evolution_1 (TimeEvolution): 合成する側の時間発展
 
     Returns:
-        UnitaryTransformer: 合成後のユニタリ変換
+        TimeEvolution: 合成後のユニタリ変換
     """
-    composed_matrix = np.dot(unitary_1.matrix, unitary_0.matrix)
-    return UnitaryTransformer(composed_matrix)
+    composed_matrix = np.dot(evolution_1.matrix, evolution_0.matrix)
+    return TimeEvolution(composed_matrix)
 
 
-def multiple_compose(unitaries: List[UnitaryTransformer]) -> UnitaryTransformer:
+def multiple_compose(evolutions: List[TimeEvolution]) -> TimeEvolution:
     """
-    一般的に2つ以上のユニタリ変換を合成して同一系のユニタリ変換を作る
+    一般的に2つ以上のユニタリ変換を合成して同一系の時間発展を作る
 
     Args:
-        unitaries (List[UnitaryTransformer]): 合成対象のユニタリ変換のリスト。リストの前方に向かって合成される
+        evolutions (List[TimeEvolution]): 合成対象の時間発展のリスト。リストの前方に向かって合成される
 
     Returns:
-        UnitaryTransformer: 合成後のユニタリ変換
+        TimeEvolution: 合成後の時間発展
     """
-    composed_unitary = unitaries[0]
+    composed_evolution = evolutions[0]
 
-    for index in range(len(unitaries) - 1):
-        composed_unitary = compose(composed_unitary, unitaries[index + 1])
+    for index in range(len(evolutions) - 1):
+        composed_evolution = compose(composed_evolution, evolutions[index + 1])
 
-    return composed_unitary
+    return composed_evolution

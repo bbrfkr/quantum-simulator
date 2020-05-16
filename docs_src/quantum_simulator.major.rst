@@ -28,10 +28,10 @@ quantum\_simulator.major.qubits module
    :undoc-members:
    :show-inheritance:
 
-quantum\_simulator.major.transformer module
--------------------------------------------
+quantum\_simulator.major.time\_evolution module
+-----------------------------------------------
 
-.. automodule:: quantum_simulator.major.transformer
+.. automodule:: quantum_simulator.major.time_evolution
    :members:
    :undoc-members:
    :show-inheritance:

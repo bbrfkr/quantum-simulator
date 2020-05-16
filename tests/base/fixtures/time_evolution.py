@@ -5,7 +5,7 @@ import pytest
 from quantum_simulator.base.observable import OrthogonalSystem
 from quantum_simulator.base.pure_qubits import PureQubits
 from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.base.transformer import UnitaryTransformer
+from quantum_simulator.base.time_evolution import TimeEvolution
 
 
 @pytest.fixture(
@@ -78,17 +78,17 @@ def dict_for_test_invalid_unitary(request):
     params=[
         # 単一Qubit
         {
-            "unitary": UnitaryTransformer([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
+            "unitary": TimeEvolution([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
             "target": Qubits([[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]]),
             "expected_qubits": Qubits([[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]]),
         },
         {
-            "unitary": UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
+            "unitary": TimeEvolution([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
             "target": Qubits([[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]]),
             "expected_qubits": Qubits([[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]]),
         },
         {
-            "unitary": UnitaryTransformer(
+            "unitary": TimeEvolution(
                 [
                     [1.0 + 0j, 0j, 0j, 0j],
                     [0j, 1.0 + 0j, 0j, 0j],
@@ -172,8 +172,8 @@ def dict_for_test_create_from_onb(request):
 @pytest.fixture(
     params=[
         {
-            "unitary_0": UnitaryTransformer([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
-            "unitary_1": UnitaryTransformer(
+            "unitary_0": TimeEvolution([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
+            "unitary_1": TimeEvolution(
                 [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]]
             ),
             "matrix": [
@@ -205,9 +205,9 @@ def dict_for_test_unitary_combine(request):
     params=[
         {
             "unitary_list": [
-                UnitaryTransformer([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
-                UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
-                UnitaryTransformer(
+                TimeEvolution([[1.0 + 0j, 0j], [0j, 1.0 + 0j]]),
+                TimeEvolution([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
+                TimeEvolution(
                     [
                         [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                         [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
@@ -282,8 +282,8 @@ def dict_for_test_unitary_multiple_combine(request):
 @pytest.fixture(
     params=[
         {
-            "unitary_0": UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
-            "unitary_1": UnitaryTransformer(
+            "unitary_0": TimeEvolution([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
+            "unitary_1": TimeEvolution(
                 [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]]
             ),
             "matrix": [
@@ -307,9 +307,9 @@ def dict_for_test_unitary_compose(request):
     params=[
         {
             "unitary_list": [
-                UnitaryTransformer([[1.0 + 0j, 0j], [0j, -1.0 + 0j]]),
-                UnitaryTransformer([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
-                UnitaryTransformer(
+                TimeEvolution([[1.0 + 0j, 0j], [0j, -1.0 + 0j]]),
+                TimeEvolution([[0j, 1.0 + 0j], [1.0 + 0j, 0j]]),
+                TimeEvolution(
                     [
                         [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                         [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
