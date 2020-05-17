@@ -6,4 +6,5 @@ pytest_plugins = (
     "tests.base.fixtures.time_evolution",
     "tests.channel.fixtures.registers",
     "tests.channel.fixtures.state",
+    "tests.channel.fixtures.transformer",
 )
