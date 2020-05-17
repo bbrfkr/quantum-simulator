@@ -23,7 +23,7 @@ class Transformer(ABC):
         self.state = state
 
     @abstractmethod
-    def transform(self, index: Optional[int]) -> State:
+    def transform(self, index=None) -> State:
         """
         QPU状態変換の抽象メソッド
             index (Optional[int]): 古典情報を格納するレジスタ番号
@@ -48,7 +48,7 @@ class ObserveTransformer(Transformer):
         super().__init__(state)
         self.observable = observable
 
-    def transform(self, index: Optional[int]) -> State:
+    def transform(self, index=None) -> State:
         """
         QPU状態変換のメソッド
             index (Optional[int]): 古典情報を格納するレジスタ番号。指定されなければ観測結果は捨てられます
@@ -78,7 +78,7 @@ class TimeEvolveTransformer(Transformer):
         super().__init__(state)
         self.time_evolution = time_evolution
 
-    def transform(self, index: Optional[int]) -> State:
+    def transform(self, index=None) -> State:
         """
         QPU状態変換のメソッド
             index (Optional[int]): 古典情報を格納するレジスタ番号。本変換では無視されます

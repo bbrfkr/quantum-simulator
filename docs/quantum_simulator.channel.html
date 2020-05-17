@@ -298,9 +298,9 @@
 </dl>
 <dl class="py method">
 <dt id="quantum_simulator.channel.transformer.ObserveTransformer.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#ObserveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#ObserveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>QPU状態変換のメソッド</dt><dd><p>index (int): 古典情報を格納するレジスタ番号</p>
+<dt>QPU状態変換のメソッド</dt><dd><p>index (Optional[int]): 古典情報を格納するレジスタ番号。指定されなければ観測結果は捨てられます</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -330,8 +330,11 @@
 </dl>
 <dl class="py method">
 <dt id="quantum_simulator.channel.transformer.TimeEvolveTransformer.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#TimeEvolveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>QPU状態変換のメソッド</p>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#TimeEvolveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>QPU状態変換のメソッド</dt><dd><p>index (Optional[int]): 古典情報を格納するレジスタ番号。本変換では無視されます</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>変換後のQPU状態</p>
@@ -356,7 +359,7 @@
 </dl>
 <dl class="py method">
 <dt id="quantum_simulator.channel.transformer.Transformer.transform">
-<em class="property">abstract </em><code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#Transformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.Transformer.transform" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#Transformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.Transformer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>QPU状態変換の抽象メソッド</dt><dd><p>index (Optional[int]): 古典情報を格納するレジスタ番号</p>
 </dd>
