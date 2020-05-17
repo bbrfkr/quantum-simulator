@@ -3,7 +3,6 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from quantum_simulator.base.observable import Observable, observe
 from quantum_simulator.base.time_evolution import TimeEvolution
