@@ -29,6 +29,9 @@ class Registers:
 
         Args:
             index (int): 取得したいレジスタの番号
+
+        Returns:
+            Optional[float]: レジスタに格納された値
         """
         return self.values[index]
 
