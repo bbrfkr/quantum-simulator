@@ -1,6 +1,8 @@
-from quantum_simulator.base.utils import is_pow2, is_probabilities, count_bits
-from quantum_simulator.base.error import NegativeValueError
 import pytest
+
+from quantum_simulator.base.error import NegativeValueError
+from quantum_simulator.base.utils import count_bits, is_pow2, is_probabilities
+
 
 class TestUtils:
     """

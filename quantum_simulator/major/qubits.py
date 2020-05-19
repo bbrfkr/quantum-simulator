@@ -2,7 +2,7 @@
 quantum_simulator.base.qubitsモジュール内クラスのよく知られたオブジェクト群
 """
 
-from quantum_simulator.base.qubits import generalize
+from quantum_simulator.base.qubits import Qubits, generalize
 from quantum_simulator.major import pure_qubits
 
 ZERO = Qubits([[1.0 + 0j, 0j], [0j, 0j]])

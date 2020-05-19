@@ -3,15 +3,21 @@
 """
 
 import random
-from quantum_simulator.channel.transformer import TimeEvolveTransformer
+
 from quantum_simulator.base import qubits, time_evolution
-from quantum_simulator.major.time_evolution import TimeEvolution, IDENT_EVOLUTION, NOT_GATE
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.utils import count_bits
 from quantum_simulator.base.qubits import combine
+from quantum_simulator.base.utils import allclose, count_bits
 from quantum_simulator.channel.registers import Registers
 from quantum_simulator.channel.state import State
-from quantum_simulator.major.qubits import ZERO, ONE
+from quantum_simulator.channel.transformer import TimeEvolveTransformer
+from quantum_simulator.major.qubits import ONE, ZERO
+from quantum_simulator.major.time_evolution import (
+    IDENT_EVOLUTION,
+    NOT_GATE,
+    TimeEvolution,
+)
+
 
 class Allocator:
     """
@@ -22,6 +28,8 @@ class Allocator:
         qubit_count (int): 確保するQubit数
         register_count (int): 確保する古典レジスタ数
     """
+
+    # 値のバリデーション
     def __init__(self, input: int, qubit_count: int, register_count: int):
         """
         Args:
@@ -29,7 +37,6 @@ class Allocator:
             qubit_count (int): 確保するQubit数
             register_count (int): 確保する古典レジスタ数
         """
-        # 引数のバリデーション
         if input < 0:
             message = "[ERROR]: 入力値として負の値が与えられました"
             raise InitializeError(message)
@@ -56,15 +63,16 @@ class Allocator:
         """
         # 初期Qubitの用意
         init_qubits = None
+        registers = Registers(self.register_count)
         candidates_list = [0, 1]
         selected = random.choice(candidates_list)
         if selected == 0:
             init_qubits = ZERO
-            Registers.put(0, 0)
+            registers.put(0, 0.0)
 
         else:
             init_qubits = ONE
-            Registers.put(0, 1)
+            registers.put(0, 1.0)
 
         # 二番目以降のQubitの結合
         registers = Registers(self.register_count)
@@ -72,10 +80,10 @@ class Allocator:
             selected = random.choice(candidates_list)
             if selected == 0:
                 init_qubits = qubits.combine(init_qubits, ZERO)
-                Registers.put(index + 1, 0)
+                registers.put(index + 1, 0.0)
             else:
                 init_qubits = qubits.combine(init_qubits, ONE)
-                Registers.put(index + 1, 1)
+                registers.put(index + 1, 1.0)
 
         # インスタンスの初期値の代入
         return State(init_qubits, registers)
@@ -89,6 +97,7 @@ class Initializer:
         allocator (Allocator): Allocatorインスタンス
         noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展
     """
+
     def __init__(self, allocator: Allocator, noise=None):
         """
         Args:
@@ -113,7 +122,7 @@ class Initializer:
         if self.noise is not None and isinstance(self.noise, TimeEvolution):
             # 時間発展の対象Qubit数とAllocatorの保持しているQubit数が
             # 一致しなかったら、エラー
-            noise = self.noise # type: TimeEvolution
+            noise = self.noise  # type: TimeEvolution
             target_count = len(noise.ndarray.shape)
             if qubit_count != target_count:
                 message = "[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません"
@@ -121,24 +130,24 @@ class Initializer:
 
             noise_transformer = TimeEvolveTransformer(mid_state, noise)
             mid_state = noise_transformer.transform()
-        
+
         # レジスタとインプットを比較して、初期状態を作るための時間発展を構成する
         input = self.allocator.input
         bit_count = count_bits(self.allocator.input)
         registers = mid_state.registers
 
         init_evolution = None
-        if ((input) & 0b1) == registers.get(0)
+        if allclose((input & 0b1), registers.get(0)):
             init_evolution = IDENT_EVOLUTION
         else:
             init_evolution = NOT_GATE
-        
+
         for index in range(bit_count - 1):
-            if ((input & 0b1) >> index + 1) == registers.get(index + 1):
+            if allclose(((input & 0b1) >> index + 1), registers.get(index + 1)):
                 init_evolution = time_evolution.combine(init_evolution, IDENT_EVOLUTION)
             else:
                 init_evolution = time_evolution.combine(init_evolution, NOT_GATE)
-        
+
         for index in range(qubit_count - bit_count):
             init_evolution = time_evolution.combine(init_evolution, IDENT_EVOLUTION)
 

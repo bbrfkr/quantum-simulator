@@ -3,10 +3,10 @@ baseパッケージ内で利用するユーティリティメソッド群
 """
 
 from typing import List
-from quantum_simulator.base.error import NegativeValueError
-
 
 import numpy as np
+
+from quantum_simulator.base.error import NegativeValueError
 
 # 計算時の近似桁数
 RELATIVE_TOLERANCE = 1.0e-5
@@ -89,12 +89,12 @@ def count_bits(a: int) -> int:
         raise NegativeValueError(message)
 
     bit_count = 0
-    while(True):
+    while True:
         a //= 2
         bit_count += 1
         if a == 0:
             break
-    
+
     return bit_count
 
 
