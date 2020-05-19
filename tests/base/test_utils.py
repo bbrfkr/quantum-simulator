@@ -1,5 +1,6 @@
-from quantum_simulator.base.utils import is_pow2, is_probabilities
-
+from quantum_simulator.base.utils import is_pow2, is_probabilities, count_bits
+from quantum_simulator.base.error import NegativeValueError
+import pytest
 
 class TestUtils:
     """
@@ -19,6 +20,18 @@ class TestUtils:
         """is_pow2メソッドのFalse値ケーステスト"""
         result = is_pow2(not_pow2_int)
         assert result is False
+
+    def test_for_success_count_bits(self, dict_for_test_count_bits):
+        """count_bitsメソッドの正常系テスト"""
+        dict_for_test = dict_for_test_count_bits
+        result = count_bits(dict_for_test["value"])
+        expected_result = dict_for_test["result"]
+        assert result == expected_result
+
+    def test_for_failuer_count_bits(self, negative_value):
+        """count_bitsメソッドの異常系テスト"""
+        with pytest.raises(NegativeValueError):
+            count_bits(negative_value)
 
     def test_for_true_is_probabilities(self, probabilities_list):
         """is_probabilitiesのTrue値ケーステスト"""

@@ -3,6 +3,8 @@ baseパッケージ内で利用するユーティリティメソッド群
 """
 
 from typing import List
+from quantum_simulator.base.error import NegativeValueError
+
 
 import numpy as np
 
@@ -69,6 +71,31 @@ def is_pow2(a: int) -> bool:
 
     # ビットの論理積で計算する
     return not a & (a - 1)
+
+
+def count_bits(a: int) -> int:
+    """
+    与えられた非負整数が表現可能な最低ビット数を返す
+
+    Args:
+        a (int): 判定対象の整数
+
+    Return:
+        int: 表現可能な最低ビット数
+    """
+    # 負の整数が与えられた時はエラー
+    if a < 0:
+        message = "[ERROR]: 負数が与えられました"
+        raise NegativeValueError(message)
+
+    bit_count = 0
+    while(True):
+        a //= 2
+        bit_count += 1
+        if a == 0:
+            break
+    
+    return bit_count
 
 
 def is_probabilities(target_list: List[float]) -> bool:
