@@ -6,7 +6,6 @@ import random
 
 from quantum_simulator.base import qubits, time_evolution
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.qubits import combine
 from quantum_simulator.base.utils import allclose, count_bits
 from quantum_simulator.channel.registers import Registers
 from quantum_simulator.channel.state import State
@@ -92,7 +91,7 @@ class Allocator:
 class Initializer:
     """
     Allocatorが確保した量子ビットを初期化するクラス
-    
+
     Args:
         allocator (Allocator): Allocatorインスタンス
         noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展

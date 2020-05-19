@@ -19,11 +19,9 @@ def negative_value(request):
     return request.param
 
 
-@pytest.fixture(
-    params=[{"value": 2, "result": 2}, {"value": 127, "result": 7},]
-)
+@pytest.fixture(params=[{"value": 2, "result": 2}, {"value": 127, "result": 7}])
 def dict_for_test_count_bits(request):
-    """count_bitsメソッドの異常系テスト用fixture"""
+    """count_bitsメソッドの正常系テスト用fixture"""
     return request.param
 
 
