@@ -74,7 +74,6 @@ class Allocator:
             registers.put(0, 1.0)
 
         # 二番目以降のQubitの結合
-        registers = Registers(self.register_count)
         for index in range(self.qubit_count - 1):
             selected = random.choice(candidates_list)
             if selected == 0:
@@ -122,7 +121,7 @@ class Initializer:
             # 時間発展の対象Qubit数とAllocatorの保持しているQubit数が
             # 一致しなかったら、エラー
             noise = self.noise  # type: TimeEvolution
-            target_count = len(noise.ndarray.shape)
+            target_count = len(noise.ndarray.shape) // 2
             if qubit_count != target_count:
                 message = "[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません"
                 raise InitializeError(message)
