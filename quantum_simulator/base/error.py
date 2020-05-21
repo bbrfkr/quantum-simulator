@@ -49,3 +49,7 @@ class NotCompleteError(BaseError):
 
 class NegativeValueError(BaseError):
     """負数時のエラー"""
+
+
+class OutOfRangeIndexError(BaseError):
+    """不正なインデックスのエラー"""

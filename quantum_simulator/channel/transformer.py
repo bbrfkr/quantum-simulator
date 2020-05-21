@@ -1,5 +1,5 @@
 """
-チャネルを構成するQPU状態変換のクラス
+チャネルを構成するQPU状態変換のクラス群
 """
 
 from abc import ABC, abstractmethod
