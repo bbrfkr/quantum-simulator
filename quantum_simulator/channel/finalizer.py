@@ -8,6 +8,7 @@ import numpy as np
 
 from quantum_simulator.base.error import OutOfRangeIndexError
 from quantum_simulator.base.observable import Observable, observe
+from quantum_simulator.base.utils import around
 from quantum_simulator.channel.state import State
 
 
@@ -17,27 +18,27 @@ class Finalizer:
 
     Attributes:
         output_indices (List[int]): 観測対象のQubit番号の昇順リスト
-        state (State): 観測対象の状態
     """
 
-    def __init__(self, output_indices: List[int], state: State):
+    def __init__(self, output_indices: List[int]):
         """
         Args:
             output_indices (List[int]): 観測対象のQubit番号のリスト
-            state (State): 観測対象の状態
         """
         self.output_indices = sorted(output_indices)
-        self.state = state
 
-    def finalize(self) -> int:
+    def finalize(self, state: State) -> int:
         """
         最終状態を観測し、計算結果を出力する
+
+        Args:
+            state (State): 観測対象の状態¥
 
         Returns:
             int: 最終的な計算結果
         """
         # Qubit番号のバリデーション
-        qubit_count = self.state.qubits.qubit_count
+        qubit_count = state.qubits.qubit_count
         for index in self.output_indices:
             if index > qubit_count - 1 or index < 0:
                 message = "[ERROR]: 観測対象のQubit番号に不正な値が含まれています"
@@ -48,7 +49,7 @@ class Finalizer:
         observable = Observable(np.diag(diagonal_values))
 
         # 計算結果の観測とターゲットビット抽出
-        raw_outcome = np.around(observe(observable, self.state.qubits)[0]).astype(int)
+        raw_outcome = around(observe(observable, state.qubits)[0]).astype(int)
 
         outcome = 0
         loop_index = 0

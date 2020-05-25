@@ -18,7 +18,7 @@ class TestFinalizer:
         random.seed(dict_for_test["random_seed"])
 
         finalizer = dict_for_test["finalizer"]
-        outcome = finalizer.finalize()
+        outcome = finalizer.finalize(dict_for_test["state"])
 
         expected_outcome = dict_for_test["outcome"]
         assert outcome == expected_outcome

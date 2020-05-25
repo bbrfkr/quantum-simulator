@@ -126,8 +126,8 @@ class Initializer:
                 message = "[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません"
                 raise InitializeError(message)
 
-            noise_transformer = TimeEvolveTransformer(mid_state, noise)
-            mid_state = noise_transformer.transform()
+            noise_transformer = TimeEvolveTransformer(noise)
+            mid_state = noise_transformer.transform(mid_state)
 
         # レジスタとインプットを比較して、初期状態を作るための時間発展を構成する
         input = self.allocator.input
@@ -150,7 +150,7 @@ class Initializer:
             init_evolution = time_evolution.combine(init_evolution, IDENT_EVOLUTION)
 
         # 初期状態の作成
-        init_transformer = TimeEvolveTransformer(mid_state, init_evolution)
-        init_state = init_transformer.transform()
+        init_transformer = TimeEvolveTransformer(init_evolution)
+        init_state = init_transformer.transform(mid_state)
 
         return init_state

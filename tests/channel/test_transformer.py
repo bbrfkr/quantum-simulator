@@ -27,8 +27,8 @@ class TestObserveTransformer:
         state = dict_for_test["state"]
         observable = dict_for_test["observable"]
         register_index = dict_for_test["register_index"]
-        transformer = ObserveTransformer(state, observable)
-        result = transformer.transform(register_index)
+        transformer = ObserveTransformer(observable)
+        result = transformer.transform(state, register_index)
         assert allclose(result.qubits.matrix, qubits.matrix)
         assert result.registers.get(register_index) == registers[register_index]
 
@@ -50,6 +50,6 @@ class TestTimeEvolveTransformer:
         qubits = dict_for_test["qubits"]
         state = dict_for_test["state"]
         time_evolution = dict_for_test["time_evolution"]
-        transformer = TimeEvolveTransformer(state, time_evolution)
-        result = transformer.transform()
+        transformer = TimeEvolveTransformer(time_evolution)
+        result = transformer.transform(state)
         assert allclose(result.qubits.matrix, qubits.matrix)
