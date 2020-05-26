@@ -39,7 +39,7 @@ class Channel(ABC):
         self.transformers = []  # type: List[Transformer]
         self.states = []  # type: List[State]
 
-    def initialize(self, input: int) -> void:
+    def initialize(self, input: int):
         """
         Transformer配列とState配列を初期化する
 
@@ -51,7 +51,7 @@ class Channel(ABC):
         self.transformers = []
         self.states = [initializer.initialize()]
 
-    def transform(self, transformer: Transformer, index=None) -> void:
+    def transform(self, transformer: Transformer, index=None):
         """
         Transformerを用い、状態を次の状態に遷移させる
 
@@ -84,7 +84,7 @@ class Channel(ABC):
         return self.finalize(output_indices)
 
     @abstractmethod
-    def calculate(self) -> void:
+    def calculate(self):
         """
         ユーザ実装の量子チャネルの計算部
         """
