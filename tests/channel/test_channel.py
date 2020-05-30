@@ -27,6 +27,9 @@ class TestChannel:
         assert allclose(state.qubits.matrix, expected_state.qubits.matrix)
 
 
+    @patch.multiple(MyAbcClass, __abstractmethods__=set())
+    def test(self):
+         self.instance = MyAbcClass()
 
     # def test_for_success_channel_finalize(
     #     self, dict_for_test_success_channel_finalize
