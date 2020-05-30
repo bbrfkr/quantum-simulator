@@ -3,7 +3,7 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from quantum_simulator.base.time_evolution import TimeEvolution
 from quantum_simulator.channel.finalizer import Finalizer
@@ -35,7 +35,6 @@ class Channel(ABC):
         self.qubit_count = qubit_count
         self.register_count = register_count
         self.noise = noise  # type: Optional[TimeEvolution]
-        self.output_indices = output_indices
         self.transformers = []  # type: List[Transformer]
         self.states = []  # type: List[State]
 
@@ -46,7 +45,7 @@ class Channel(ABC):
         Args:
             input (int): 入力情報
         """
-        allocator = Allocator(self.input, self.qubit_count, self.register_count)
+        allocator = Allocator(input, self.qubit_count, self.register_count)
         initializer = Initializer(allocator, self.noise)
         self.transformers = []
         self.states = [initializer.initialize()]
@@ -60,7 +59,7 @@ class Channel(ABC):
             index (Optionnal[int]): 古典情報が得られた場合に格納するレジスタ番号
         """
         self.transformers.append(transformer)
-        self.states.append(transformer.transform(states[-1], index))
+        self.states.append(transformer.transform(self.states[-1], index))
 
     def finalize(self, output_indices: List[int]) -> int:
         """
@@ -73,7 +72,7 @@ class Channel(ABC):
             int: 最終的な計算結果
         """
         finalizer = Finalizer(output_indices)
-        return finalizer.finalize()
+        return finalizer.finalize(self.states[-1])
 
     def apply(self, input: int, output_indices: List[int]) -> int:
         """

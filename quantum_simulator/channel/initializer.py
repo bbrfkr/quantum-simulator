@@ -77,10 +77,10 @@ class Allocator:
         for index in range(self.qubit_count - 1):
             selected = random.choice(candidates_list)
             if selected == 0:
-                init_qubits = qubits.combine(init_qubits, ZERO)
+                init_qubits = qubits.combine(ZERO, init_qubits)
                 registers.put(index + 1, 0.0)
             else:
-                init_qubits = qubits.combine(init_qubits, ONE)
+                init_qubits = qubits.combine(ONE, init_qubits)
                 registers.put(index + 1, 1.0)
 
         # インスタンスの初期値の代入
@@ -131,7 +131,6 @@ class Initializer:
 
         # レジスタとインプットを比較して、初期状態を作るための時間発展を構成する
         input = self.allocator.input
-        bit_count = count_bits(self.allocator.input)
         registers = mid_state.registers
 
         init_evolution = None
@@ -140,14 +139,11 @@ class Initializer:
         else:
             init_evolution = NOT_GATE
 
-        for index in range(bit_count - 1):
-            if allclose(((input & 0b1) >> index + 1), registers.get(index + 1)):
-                init_evolution = time_evolution.combine(init_evolution, IDENT_EVOLUTION)
+        for index in range(qubit_count - 1):
+            if allclose(((input >> index + 1) & 0b1), registers.get(index + 1)):
+                init_evolution = time_evolution.combine(IDENT_EVOLUTION, init_evolution)
             else:
-                init_evolution = time_evolution.combine(init_evolution, NOT_GATE)
-
-        for index in range(qubit_count - bit_count):
-            init_evolution = time_evolution.combine(init_evolution, IDENT_EVOLUTION)
+                init_evolution = time_evolution.combine(NOT_GATE, init_evolution)
 
         # 初期状態の作成
         init_transformer = TimeEvolveTransformer(init_evolution)

@@ -223,10 +223,10 @@
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">selected</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">candidates_list</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">selected</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">init_qubits</span><span class="p">,</span> <span class="n">ZERO</span><span class="p">)</span>
+                <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ZERO</span><span class="p">,</span> <span class="n">init_qubits</span><span class="p">)</span>
                 <span class="n">registers</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">init_qubits</span><span class="p">,</span> <span class="n">ONE</span><span class="p">)</span>
+                <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ONE</span><span class="p">,</span> <span class="n">init_qubits</span><span class="p">)</span>
                 <span class="n">registers</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
         <span class="c1"># インスタンスの初期値の代入</span>
@@ -272,12 +272,11 @@
                 <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません&quot;</span>
                 <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-            <span class="n">noise_transformer</span> <span class="o">=</span> <span class="n">TimeEvolveTransformer</span><span class="p">(</span><span class="n">mid_state</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
-            <span class="n">mid_state</span> <span class="o">=</span> <span class="n">noise_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span>
+            <span class="n">noise_transformer</span> <span class="o">=</span> <span class="n">TimeEvolveTransformer</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+            <span class="n">mid_state</span> <span class="o">=</span> <span class="n">noise_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mid_state</span><span class="p">)</span>
 
         <span class="c1"># レジスタとインプットを比較して、初期状態を作るための時間発展を構成する</span>
         <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allocator</span><span class="o">.</span><span class="n">input</span>
-        <span class="n">bit_count</span> <span class="o">=</span> <span class="n">count_bits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allocator</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
         <span class="n">registers</span> <span class="o">=</span> <span class="n">mid_state</span><span class="o">.</span><span class="n">registers</span>
 
         <span class="n">init_evolution</span> <span class="o">=</span> <span class="kc">None</span>
@@ -286,18 +285,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">NOT_GATE</span>
 
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">allclose</span><span class="p">(((</span><span class="nb">input</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
-                <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">init_evolution</span><span class="p">,</span> <span class="n">IDENT_EVOLUTION</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qubit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">allclose</span><span class="p">(((</span><span class="nb">input</span> <span class="o">&gt;&gt;</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">IDENT_EVOLUTION</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">init_evolution</span><span class="p">,</span> <span class="n">NOT_GATE</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qubit_count</span> <span class="o">-</span> <span class="n">bit_count</span><span class="p">):</span>
-            <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">init_evolution</span><span class="p">,</span> <span class="n">IDENT_EVOLUTION</span><span class="p">)</span>
+                <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">NOT_GATE</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
 
         <span class="c1"># 初期状態の作成</span>
-        <span class="n">init_transformer</span> <span class="o">=</span> <span class="n">TimeEvolveTransformer</span><span class="p">(</span><span class="n">mid_state</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
-        <span class="n">init_state</span> <span class="o">=</span> <span class="n">init_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span>
+        <span class="n">init_transformer</span> <span class="o">=</span> <span class="n">TimeEvolveTransformer</span><span class="p">(</span><span class="n">init_evolution</span><span class="p">)</span>
+        <span class="n">init_state</span> <span class="o">=</span> <span class="n">init_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mid_state</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">init_state</span></div></div>
 </pre></div>
