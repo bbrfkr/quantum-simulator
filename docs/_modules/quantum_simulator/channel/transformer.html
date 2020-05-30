@@ -178,6 +178,9 @@
 <div class="viewcode-block" id="ObserveTransformer"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.transformer.ObserveTransformer">[docs]</a><span class="k">class</span> <span class="nc">ObserveTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    観測によるQPU状態変換のクラス</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        observable (Observable): 変換に利用する観測量</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observable</span><span class="p">:</span> <span class="n">Observable</span><span class="p">):</span>
@@ -210,6 +213,9 @@
 <div class="viewcode-block" id="TimeEvolveTransformer"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.transformer.TimeEvolveTransformer">[docs]</a><span class="k">class</span> <span class="nc">TimeEvolveTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    時間発展によるQPU状態変換のクラス</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        time_evolution (TimeEvolution): 変換に利用する時間発展</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_evolution</span><span class="p">:</span> <span class="n">TimeEvolution</span><span class="p">):</span>
@@ -222,7 +228,7 @@
 <div class="viewcode-block" id="TimeEvolveTransformer.transform"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.transformer.TimeEvolveTransformer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        QPU状態変換のメソッド</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            state (State): 変換前のQPU状態</span>
 <span class="sd">            index (Optional[int]): 古典情報を格納するレジスタ番号。本変換では無視されます</span>
