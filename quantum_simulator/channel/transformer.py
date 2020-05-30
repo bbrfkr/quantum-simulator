@@ -76,7 +76,7 @@ class TimeEvolveTransformer(Transformer):
     def transform(self, state: State, index=None) -> State:
         """
         QPU状態変換のメソッド
-        
+
         Args:
             state (State): 変換前のQPU状態
             index (Optional[int]): 古典情報を格納するレジスタ番号。本変換では無視されます
