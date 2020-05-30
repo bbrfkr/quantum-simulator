@@ -20,7 +20,6 @@ class Channel(ABC):
         qubit_count (int): チャネル内のqubit数
         register_count (int): チャネル内の古典レジスタ数
         noise (Optional[TImeEvolution]): 初期化時に発生し得るノイズとしての時間発展
-        output_indices (List[int]): 出力結果を観測するQubit番号のリスト
         transformers (List[Transformer]): 変換の列
         states (List(State)): QPU状態の列
     """
