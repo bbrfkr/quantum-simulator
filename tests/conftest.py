@@ -7,4 +7,7 @@ pytest_plugins = (
     "tests.channel.fixtures.registers",
     "tests.channel.fixtures.state",
     "tests.channel.fixtures.transformer",
+    "tests.channel.fixtures.initializer",
+    "tests.channel.fixtures.finalizer",
+    "tests.channel.fixtures.channel",
 )

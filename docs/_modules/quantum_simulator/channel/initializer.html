@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>quantum_simulator.channel.initializer &mdash; quantum-simulator  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> quantum-simulator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quantum_simulator.html">quantum_simulator package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">quantum-simulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>quantum_simulator.channel.initializer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for quantum_simulator.channel.initializer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">チャネル通過時の初期化するクラス群</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">quantum_simulator.base</span> <span class="kn">import</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">time_evolution</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="n">InitializeError</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">count_bits</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.channel.registers</span> <span class="kn">import</span> <span class="n">Registers</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.channel.state</span> <span class="kn">import</span> <span class="n">State</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.channel.transformer</span> <span class="kn">import</span> <span class="n">TimeEvolveTransformer</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.major.qubits</span> <span class="kn">import</span> <span class="n">ONE</span><span class="p">,</span> <span class="n">ZERO</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.major.time_evolution</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">IDENT_EVOLUTION</span><span class="p">,</span>
+    <span class="n">NOT_GATE</span><span class="p">,</span>
+    <span class="n">TimeEvolution</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Allocator"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.initializer.Allocator">[docs]</a><span class="k">class</span> <span class="nc">Allocator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    必要なだけ量子ビットと古典レジスタを用意するクラス</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input (int): 入力値(非負値)</span>
+<span class="sd">        qubit_count (int): 確保するQubit数</span>
+<span class="sd">        register_count (int): 確保する古典レジスタ数</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 値のバリデーション</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">qubit_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            input (int): 入力値(非負値)</span>
+<span class="sd">            qubit_count (int): 確保するQubit数</span>
+<span class="sd">            register_count (int): 確保する古典レジスタ数</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">input</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 入力値として負の値が与えられました&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="n">bit_count</span> <span class="o">=</span> <span class="n">count_bits</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">register_count</span> <span class="o">&lt;</span> <span class="n">bit_count</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: レジスタ数が入力値を表現可能な最小ビット数を満たしません&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bit_count</span> <span class="o">&gt;</span> <span class="n">qubit_count</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 確保するQubit数が入力値を表現するには不足しています&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="nb">input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">=</span> <span class="n">qubit_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_count</span> <span class="o">=</span> <span class="n">register_count</span>
+
+<div class="viewcode-block" id="Allocator.allocate"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.initializer.Allocator.allocate">[docs]</a>    <span class="k">def</span> <span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        要求された量子ビットおよび古典レジスタを用意する</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            State: 量子ビットと古典レジスタを用意した直後の状態</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 初期Qubitの用意</span>
+        <span class="n">init_qubits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">registers</span> <span class="o">=</span> <span class="n">Registers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register_count</span><span class="p">)</span>
+        <span class="n">candidates_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">candidates_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">selected</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">ZERO</span>
+            <span class="n">registers</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">ONE</span>
+            <span class="n">registers</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># 二番目以降のQubitの結合</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">candidates_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">selected</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ZERO</span><span class="p">,</span> <span class="n">init_qubits</span><span class="p">)</span>
+                <span class="n">registers</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">init_qubits</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ONE</span><span class="p">,</span> <span class="n">init_qubits</span><span class="p">)</span>
+                <span class="n">registers</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># インスタンスの初期値の代入</span>
+        <span class="k">return</span> <span class="n">State</span><span class="p">(</span><span class="n">init_qubits</span><span class="p">,</span> <span class="n">registers</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Initializer"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.initializer.Initializer">[docs]</a><span class="k">class</span> <span class="nc">Initializer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allocatorが確保した量子ビットを初期化するクラス</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        allocator (Allocator): Allocatorインスタンス</span>
+<span class="sd">        noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allocator</span><span class="p">:</span> <span class="n">Allocator</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            allocator (Allocator): Allocatorインスタンス</span>
+<span class="sd">            noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allocator</span> <span class="o">=</span> <span class="n">allocator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
+
+<div class="viewcode-block" id="Initializer.initialize"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.initializer.Initializer.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        量子ビットと古典レジスタ確保後、ノイズをかけたのち、状態初期化の時間発展を適用する</span>
+<span class="sd">        最終的に初期化された状態(QubitsとRegistersの組)を返す</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            State: 最終的な初期化状態</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">mid_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allocator</span><span class="o">.</span><span class="n">allocate</span><span class="p">()</span>
+        <span class="n">qubit_count</span> <span class="o">=</span> <span class="n">mid_state</span><span class="o">.</span><span class="n">qubits</span><span class="o">.</span><span class="n">qubit_count</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">,</span> <span class="n">TimeEvolution</span><span class="p">):</span>
+            <span class="c1"># 時間発展の対象Qubit数とAllocatorの保持しているQubit数が</span>
+            <span class="c1"># 一致しなかったら、エラー</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span>  <span class="c1"># type: TimeEvolution</span>
+            <span class="n">target_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">qubit_count</span> <span class="o">!=</span> <span class="n">target_count</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません&quot;</span>
+                <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+            <span class="n">noise_transformer</span> <span class="o">=</span> <span class="n">TimeEvolveTransformer</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+            <span class="n">mid_state</span> <span class="o">=</span> <span class="n">noise_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mid_state</span><span class="p">)</span>
+
+        <span class="c1"># レジスタとインプットを比較して、初期状態を作るための時間発展を構成する</span>
+        <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">allocator</span><span class="o">.</span><span class="n">input</span>
+        <span class="n">registers</span> <span class="o">=</span> <span class="n">mid_state</span><span class="o">.</span><span class="n">registers</span>
+
+        <span class="n">init_evolution</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">allclose</span><span class="p">((</span><span class="nb">input</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
+            <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">IDENT_EVOLUTION</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">NOT_GATE</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qubit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">allclose</span><span class="p">(((</span><span class="nb">input</span> <span class="o">&gt;&gt;</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">IDENT_EVOLUTION</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">NOT_GATE</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
+
+        <span class="c1"># 初期状態の作成</span>
+        <span class="n">init_transformer</span> <span class="o">=</span> <span class="n">TimeEvolveTransformer</span><span class="p">(</span><span class="n">init_evolution</span><span class="p">)</span>
+        <span class="n">init_state</span> <span class="o">=</span> <span class="n">init_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">mid_state</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">init_state</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Tatsunori Saito
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

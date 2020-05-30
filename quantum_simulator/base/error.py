@@ -45,3 +45,11 @@ class IncompatibleDimensionError(BaseError):
 
 class NotCompleteError(BaseError):
     """正規直交系の不完全時エラー"""
+
+
+class NegativeValueError(BaseError):
+    """負数時のエラー"""
+
+
+class OutOfRangeIndexError(BaseError):
+    """不正なインデックスのエラー"""
