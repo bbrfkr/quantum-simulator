@@ -4,6 +4,14 @@ quantum\_simulator.channel package
 Submodules
 ----------
 
+quantum\_simulator.channel.channel module
+-----------------------------------------
+
+.. automodule:: quantum_simulator.channel.channel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 quantum\_simulator.channel.finalizer module
 -------------------------------------------
 

@@ -22,7 +22,7 @@ class Allocator:
     """
     必要なだけ量子ビットと古典レジスタを用意するクラス
 
-    Args:
+    Attributes:
         input (int): 入力値(非負値)
         qubit_count (int): 確保するQubit数
         register_count (int): 確保する古典レジスタ数
@@ -91,7 +91,7 @@ class Initializer:
     """
     Allocatorが確保した量子ビットを初期化するクラス
 
-    Args:
+    Attributes:
         allocator (Allocator): Allocatorインスタンス
         noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展
     """

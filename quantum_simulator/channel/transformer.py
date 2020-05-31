@@ -32,6 +32,9 @@ class Transformer(ABC):
 class ObserveTransformer(Transformer):
     """
     観測によるQPU状態変換のクラス
+
+    Attributes:
+        observable (Observable): 変換に利用する観測量
     """
 
     def __init__(self, observable: Observable):
@@ -64,6 +67,9 @@ class ObserveTransformer(Transformer):
 class TimeEvolveTransformer(Transformer):
     """
     時間発展によるQPU状態変換のクラス
+
+    Attributes:
+        time_evolution (TimeEvolution): 変換に利用する時間発展
     """
 
     def __init__(self, time_evolution: TimeEvolution):
