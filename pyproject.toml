@@ -8,6 +8,7 @@ authors = ["bbrfkr <bbrfkr@gmail.com>"]
 python = "^3.6"
 numpy = "^1.18.3"
 typing = "^3.7.4"
+cupy-cuda102 = "^7.5.0"
 
 [tool.poetry.dev-dependencies]
 black = "19.10b0"
