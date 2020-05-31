@@ -1,6 +1,6 @@
 import random
 
-import numpy as np
+import cupy as np
 
 from quantum_simulator.base.observable import (
     Observable,

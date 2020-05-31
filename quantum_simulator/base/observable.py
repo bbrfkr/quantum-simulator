@@ -5,7 +5,7 @@
 from random import choices
 from typing import List, Tuple
 
-import numpy as np
+import cupy as np
 
 import quantum_simulator.base.pure_qubits as pure_qubits
 from quantum_simulator.base.error import (
@@ -30,8 +30,8 @@ class Observable:  # pylint: disable=too-few-public-methods
     Attributes:
         eigen_values (List[float]): 観測量の固有値のリスト
         eigen_states (List[PureQubits]): 観測量の固有状態のリスト
-        ndarray (numpy.array): ndarray形式の観測量
-        matrix (numpy.array): 行列形式の観測量
+        ndarray (cupy.array): ndarray形式の観測量
+        matrix (cupy.array): 行列形式の観測量
         matrix_dim (int): 観測料の行列の次元
     """
 

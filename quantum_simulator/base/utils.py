@@ -4,7 +4,7 @@ baseパッケージ内で利用するユーティリティメソッド群
 
 from typing import List
 
-import numpy as np
+import cupy as np
 
 from quantum_simulator.base.error import NegativeValueError
 
@@ -16,25 +16,25 @@ AROUNDED_DECIMALS = 5
 
 def isclose(a: np.array, b: np.array) -> np.array:
     """
-    numpy.iscloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、比較結果をnumpy.arrayで返す。
+    cupy.iscloseの本モジュール用ラッパー。２つのcupy.arrayの各要素を近似的に比較し、比較結果をcupy.arrayで返す。
 
     Args:
-        a (numpy.array): 比較対象1つ目
-        b (numpy.array): 比較対象2つ目
+        a (cupy.array): 比較対象1つ目
+        b (cupy.array): 比較対象2つ目
 
     Return:
-        numpy.array: 各要素の比較結果のnumpy.array (dtype=bool)
+        cupy.array: 各要素の比較結果のcupy.array (dtype=bool)
     """
     return np.isclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
 
 
 def allclose(a: np.array, b: np.array) -> bool:
     """
-    numpy.allcloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
+    cupy.allcloseの本モジュール用ラッパー。２つのcupy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
 
     Args:
-        a (numpy.array): 比較対象1つ目
-        b (numpy.array): 比較対象2つ目
+        a (cupy.array): 比較対象1つ目
+        b (cupy.array): 比較対象2つ目
 
     Return:
         bool: 比較結果
@@ -44,13 +44,13 @@ def allclose(a: np.array, b: np.array) -> bool:
 
 def around(a: np.array) -> np.array:
     """
-    numpy.aroundの本モジュール用ラッパー。numpy.arrayの各要素をモジュール指定の桁数で丸める
+    cupy.aroundの本モジュール用ラッパー。cupy.arrayの各要素をモジュール指定の桁数で丸める
 
     Args:
-        a (numpy.array): 比較対象1つ目
+        a (cupy.array): 比較対象1つ目
 
     Return:
-        numpy.array: aを丸めた結果
+        cupy.array: aを丸めた結果
     """
     return np.around(a, AROUNDED_DECIMALS)
 
@@ -113,10 +113,10 @@ def is_probabilities(target_list: List[float]) -> bool:
         if element < 0.0:
             return False
         total += element
-        if round(total, AROUNDED_DECIMALS) > 1.0:
+        if np.around(total, AROUNDED_DECIMALS) > 1.0:
             return False
 
-    if round(total, AROUNDED_DECIMALS) < 1.0:
+    if np.around(total, AROUNDED_DECIMALS) < 1.0:
         return False
 
     return True
@@ -124,10 +124,10 @@ def is_probabilities(target_list: List[float]) -> bool:
 
 def is_real(array: np.array) -> bool:
     """
-    与えられたnumpy.arrayのデータ型が近似的に実数であるか判定する
+    与えられたcupy.arrayのデータ型が近似的に実数であるか判定する
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (cupy.array): 判定対象のcupy.array
 
     Return:
         bool: 判定結果

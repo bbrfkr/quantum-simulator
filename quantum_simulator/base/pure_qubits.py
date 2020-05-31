@@ -5,8 +5,8 @@
 from math import ceil
 from typing import List, Tuple
 
-import numpy as np
-from numpy import conjugate
+import cupy as np
+from cupy import conj
 
 from quantum_simulator.base.error import (
     InitializeError,
@@ -21,11 +21,11 @@ class PureQubits:
     純粋状態で一般的に複数粒子のQubit系クラス
 
     Attributes:
-        ndarray (numpy.array): ndarray形式のPureQubits
-        vector (numpy.array): ベクトル形式のPureQubits
+        ndarray (cupy.array): ndarray形式のPureQubits
+        vector (cupy.array): ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
-        projection (numpy.array): PureQubitsに対応する射影のndarray
-        projection_matrix (numpy.array): PureQubitsに対応する射影行列
+        projection (cupy.array): PureQubitsに対応する射影のndarray
+        projection_matrix (cupy.array): PureQubitsに対応する射影行列
         projection_matrix_dim (int): 射影行列の次元
     """
 
@@ -48,7 +48,7 @@ class PureQubits:
         qubit_count = _count_qubits(ndarray)
 
         # 射影作用素を導出
-        projection = np.multiply.outer(ndarray, np.conjugate(ndarray))
+        projection = np.outer(ndarray, np.conj(ndarray))
 
         # 射影作用素に対応する行列を導出
         projection_matrix_dim = 2 ** qubit_count
@@ -144,10 +144,10 @@ class OrthogonalSystem:
 
 def _is_pure_qubits(array: np.array) -> bool:
     """
-    与えられたnumpy.arrayがQubit系を表現しているか判定する。
+    与えられたcupy.arrayがQubit系を表現しているか判定する。
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (cupy.array): 判定対象のcupy.array
 
     Returns:
         bool: 判定結果
@@ -175,10 +175,10 @@ def _is_pure_qubits(array: np.array) -> bool:
 
 def _count_qubits(pure_qubits: np.array) -> int:
     """
-    与えられたnumpy.arrayがQubit系であることを仮定し、内包するQubit数を返す。
+    与えられたcupy.arrayがQubit系であることを仮定し、内包するQubit数を返す。
 
     Args:
-        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+        pure_qubits (cupy.array): PureQubitsの候補となるcupy.array
 
     Returns:
         int: 内包するQubit数
@@ -195,13 +195,13 @@ def _count_qubits(pure_qubits: np.array) -> int:
 
 def _resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
     """
-    与えられたnumpy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
+    与えられたcupy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
 
     Args:
-        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+        pure_qubits (cupy.array): PureQubitsの候補となるcupy.array
 
     Returns:
-        Tuple[numpy.array, numpy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
+        Tuple[cupy.array, cupy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
     """
     vector = None
     ndarray = None
@@ -306,7 +306,7 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
         message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
         raise QubitCountNotMatchError(message)
 
-    return np.inner(conjugate(qubits_0.vector), qubits_1.vector)
+    return np.inner(conj(qubits_0.vector), qubits_1.vector)
 
 
 def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:

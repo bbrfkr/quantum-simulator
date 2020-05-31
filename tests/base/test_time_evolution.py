@@ -1,4 +1,4 @@
-import numpy as np
+import cupy as np
 import pytest
 
 from quantum_simulator.base.error import InitializeError

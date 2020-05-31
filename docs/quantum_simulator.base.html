@@ -304,7 +304,7 @@
 <dd><p>ndarray形式の観測量</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -315,7 +315,7 @@
 <dd><p>行列形式の観測量</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -504,7 +504,7 @@
 <dd><p>ndarray形式のPureQubits</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -515,7 +515,7 @@
 <dd><p>ベクトル形式のPureQubits</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -537,7 +537,7 @@
 <dd><p>PureQubitsに対応する射影のndarray</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -548,7 +548,7 @@
 <dd><p>PureQubitsに対応する射影行列</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -777,7 +777,7 @@
 <dd><p>ndarray形式のQubits</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -788,7 +788,7 @@
 <dd><p>行列形式のQubits</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -935,11 +935,11 @@
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.is_qubits_dim">
-<code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">is_qubits_dim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#is_qubits_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.is_qubits_dim" title="Permalink to this definition">¶</a></dt>
-<dd><p>与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</p>
+<code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">is_qubits_dim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#is_qubits_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.is_qubits_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>与えられたcupy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>numpy.array</em>) – 判定対象のnumpy.array</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>cupy.array</em>) – 判定対象のcupy.array</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>判定結果</p>
@@ -1009,11 +1009,11 @@
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.resolve_arrays">
-<code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">resolve_arrays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.array<span class="p">, </span>numpy.array<span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#resolve_arrays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.resolve_arrays" title="Permalink to this definition">¶</a></dt>
-<dd><p>与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</p>
+<code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">resolve_arrays</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>cupy.array<span class="p">, </span>cupy.array<span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#resolve_arrays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.resolve_arrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>与えられたcupy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>numpy.array</em>) – 計算対象のnumpy.array</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>cupy.array</em>) – 計算対象のcupy.array</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>行列形式のnumy.arrayとndarray形式のnumy.array</p>
@@ -1026,11 +1026,11 @@
 
 <dl class="py function">
 <dt id="quantum_simulator.base.qubits.resolve_eigen">
-<code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">resolve_eigen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>complex<span class="p">]</span><span class="p">, </span>List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">quantum_simulator.base.pure_qubits.PureQubits</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#resolve_eigen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.resolve_eigen" title="Permalink to this definition">¶</a></dt>
-<dd><p>行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する</p>
+<code class="sig-prename descclassname">quantum_simulator.base.qubits.</code><code class="sig-name descname">resolve_eigen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>complex<span class="p">]</span><span class="p">, </span>List<span class="p">[</span><a class="reference internal" href="#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">quantum_simulator.base.pure_qubits.PureQubits</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/base/qubits.html#resolve_eigen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.qubits.resolve_eigen" title="Permalink to this definition">¶</a></dt>
+<dd><p>行列形式のcupy.arrayを仮定し、その固有値・固有状態を導出する</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>matrix</strong> (<em>numpy.array</em>) – 計算対象のnumpy.array</p>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>cupy.array</em>) – 計算対象のcupy.array</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>導かれた固有値および固有状態のリストの組</p>
@@ -1229,13 +1229,13 @@
 <p>baseパッケージ内で利用するユーティリティメソッド群</p>
 <dl class="py function">
 <dt id="quantum_simulator.base.utils.allclose">
-<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">allclose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#allclose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.allclose" title="Permalink to this definition">¶</a></dt>
-<dd><p>numpy.allcloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。</p>
+<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">allclose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">cupy.array</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#allclose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.allclose" title="Permalink to this definition">¶</a></dt>
+<dd><p>cupy.allcloseの本モジュール用ラッパー。２つのcupy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>numpy.array</em>) – 比較対象1つ目</p></li>
-<li><p><strong>b</strong> (<em>numpy.array</em>) – 比較対象2つ目</p></li>
+<li><p><strong>a</strong> (<em>cupy.array</em>) – 比較対象1つ目</p></li>
+<li><p><strong>b</strong> (<em>cupy.array</em>) – 比較対象2つ目</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1249,17 +1249,17 @@
 
 <dl class="py function">
 <dt id="quantum_simulator.base.utils.around">
-<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">around</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#around"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.around" title="Permalink to this definition">¶</a></dt>
-<dd><p>numpy.aroundの本モジュール用ラッパー。numpy.arrayの各要素をモジュール指定の桁数で丸める</p>
+<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">around</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; cupy.array<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#around"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.around" title="Permalink to this definition">¶</a></dt>
+<dd><p>cupy.aroundの本モジュール用ラッパー。cupy.arrayの各要素をモジュール指定の桁数で丸める</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>a</strong> (<em>numpy.array</em>) – 比較対象1つ目</p>
+<dd class="field-odd"><p><strong>a</strong> (<em>cupy.array</em>) – 比較対象1つ目</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>aを丸めた結果</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1317,11 +1317,11 @@
 
 <dl class="py function">
 <dt id="quantum_simulator.base.utils.is_real">
-<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">is_real</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#is_real"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.is_real" title="Permalink to this definition">¶</a></dt>
-<dd><p>与えられたnumpy.arrayのデータ型が近似的に実数であるか判定する</p>
+<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">is_real</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#is_real"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.is_real" title="Permalink to this definition">¶</a></dt>
+<dd><p>与えられたcupy.arrayのデータ型が近似的に実数であるか判定する</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>numpy.array</em>) – 判定対象のnumpy.array</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>cupy.array</em>) – 判定対象のcupy.array</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>判定結果</p>
@@ -1334,20 +1334,20 @@
 
 <dl class="py function">
 <dt id="quantum_simulator.base.utils.isclose">
-<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">isclose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#isclose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.isclose" title="Permalink to this definition">¶</a></dt>
-<dd><p>numpy.iscloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、比較結果をnumpy.arrayで返す。</p>
+<code class="sig-prename descclassname">quantum_simulator.base.utils.</code><code class="sig-name descname">isclose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">cupy.array</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">cupy.array</span></em><span class="sig-paren">)</span> &#x2192; cupy.array<a class="reference internal" href="_modules/quantum_simulator/base/utils.html#isclose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.base.utils.isclose" title="Permalink to this definition">¶</a></dt>
+<dd><p>cupy.iscloseの本モジュール用ラッパー。２つのcupy.arrayの各要素を近似的に比較し、比較結果をcupy.arrayで返す。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>numpy.array</em>) – 比較対象1つ目</p></li>
-<li><p><strong>b</strong> (<em>numpy.array</em>) – 比較対象2つ目</p></li>
+<li><p><strong>a</strong> (<em>cupy.array</em>) – 比較対象1つ目</p></li>
+<li><p><strong>b</strong> (<em>cupy.array</em>) – 比較対象2つ目</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>各要素の比較結果のnumpy.array (dtype=bool)</p>
+<dd class="field-even"><p>各要素の比較結果のcupy.array (dtype=bool)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>cupy.array</p>
 </dd>
 </dl>
 </dd></dl>
