@@ -1,7 +1,10 @@
-import os
+import sys
+import Mock
+
+sys.modules["cupy"] = Mock()
+
 from test.support import captured_stdout
 
-import cupy
 import numpy
 import pytest
 
@@ -26,7 +29,7 @@ from quantum_simulator.base.pure_qubits import (
 )
 from quantum_simulator.base.utils import allclose
 
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = numpy
 
 
 class TestPureQubits:

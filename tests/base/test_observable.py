@@ -1,7 +1,10 @@
-import os
+import sys
+import Mock
+
+sys.modules["cupy"] = Mock()
+
 import random
 
-import cupy
 import numpy
 
 from quantum_simulator.base.observable import (
@@ -15,7 +18,7 @@ from quantum_simulator.base.observable import (
 from quantum_simulator.base.qubits import Qubits
 from quantum_simulator.base.utils import allclose
 
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = numpy
 
 
 class TestObservable:
