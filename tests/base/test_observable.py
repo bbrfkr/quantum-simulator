@@ -1,5 +1,5 @@
 import sys
-import Mock
+from unittest.mock import Mock
 
 sys.modules["cupy"] = Mock()
 

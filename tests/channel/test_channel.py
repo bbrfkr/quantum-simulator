@@ -1,3 +1,8 @@
+import sys
+from unittest.mock import Mock
+
+sys.modules["cupy"] = Mock()
+
 from unittest.mock import patch
 
 from quantum_simulator.base.utils import allclose
