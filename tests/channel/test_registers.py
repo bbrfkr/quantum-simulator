@@ -1,3 +1,8 @@
+import sys
+from unittest.mock import Mock
+
+sys.modules["cupy"] = Mock()
+
 from quantum_simulator.channel.registers import Registers
 
 

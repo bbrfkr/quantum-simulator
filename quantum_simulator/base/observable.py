@@ -2,10 +2,12 @@
 観測量に関するクラス群
 """
 
+import os
 from random import choices
 from typing import List, Tuple
 
-import numpy as np
+import cupy
+import numpy
 
 import quantum_simulator.base.pure_qubits as pure_qubits
 from quantum_simulator.base.error import (
@@ -20,7 +22,9 @@ from quantum_simulator.base.qubits import (
     resolve_arrays,
     resolve_eigen,
 )
-from quantum_simulator.base.utils import is_real, isclose
+from quantum_simulator.base.utils import allclose, is_real
+
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class Observable:  # pylint: disable=too-few-public-methods
@@ -30,8 +34,8 @@ class Observable:  # pylint: disable=too-few-public-methods
     Attributes:
         eigen_values (List[float]): 観測量の固有値のリスト
         eigen_states (List[PureQubits]): 観測量の固有状態のリスト
-        ndarray (numpy.array): ndarray形式の観測量
-        matrix (numpy.array): 行列形式の観測量
+        ndarray (np.array): ndarray形式の観測量
+        matrix (np.array): 行列形式の観測量
         matrix_dim (int): 観測料の行列の次元
     """
 
@@ -131,7 +135,7 @@ def _resolve_observed_results(
             degrated_indice = [index_0]
 
             for index_1 in range(len(eigen_values) - index_0 - 1):
-                if isclose(eigen_values[index_0], eigen_values[index_0 + index_1 + 1]):
+                if allclose(eigen_values[index_0], eigen_values[index_0 + index_1 + 1]):
                     # 固有値が近似的に等しいときは、全ての固有値を一致させ、インデックスに登録
                     eigen_values[index_0 + index_1 + 1] = eigen_values[index_0]
                     degrated_indice.append(index_0 + index_1 + 1)

@@ -1,6 +1,11 @@
+import sys
+from unittest.mock import Mock
+
+sys.modules["cupy"] = Mock()
+
 import random
 
-import numpy as np
+import numpy
 
 from quantum_simulator.base.observable import (
     Observable,
@@ -11,7 +16,9 @@ from quantum_simulator.base.observable import (
     observe,
 )
 from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.base.utils import allclose, isclose
+from quantum_simulator.base.utils import allclose
+
+np = numpy
 
 
 class TestObservable:
@@ -46,7 +53,7 @@ class TestObservable:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -86,7 +93,7 @@ class TestObservable:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -113,7 +120,7 @@ class TestObservable:
         expected_expected_value = test_for_success_expected_value_for_pure[
             "expected_value"
         ]
-        assert isclose(expected_value, expected_expected_value)
+        assert allclose(expected_value, expected_expected_value)
 
     def test_for_success__resolve_observed_results(
         self, test_for_success__resolve_observed_results
@@ -139,7 +146,7 @@ class TestObservable:
             is_passed = False
 
             for result_index in range(len(unique_eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index],
                     unique_eigen_values[result_index],
                 ) and allclose(
@@ -164,7 +171,7 @@ class TestObservable:
         expected_observed_value = test_for_success_observe["expected_observed_value"]
         expected_qubits = test_for_success_observe["expected_qubits"]
 
-        assert isclose(observed_value, expected_observed_value)
+        assert allclose(observed_value, expected_observed_value)
         assert allclose(converged_qubits.matrix, expected_qubits.matrix)
 
     def test_for_success_observable_combine(self, test_for_success_observable_combine):
@@ -191,7 +198,7 @@ class TestObservable:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -240,7 +247,7 @@ class TestObservable:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],

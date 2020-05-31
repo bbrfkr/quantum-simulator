@@ -2,10 +2,11 @@
 時間発展を記述するクラス群
 """
 
+import os
 from typing import List
 
-import numpy as np
-from numpy import conjugate
+import cupy
+import numpy
 
 from quantum_simulator.base.error import (
     IncompatibleDimensionError,
@@ -15,6 +16,8 @@ from quantum_simulator.base.error import (
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits, combine_ons
 from quantum_simulator.base.qubits import Qubits, is_qubits_dim, resolve_arrays
 from quantum_simulator.base.utils import allclose
+
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class TimeEvolution:
@@ -43,7 +46,7 @@ class TimeEvolution:
         matrix, ndarray = resolve_arrays(tmp_array)
         matrix_dim = matrix.shape[0]
         # ユニタリ性のチェック
-        hermite_matrix = np.dot(matrix, conjugate(matrix.T))
+        hermite_matrix = np.dot(matrix, np.conj(matrix.T))
         if not allclose(hermite_matrix, np.identity(matrix_dim)):
             message = "[ERROR]: 与えられたリストはユニタリ変換ではありません"
             raise InitializeError(message)
@@ -83,7 +86,7 @@ class TimeEvolution:
             raise IncompatibleDimensionError(message)
 
         transformed_matrix = np.dot(
-            np.dot(self.matrix, qubits.matrix), conjugate(self.matrix.T)
+            np.dot(self.matrix, qubits.matrix), np.conj(self.matrix.T)
         )
 
         return Qubits(transformed_matrix)
@@ -115,9 +118,9 @@ def create_from_onb(
 
     # 変換のndarrayの生成
     elements_matrices = [
-        np.multiply.outer(
+        np.outer(
             post_ons.qubits_list[index].vector,
-            conjugate(pre_ons.qubits_list[index].vector),
+            np.conj(pre_ons.qubits_list[index].vector),
         )
         for index in range(len_pre_ons)
     ]
@@ -145,7 +148,7 @@ def combine(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolu
     matrix_0_dim = evolution_0.matrix_dim
     onb_0 = OrthogonalSystem(
         [
-            PureQubits(list(conjugate(conjugate(matrix_0)[:, index])))
+            PureQubits(list(np.conj(np.conj(matrix_0)[:, index])))
             for index in range(matrix_0_dim)
         ]
     )
@@ -153,7 +156,7 @@ def combine(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolu
     matrix_1_dim = evolution_1.matrix_dim
     onb_1 = OrthogonalSystem(
         [
-            PureQubits(list(conjugate(conjugate(matrix_1)[:, index])))
+            PureQubits(list(np.conj(np.conj(matrix_1)[:, index])))
             for index in range(matrix_1_dim)
         ]
     )

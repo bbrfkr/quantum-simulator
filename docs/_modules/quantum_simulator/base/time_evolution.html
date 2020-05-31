@@ -148,10 +148,11 @@
 <span class="sd">時間発展を記述するクラス群</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">conjugate</span>
+<span class="kn">import</span> <span class="nn">cupy</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">IncompatibleDimensionError</span><span class="p">,</span>
@@ -161,6 +162,8 @@
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">PureQubits</span><span class="p">,</span> <span class="n">combine_ons</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="n">Qubits</span><span class="p">,</span> <span class="n">is_qubits_dim</span><span class="p">,</span> <span class="n">resolve_arrays</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span>
+
+<span class="n">np</span> <span class="o">=</span> <span class="n">cupy</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_CUPY&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="k">else</span> <span class="n">numpy</span>
 
 
 <div class="viewcode-block" id="TimeEvolution"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution">[docs]</a><span class="k">class</span> <span class="nc">TimeEvolution</span><span class="p">:</span>
@@ -189,7 +192,7 @@
         <span class="n">matrix</span><span class="p">,</span> <span class="n">ndarray</span> <span class="o">=</span> <span class="n">resolve_arrays</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">)</span>
         <span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># ユニタリ性のチェック</span>
-        <span class="n">hermite_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">conjugate</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+        <span class="n">hermite_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">hermite_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">matrix_dim</span><span class="p">)):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはユニタリ変換ではありません&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -229,7 +232,7 @@
             <span class="k">raise</span> <span class="n">IncompatibleDimensionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="n">transformed_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">qubits</span><span class="o">.</span><span class="n">matrix</span><span class="p">),</span> <span class="n">conjugate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">qubits</span><span class="o">.</span><span class="n">matrix</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Qubits</span><span class="p">(</span><span class="n">transformed_matrix</span><span class="p">)</span></div></div>
@@ -261,9 +264,9 @@
 
     <span class="c1"># 変換のndarrayの生成</span>
     <span class="n">elements_matrices</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
             <span class="n">post_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span>
-            <span class="n">conjugate</span><span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_pre_ons</span><span class="p">)</span>
     <span class="p">]</span>
@@ -291,7 +294,7 @@
     <span class="n">matrix_0_dim</span> <span class="o">=</span> <span class="n">evolution_0</span><span class="o">.</span><span class="n">matrix_dim</span>
     <span class="n">onb_0</span> <span class="o">=</span> <span class="n">OrthogonalSystem</span><span class="p">(</span>
         <span class="p">[</span>
-            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">matrix_0</span><span class="p">)[:,</span> <span class="n">index</span><span class="p">])))</span>
+            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">matrix_0</span><span class="p">)[:,</span> <span class="n">index</span><span class="p">])))</span>
             <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix_0_dim</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">)</span>
@@ -299,7 +302,7 @@
     <span class="n">matrix_1_dim</span> <span class="o">=</span> <span class="n">evolution_1</span><span class="o">.</span><span class="n">matrix_dim</span>
     <span class="n">onb_1</span> <span class="o">=</span> <span class="n">OrthogonalSystem</span><span class="p">(</span>
         <span class="p">[</span>
-            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">matrix_1</span><span class="p">)[:,</span> <span class="n">index</span><span class="p">])))</span>
+            <span class="n">PureQubits</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">matrix_1</span><span class="p">)[:,</span> <span class="n">index</span><span class="p">])))</span>
             <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix_1_dim</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="p">)</span>

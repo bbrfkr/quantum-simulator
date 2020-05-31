@@ -1,3 +1,8 @@
+import sys
+from unittest.mock import Mock
+
+sys.modules["cupy"] = Mock()
+
 import random
 
 from quantum_simulator.base.time_evolution import TimeEvolution

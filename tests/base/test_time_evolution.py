@@ -1,4 +1,9 @@
-import numpy as np
+import sys
+from unittest.mock import Mock
+
+sys.modules["cupy"] = Mock()
+
+import numpy
 import pytest
 
 from quantum_simulator.base.error import InitializeError
@@ -11,6 +16,8 @@ from quantum_simulator.base.time_evolution import (
     multiple_compose,
 )
 from quantum_simulator.base.utils import allclose
+
+np = numpy
 
 
 class TestTimeEvolution:

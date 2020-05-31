@@ -2,18 +2,22 @@
 純粋状態のQubit系に関するクラス群
 """
 
+import os
 from math import ceil
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
-import numpy as np
-from numpy import conjugate
+import cupy
+import numpy
 
 from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.utils import is_pow2, isclose
+from quantum_simulator.base.utils import allclose, is_pow2
+
+np_array = Union[numpy.array, cupy.array]
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class PureQubits:
@@ -21,11 +25,11 @@ class PureQubits:
     純粋状態で一般的に複数粒子のQubit系クラス
 
     Attributes:
-        ndarray (numpy.array): ndarray形式のPureQubits
-        vector (numpy.array): ベクトル形式のPureQubits
+        ndarray (np.array): ndarray形式のPureQubits
+        vector (np.array): ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
-        projection (numpy.array): PureQubitsに対応する射影のndarray
-        projection_matrix (numpy.array): PureQubitsに対応する射影行列
+        projection (np.array): PureQubitsに対応する射影のndarray
+        projection_matrix (np.array): PureQubitsに対応する射影行列
         projection_matrix_dim (int): 射影行列の次元
     """
 
@@ -48,13 +52,12 @@ class PureQubits:
         qubit_count = _count_qubits(ndarray)
 
         # 射影作用素を導出
-        projection = np.multiply.outer(ndarray, np.conjugate(ndarray))
+        projection_matrix = np.outer(ndarray, np.conj(ndarray))
 
         # 射影作用素に対応する行列を導出
-        projection_matrix_dim = 2 ** qubit_count
-        projection_matrix = projection.reshape(
-            projection_matrix_dim, projection_matrix_dim
-        )
+        projection_matrix_dim = projection_matrix.shape[0]
+        projection_shape = tuple([2 for index in range(qubit_count * 2)])
+        projection = projection_matrix.reshape(projection_shape)
 
         # 初期化
         self.ndarray = ndarray
@@ -142,12 +145,12 @@ class OrthogonalSystem:
         return True
 
 
-def _is_pure_qubits(array: np.array) -> bool:
+def _is_pure_qubits(array: np_array) -> bool:
     """
-    与えられたnumpy.arrayがQubit系を表現しているか判定する。
+    与えられたnp.arrayがQubit系を表現しているか判定する。
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (np.array): 判定対象のnp.array
 
     Returns:
         bool: 判定結果
@@ -167,18 +170,18 @@ def _is_pure_qubits(array: np.array) -> bool:
 
     # 長さが1、つまり確率が1になるかをチェック
     norm = np.sqrt(np.sum(np.abs(array) ** 2))
-    if not isclose(norm, 1.0):
+    if not allclose(norm, 1.0):
         return False
 
     return True
 
 
-def _count_qubits(pure_qubits: np.array) -> int:
+def _count_qubits(pure_qubits: np_array) -> int:
     """
-    与えられたnumpy.arrayがQubit系であることを仮定し、内包するQubit数を返す。
+    与えられたnp.arrayがQubit系であることを仮定し、内包するQubit数を返す。
 
     Args:
-        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+        pure_qubits (np.array): PureQubitsの候補となるnp.array
 
     Returns:
         int: 内包するQubit数
@@ -193,15 +196,15 @@ def _count_qubits(pure_qubits: np.array) -> int:
     return count
 
 
-def _resolve_arrays(pure_qubits: np.array) -> Tuple[np.array, np.array]:
+def _resolve_arrays(pure_qubits: np_array) -> Tuple[np_array, np_array]:
     """
-    与えられたnumpy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
+    与えられたnp.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
 
     Args:
-        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+        pure_qubits (np.array): PureQubitsの候補となるnp.array
 
     Returns:
-        Tuple[numpy.array, numpy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
+        Tuple[np.array, np.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
     """
     vector = None
     ndarray = None
@@ -306,7 +309,7 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
         message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
         raise QubitCountNotMatchError(message)
 
-    return np.inner(conjugate(qubits_0.vector), qubits_1.vector)
+    return np.inner(np.conj(qubits_0.vector), qubits_1.vector)
 
 
 def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
@@ -320,7 +323,7 @@ def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
     Returns:
         bool: qubits_0とqubits_1の内積が0か否か
     """
-    return isclose(inner(qubits_0, qubits_1), 0.0)
+    return allclose(inner(qubits_0, qubits_1), 0.0)
 
 
 def all_orthogonal(qubits_list: List[PureQubits]) -> bool:

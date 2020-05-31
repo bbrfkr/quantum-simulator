@@ -2,10 +2,11 @@
 一般的に混合状態のQubit系に関するクラス群
 """
 
-from typing import List, Tuple
+import os
+from typing import List, Tuple, Union
 
-import numpy as np
-from numpy import linalg as LA
+import cupy
+import numpy
 
 from quantum_simulator.base import pure_qubits
 from quantum_simulator.base.error import (
@@ -17,12 +18,15 @@ from quantum_simulator.base.error import (
 )
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.utils import (
+    allclose,
     around,
     is_pow2,
     is_probabilities,
     is_real,
-    isclose,
 )
+
+np_array = Union[numpy.array, cupy.array]
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class Qubits:
@@ -32,8 +36,8 @@ class Qubits:
     Attributes:
         eigen_values (List[float]): Qubitsの固有値のリスト
         eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
-        ndarray (numpy.array): ndarray形式のQubits
-        matrix (numpy.array): 行列形式のQubits
+        ndarray (np.array): ndarray形式のQubits
+        matrix (np.array): 行列形式のQubits
         matrix_dim (int): Qubitsの行列の次元
         qubit_count (int): Qubitsに内包されているQubitの数
     """
@@ -104,18 +108,18 @@ class Qubits:
             bool: 判定結果
         """
         for eigen_value in self.eigen_values:
-            if isclose(eigen_value, 1.0 + 0j):
+            if allclose(eigen_value, 1.0 + 0j):
                 return True
 
         return False
 
 
-def is_qubits_dim(array: np.array) -> bool:
+def is_qubits_dim(array: np_array) -> bool:
     """
-    与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
+    与えられたnp.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (np.array): 判定対象のnp.array
 
     Returns:
         bool: 判定結果
@@ -162,12 +166,12 @@ def is_qubits_dim(array: np.array) -> bool:
     return True
 
 
-def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
+def resolve_arrays(array: np_array) -> Tuple[np_array, np_array]:
     """
-    与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
+    与えられたnp.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
 
     Args:
-        array (numpy.array): 計算対象のnumpy.array
+        array (np.array): 計算対象のnp.array
 
     Returns:
         Tuple[numy.array, numy.array]: 行列形式のnumy.arrayとndarray形式のnumy.array
@@ -179,7 +183,7 @@ def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
 
     # 与えられたarrayが行列表現である場合
     if len_array_shape == 2:
-        qubit_count = int(np.log2(array.shape[0]))
+        qubit_count = int(around(np.log2(array.shape[0])))
         ndarray_shape = tuple([2 for i in range(2 * qubit_count)])
         ndarray = array.reshape(ndarray_shape)
         matrix = array
@@ -194,19 +198,19 @@ def resolve_arrays(array: np.array) -> Tuple[np.array, np.array]:
     return (matrix, ndarray)
 
 
-def resolve_eigen(matrix: np.array) -> Tuple[List[complex], List[PureQubits]]:
+def resolve_eigen(matrix: np_array) -> Tuple[List[complex], List[PureQubits]]:
     """
-    行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する
+    行列形式のnp.arrayを仮定し、その固有値・固有状態を導出する
 
     Args:
-        matrix (numpy.array): 計算対象のnumpy.array
+        matrix (np.array): 計算対象のnp.array
 
     Returns:
         Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組
     """
 
     # 固有値・固有状態の導出
-    tmp_eigen_values, tmp_eigen_states = LA.eig(matrix)
+    tmp_eigen_values, tmp_eigen_states = np.linalg.eigh(matrix)
 
     # 実際に呼び出し元に渡すオブジェクトの整理
     eigen_values = []  # type: List[complex]
@@ -255,7 +259,7 @@ def specialize(qubits: Qubits) -> PureQubits:
     # Qubitsが純粋状態かチェックし、対応するインデックスを取り出す
     pure_index = -1
     for index in range(len(qubits.eigen_values)):
-        if isclose(qubits.eigen_values[index], 1.0 + 0j):
+        if allclose(qubits.eigen_values[index], 1.0 + 0j):
             pure_index = index
 
     if pure_index == -1:
@@ -290,7 +294,7 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
         raise NotMatchCountError(message)
 
     # 密度行列から再度密度行列を導出する
-    density_matrix = probabilities[-1] * qubits_list[-1].matrix
+    density_matrix = probabilities[-1] * qubits_list[-1].matrix  # type: np_array
 
     for index in range(len_qubits_list - 1):
         added_matrix = probabilities[index] * qubits_list[index].matrix

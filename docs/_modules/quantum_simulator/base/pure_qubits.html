@@ -148,18 +148,22 @@
 <span class="sd">純粋状態のQubit系に関するクラス群</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">conjugate</span>
+<span class="kn">import</span> <span class="nn">cupy</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">InitializeError</span><span class="p">,</span>
     <span class="n">NoQubitsInputError</span><span class="p">,</span>
     <span class="n">QubitCountNotMatchError</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">is_pow2</span><span class="p">,</span> <span class="n">isclose</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">is_pow2</span>
+
+<span class="n">np_array</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">cupy</span><span class="o">.</span><span class="n">array</span><span class="p">]</span>
+<span class="n">np</span> <span class="o">=</span> <span class="n">cupy</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_CUPY&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="k">else</span> <span class="n">numpy</span>
 
 
 <div class="viewcode-block" id="PureQubits"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits">[docs]</a><span class="k">class</span> <span class="nc">PureQubits</span><span class="p">:</span>
@@ -167,11 +171,11 @@
 <span class="sd">    純粋状態で一般的に複数粒子のQubit系クラス</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        ndarray (numpy.array): ndarray形式のPureQubits</span>
-<span class="sd">        vector (numpy.array): ベクトル形式のPureQubits</span>
+<span class="sd">        ndarray (np.array): ndarray形式のPureQubits</span>
+<span class="sd">        vector (np.array): ベクトル形式のPureQubits</span>
 <span class="sd">        qubit_count (int): PureQubitsに内包されているQubitの数</span>
-<span class="sd">        projection (numpy.array): PureQubitsに対応する射影のndarray</span>
-<span class="sd">        projection_matrix (numpy.array): PureQubitsに対応する射影行列</span>
+<span class="sd">        projection (np.array): PureQubitsに対応する射影のndarray</span>
+<span class="sd">        projection_matrix (np.array): PureQubitsに対応する射影行列</span>
 <span class="sd">        projection_matrix_dim (int): 射影行列の次元</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -194,13 +198,12 @@
         <span class="n">qubit_count</span> <span class="o">=</span> <span class="n">_count_qubits</span><span class="p">(</span><span class="n">ndarray</span><span class="p">)</span>
 
         <span class="c1"># 射影作用素を導出</span>
-        <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">ndarray</span><span class="p">))</span>
+        <span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ndarray</span><span class="p">))</span>
 
         <span class="c1"># 射影作用素に対応する行列を導出</span>
-        <span class="n">projection_matrix_dim</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">qubit_count</span>
-        <span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">projection</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-            <span class="n">projection_matrix_dim</span><span class="p">,</span> <span class="n">projection_matrix_dim</span>
-        <span class="p">)</span>
+        <span class="n">projection_matrix_dim</span> <span class="o">=</span> <span class="n">projection_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">projection_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">2</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qubit_count</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)])</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">projection_matrix</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">projection_shape</span><span class="p">)</span>
 
         <span class="c1"># 初期化</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span>
@@ -288,12 +291,12 @@
         <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_is_pure_qubits</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_is_pure_qubits</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系を表現しているか判定する。</span>
+<span class="sd">    与えられたnp.arrayがQubit系を表現しているか判定する。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (numpy.array): 判定対象のnumpy.array</span>
+<span class="sd">        array (np.array): 判定対象のnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: 判定結果</span>
@@ -313,18 +316,18 @@
 
     <span class="c1"># 長さが1、つまり確率が1になるかをチェック</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">isclose</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="kc">True</span>
 
 
-<span class="k">def</span> <span class="nf">_count_qubits</span><span class="p">(</span><span class="n">pure_qubits</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_count_qubits</span><span class="p">(</span><span class="n">pure_qubits</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系であることを仮定し、内包するQubit数を返す。</span>
+<span class="sd">    与えられたnp.arrayがQubit系であることを仮定し、内包するQubit数を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array</span>
+<span class="sd">        pure_qubits (np.array): PureQubitsの候補となるnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        int: 内包するQubit数</span>
@@ -339,15 +342,15 @@
     <span class="k">return</span> <span class="n">count</span>
 
 
-<span class="k">def</span> <span class="nf">_resolve_arrays</span><span class="p">(</span><span class="n">pure_qubits</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_resolve_arrays</span><span class="p">(</span><span class="n">pure_qubits</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np_array</span><span class="p">,</span> <span class="n">np_array</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。</span>
+<span class="sd">    与えられたnp.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array</span>
+<span class="sd">        pure_qubits (np.array): PureQubitsの候補となるnp.array</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple[numpy.array, numpy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現</span>
+<span class="sd">        Tuple[np.array, np.array]: pure_qubitsに対応する、ベクトル表現とndarray表現</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vector</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>
@@ -452,7 +455,7 @@
         <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 対象PureQubits同士のQubit数が一致しません&quot;</span>
         <span class="k">raise</span> <span class="n">QubitCountNotMatchError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">conjugate</span><span class="p">(</span><span class="n">qubits_0</span><span class="o">.</span><span class="n">vector</span><span class="p">),</span> <span class="n">qubits_1</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">qubits_0</span><span class="o">.</span><span class="n">vector</span><span class="p">),</span> <span class="n">qubits_1</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="is_orthogonal"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.is_orthogonal">[docs]</a><span class="k">def</span> <span class="nf">is_orthogonal</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">,</span> <span class="n">qubits_1</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -466,7 +469,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: qubits_0とqubits_1の内積が0か否か</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">isclose</span><span class="p">(</span><span class="n">inner</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">,</span> <span class="n">qubits_1</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">allclose</span><span class="p">(</span><span class="n">inner</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">,</span> <span class="n">qubits_1</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="all_orthogonal"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.all_orthogonal">[docs]</a><span class="k">def</span> <span class="nf">all_orthogonal</span><span class="p">(</span><span class="n">qubits_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
