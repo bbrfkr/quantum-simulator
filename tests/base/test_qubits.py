@@ -1,8 +1,10 @@
-import cupy as np
+import os
+
+import cupy
+import numpy
 import pytest
 
 from quantum_simulator.base.error import (
-    InitializeError,
     InvalidProbabilitiesError,
     NotMatchCountError,
     ReductionError,
@@ -21,7 +23,9 @@ from quantum_simulator.base.qubits import (
     resolve_eigen,
     specialize,
 )
-from quantum_simulator.base.utils import allclose, isclose
+from quantum_simulator.base.utils import allclose
+
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class TestQubits:
@@ -67,7 +71,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -101,7 +105,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -118,13 +122,6 @@ class TestQubits:
         assert allclose(matrix.shape, expected_matrix.shape)
         assert allclose(ndarray.shape, expected_ndarray.shape)
         assert is_pure == expected_is_pure
-
-    def test_for_failure_constructor(self):
-        """__init__メソッド 虚数固有値の異常系テスト"""
-        with pytest.raises(InitializeError) as error:
-            target = [[0.5 + 0j, 0j], [0j, 0.5 * 1j]]
-            Qubits(target)
-        assert "与えられたリストには虚数の固有値が存在します" in str(error.value)
 
     def test_for_success_generalize(self, dict_for_test_generalize):
         """generalizeメソッドの正常系テスト"""
@@ -151,7 +148,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -215,7 +212,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -259,7 +256,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -330,7 +327,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -374,7 +371,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -417,7 +414,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],
@@ -461,7 +458,7 @@ class TestQubits:
             is_passed = False
 
             for result_index in range(len(eigen_values)):
-                if isclose(
+                if allclose(
                     expected_eigen_values[expected_index], eigen_values[result_index]
                 ) and allclose(
                     expected_eigen_states[expected_index],

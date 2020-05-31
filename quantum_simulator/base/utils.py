@@ -2,11 +2,16 @@
 baseパッケージ内で利用するユーティリティメソッド群
 """
 
-from typing import List
+import os
+from typing import List, Union
 
-import cupy as np
+import cupy
+import numpy
 
 from quantum_simulator.base.error import NegativeValueError
+
+np_array = Union[numpy.array, cupy.array]
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 # 計算時の近似桁数
 RELATIVE_TOLERANCE = 1.0e-5
@@ -14,27 +19,13 @@ ABSOLUTE_TOLERANCE = 1.0e-8
 AROUNDED_DECIMALS = 5
 
 
-def isclose(a: np.array, b: np.array) -> np.array:
+def allclose(a: np_array, b: np_array) -> bool:
     """
-    cupy.iscloseの本モジュール用ラッパー。２つのcupy.arrayの各要素を近似的に比較し、比較結果をcupy.arrayで返す。
+    numpy.allcloseの本モジュール用ラッパー。２つのnp.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
 
     Args:
-        a (cupy.array): 比較対象1つ目
-        b (cupy.array): 比較対象2つ目
-
-    Return:
-        cupy.array: 各要素の比較結果のcupy.array (dtype=bool)
-    """
-    return np.isclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
-
-
-def allclose(a: np.array, b: np.array) -> bool:
-    """
-    cupy.allcloseの本モジュール用ラッパー。２つのcupy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
-
-    Args:
-        a (cupy.array): 比較対象1つ目
-        b (cupy.array): 比較対象2つ目
+        a (np.array): 比較対象1つ目
+        b (np.array): 比較対象2つ目
 
     Return:
         bool: 比較結果
@@ -42,15 +33,15 @@ def allclose(a: np.array, b: np.array) -> bool:
     return np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
 
 
-def around(a: np.array) -> np.array:
+def around(a: np_array) -> np_array:
     """
-    cupy.aroundの本モジュール用ラッパー。cupy.arrayの各要素をモジュール指定の桁数で丸める
+    numpy.aroundの本モジュール用ラッパー。np.arrayの各要素をモジュール指定の桁数で丸める
 
     Args:
-        a (cupy.array): 比較対象1つ目
+        a (np.array): 比較対象1つ目
 
     Return:
-        cupy.array: aを丸めた結果
+        np.array: aを丸めた結果
     """
     return np.around(a, AROUNDED_DECIMALS)
 
@@ -122,12 +113,12 @@ def is_probabilities(target_list: List[float]) -> bool:
     return True
 
 
-def is_real(array: np.array) -> bool:
+def is_real(array: np_array) -> bool:
     """
-    与えられたcupy.arrayのデータ型が近似的に実数であるか判定する
+    与えられたnp.arrayのデータ型が近似的に実数であるか判定する
 
     Args:
-        array (cupy.array): 判定対象のcupy.array
+        array (np.array): 判定対象のnp.array
 
     Return:
         bool: 判定結果

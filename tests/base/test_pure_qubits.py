@@ -1,6 +1,8 @@
+import os
 from test.support import captured_stdout
 
-import cupy as np
+import cupy
+import numpy
 import pytest
 
 from quantum_simulator.base.error import (
@@ -22,7 +24,9 @@ from quantum_simulator.base.pure_qubits import (
     multiple_combine,
     multiple_combine_ons,
 )
-from quantum_simulator.base.utils import allclose, isclose
+from quantum_simulator.base.utils import allclose
+
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class TestPureQubits:
@@ -141,7 +145,7 @@ class TestPureQubits:
         result = inner(target_0, target_1)
 
         expected_result = dict_for_test_valid_inner_input["result"]
-        assert isclose(result, expected_result)
+        assert allclose(result, expected_result)
 
     def test_for_failure_inner(self, dict_for_test_invalid_inner_input):
         """

@@ -1,4 +1,7 @@
-import cupy as np
+import os
+
+import cupy
+import numpy
 import pytest
 
 from quantum_simulator.base.error import InitializeError
@@ -11,6 +14,8 @@ from quantum_simulator.base.time_evolution import (
     multiple_compose,
 )
 from quantum_simulator.base.utils import allclose
+
+np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
 
 
 class TestTimeEvolution:

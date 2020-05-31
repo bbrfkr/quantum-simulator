@@ -80,9 +80,9 @@ from quantum_simulator.base.qubits import Qubits
             ],
             "eigen_values": [1.0, 2.0, 3.0, 4.0],
             "eigen_states": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
-                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
-                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
                 [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
             "matrix": [
@@ -161,9 +161,9 @@ def test_for_success_observable_constructor(request):
             ),
             "eigen_values": [1.0, 2.0, 3.0, 4.0],
             "eigen_states": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
                 [-sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
-                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
                 [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
             "matrix": [

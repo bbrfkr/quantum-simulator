@@ -93,11 +93,6 @@ def valid_qubits_array(request):
             [0j, sqrt(1 / 3) + 0j, 0j],
             [0j, 0j, sqrt(1 / 3) + 0j],
         ],
-        # shapeの要素数が2の倍数でないndarray
-        [
-            [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], [0j, 0j, 0j, sqrt(1 / 4) + 0j]],
-            [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], 0j, 0j, 0j, sqrt(1 / 4) + 0j],
-        ],
         # shapeの各要素が2でないndarray
         [
             [[sqrt(1 / 4) + 0j, 0j, 0j, 0j], [0j, 0j, 0j, sqrt(1 / 4) + 0j]],
@@ -174,12 +169,12 @@ def dict_for_test_qubits_resolve_arrays(request):
             "eigen_values": [(2 + sqrt(2)) / 4 + 0j, (2 - sqrt(2)) / 4 + 0j],
             "eigen_states": [
                 [
-                    (1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
-                    (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                    -(1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                    -(1 / sqrt(4 + 2 * sqrt(2))) + 0j,
                 ],
                 [
-                    (1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
-                    (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                    -(1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                    -(1 / sqrt(4 - 2 * sqrt(2))) + 0j,
                 ],
             ],
         },
@@ -193,7 +188,7 @@ def dict_for_test_qubits_resolve_arrays(request):
             ],
             "eigen_values": [0.25, 0.75],
             "eigen_states": [
-                [0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [sqrt(2 / 3) + 0j, 0j, sqrt(1 / 6) + 0j, sqrt(1 / 6) + 0j],
             ],
         },
@@ -222,12 +217,12 @@ def dict_for_test_resolve_eigen(request):
             "eigen_values": [(2 + sqrt(2)) / 4 + 0j, (2 - sqrt(2)) / 4 + 0j],
             "eigen_states": [
                 [
-                    (1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
-                    (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                    -(1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
+                    -(1 / sqrt(4 + 2 * sqrt(2))) + 0j,
                 ],
                 [
-                    (1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
-                    (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                    -(1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
+                    -(1 / sqrt(4 - 2 * sqrt(2))) + 0j,
                 ],
             ],
             "matrix": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
@@ -246,7 +241,7 @@ def dict_for_test_resolve_eigen(request):
             ],
             "eigen_values": [0.25, 0.75],
             "eigen_states": [
-                [0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [sqrt(2 / 3) + 0j, 0j, sqrt(1 / 6) + 0j, sqrt(1 / 6) + 0j],
             ],
             "matrix": [
@@ -274,7 +269,7 @@ def dict_for_test_resolve_eigen(request):
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
             ],
             "eigen_values": [1.0],
-            "eigen_states": [[sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]],
+            "eigen_states": [[-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 [0j, 0j, 0j, 0j],
@@ -323,7 +318,7 @@ def dict_for_test_qubits_constructor(request):
         {
             "target": PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
             "eigen_values": [1.0],
-            "eigen_states": [[sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]],
+            "eigen_states": [[-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 [0j, 0j, 0j, 0j],
@@ -359,8 +354,8 @@ def dict_for_test_generalize(request):
         },
         {
             "target": Qubits([[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]]),
-            "vector": [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-            "ndarray": [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+            "vector": [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            "ndarray": [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             "qubit_count": 1,
             "projection": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
             "projection_matrix": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
@@ -376,8 +371,8 @@ def dict_for_test_generalize(request):
                     [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 ]
             ),
-            "vector": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
-            "ndarray": [[sqrt(0.5) + 0j, 0j], [0j, sqrt(0.5) + 0j]],
+            "vector": [-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j],
+            "ndarray": [[-sqrt(0.5) + 0j, 0j], [0j, -sqrt(0.5) + 0j]],
             "qubit_count": 2,
             "projection": [
                 [[[0.5 + 0j, 0j], [0j, 0.5 + 0j]], [[0j, 0j], [0j, 0j]]],
@@ -429,7 +424,7 @@ def dict_for_test_specialize(request):
                 ),
             ],
             "eigen_values": [1.0],
-            "eigen_states": [[sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]],
+            "eigen_states": [[-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 [0j, 0j, 0j, 0j],
@@ -529,7 +524,7 @@ def not_match_count_probabilities_and_qubits_list(request):
             ),
             "eigen_values": [0.25, 0.75],
             "eigen_states": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
             "matrix": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],
@@ -582,7 +577,7 @@ def dict_for_test_create_from_ons(request):
             ],
             "eigen_values": [0.5, 0.5],
             "eigen_states": [
-                [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
+                [-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
                 [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
             ],
             "matrix": [
@@ -804,7 +799,7 @@ def invalid_reduction(request):
             ],
             "eigen_values": [0.5, 0.5],
             "eigen_states": [
-                [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
+                [-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
                 [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
             ],
             "matrix": [

@@ -19,8 +19,4 @@ class HadamardChannel(Channel):
 
 
 test_channel = HadamardChannel(7, 7)
-print(
-    test_channel.apply(
-        test_channel.apply(0, [0, 1, 2, 3, 4, 5, 6]), [0, 1, 2, 3, 4, 5, 6]
-    )
-)
+print(test_channel.apply(test_channel.apply(0, [0, 1, 2, 3, 4, 5]), [0, 1, 2, 3, 4, 5]))
