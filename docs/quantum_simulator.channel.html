@@ -1,333 +1,86 @@
 
-<!DOCTYPE html>
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>quantum_simulator.channel package &#8212; quantum_simulator  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>quantum_simulator.channel package &mdash; quantum-simulator  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="quantum_simulator.major package" href="quantum_simulator.major.html" />
-    <link rel="prev" title="quantum_simulator.base package" href="quantum_simulator.base.html" />
+    <link rel="prev" title="quantum_simulator.base package" href="quantum_simulator.base.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> quantum-simulator
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="quantum-simulator-channel-package">
-<h1>quantum_simulator.channel package<a class="headerlink" href="#quantum-simulator-channel-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-quantum_simulator.channel.channel">
-<span id="quantum-simulator-channel-channel-module"></span><h2>quantum_simulator.channel.channel module<a class="headerlink" href="#module-quantum_simulator.channel.channel" title="Permalink to this headline">¶</a></h2>
-<p>量子チャネルを表現するクラス群</p>
-<dl class="py class">
-<dt id="quantum_simulator.channel.channel.Channel">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.channel.</code><code class="sig-name descname">Channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubit_count</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">register_count</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">noise</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-<p>量子チャネルの抽象クラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>qubit_count (int): チャネル内のqubit数
-register_count (int): チャネル内の古典レジスタ数
-noise (Optional[TImeEvolution]): 初期化時に発生し得るノイズとしての時間発展
-transformers (List[Transformer]): 変換の列
-states (List(State)): QPU状態の列</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.channel.Channel.apply">
-<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">output_indices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>CPUから見たQPUによる計算の適用</p>
-</dd></dl>
+            
+          
 
-<dl class="py method">
-<dt id="quantum_simulator.channel.channel.Channel.calculate">
-<em class="property">abstract </em><code class="sig-name descname">calculate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.calculate" title="Permalink to this definition">¶</a></dt>
-<dd><p>ユーザ実装の量子チャネルの計算部</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="quantum_simulator.channel.channel.Channel.finalize">
-<code class="sig-name descname">finalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_indices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.finalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>最終処理を行い、計算結果を取得する</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>output_indices (List[int]): 出力結果を観測するQubit番号のリスト</p>
-</dd>
-<dt>Returns:</dt><dd><p>int: 最終的な計算結果</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="quantum_simulator.channel.channel.Channel.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformer配列とState配列を初期化する</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>input (int): 入力情報</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="quantum_simulator.channel.channel.Channel.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transformer</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer">quantum_simulator.channel.transformer.Transformer</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transformerを用い、状態を次の状態に遷移させる</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>transformer (Transformer): 利用する状態変換
-index (Optionnal[int]): 古典情報が得られた場合に格納するレジスタ番号</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.channel.finalizer">
-<span id="quantum-simulator-channel-finalizer-module"></span><h2>quantum_simulator.channel.finalizer module<a class="headerlink" href="#module-quantum_simulator.channel.finalizer" title="Permalink to this headline">¶</a></h2>
-<p>終了処理を表現するクラス群</p>
-<dl class="py class">
-<dt id="quantum_simulator.channel.finalizer.Finalizer">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.finalizer.</code><code class="sig-name descname">Finalizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_indices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/finalizer.html#Finalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.finalizer.Finalizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>終了処理を表すクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>output_indices (List[int]): 観測対象のQubit番号の昇順リスト</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.finalizer.Finalizer.finalize">
-<code class="sig-name descname">finalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/quantum_simulator/channel/finalizer.html#Finalizer.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.finalizer.Finalizer.finalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>最終状態を観測し、計算結果を出力する</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>state (State): 観測対象の状態¥</p>
-</dd>
-<dt>Returns:</dt><dd><p>int: 最終的な計算結果</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.channel.initializer">
-<span id="quantum-simulator-channel-initializer-module"></span><h2>quantum_simulator.channel.initializer module<a class="headerlink" href="#module-quantum_simulator.channel.initializer" title="Permalink to this headline">¶</a></h2>
-<p>チャネル通過時の初期化するクラス群</p>
-<dl class="py class">
-<dt id="quantum_simulator.channel.initializer.Allocator">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.initializer.</code><code class="sig-name descname">Allocator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">qubit_count</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">register_count</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Allocator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>必要なだけ量子ビットと古典レジスタを用意するクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>input (int): 入力値(非負値)
-qubit_count (int): 確保するQubit数
-register_count (int): 確保する古典レジスタ数</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.initializer.Allocator.allocate">
-<code class="sig-name descname">allocate</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Allocator.allocate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator.allocate" title="Permalink to this definition">¶</a></dt>
-<dd><p>要求された量子ビットおよび古典レジスタを用意する</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>State: 量子ビットと古典レジスタを用意した直後の状態</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="quantum_simulator.channel.initializer.Initializer">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.initializer.</code><code class="sig-name descname">Initializer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">allocator</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.initializer.Allocator" title="quantum_simulator.channel.initializer.Allocator">quantum_simulator.channel.initializer.Allocator</a></span></em>, <em class="sig-param"><span class="n">noise</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Initializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Initializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Allocatorが確保した量子ビットを初期化するクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>allocator (Allocator): Allocatorインスタンス
-noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.initializer.Initializer.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Initializer.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Initializer.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>量子ビットと古典レジスタ確保後、ノイズをかけたのち、状態初期化の時間発展を適用する
-最終的に初期化された状態(QubitsとRegistersの組)を返す</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>State: 最終的な初期化状態</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.channel.registers">
-<span id="quantum-simulator-channel-registers-module"></span><h2>quantum_simulator.channel.registers module<a class="headerlink" href="#module-quantum_simulator.channel.registers" title="Permalink to this headline">¶</a></h2>
-<p>QPUのレジスタを表現するクラス群</p>
-<dl class="py class">
-<dt id="quantum_simulator.channel.registers.Registers">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.registers.</code><code class="sig-name descname">Registers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">count</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/registers.html#Registers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.registers.Registers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>QPUの古典レジスタのクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>count (int): 内包するレジスタの数
-values (List[float]): レジスタの値リスト</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.registers.Registers.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>float<span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/channel/registers.html#Registers.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.registers.Registers.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>指定された番号のレジスタに格納された値を取得する</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>index (int): 取得したいレジスタの番号</p>
-</dd>
-<dt>Returns:</dt><dd><p>Optional[float]: レジスタに格納された値</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="quantum_simulator.channel.registers.Registers.put">
-<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/registers.html#Registers.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.registers.Registers.put" title="Permalink to this definition">¶</a></dt>
-<dd><p>指定された番号のレジスタに値を格納する</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>index (int): 値を格納したいレジスタの番号
-value (float): 格納する値</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.channel.state">
-<span id="quantum-simulator-channel-state-module"></span><h2>quantum_simulator.channel.state module<a class="headerlink" href="#module-quantum_simulator.channel.state" title="Permalink to this headline">¶</a></h2>
-<p>QPU状態を表現するクラス群</p>
-<dl class="py class">
-<dt id="quantum_simulator.channel.state.State">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.state.</code><code class="sig-name descname">State</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em>, <em class="sig-param"><span class="n">registers</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.registers.Registers" title="quantum_simulator.channel.registers.Registers">quantum_simulator.channel.registers.Registers</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/state.html#State"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.state.State" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>QPU内における各変換前後の状態を表すクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>qubits (Qubits): QPU内のQubit系
-registers (Registers): QPU内の古典レジスタ群</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.channel.transformer">
-<span id="quantum-simulator-channel-transformer-module"></span><h2>quantum_simulator.channel.transformer module<a class="headerlink" href="#module-quantum_simulator.channel.transformer" title="Permalink to this headline">¶</a></h2>
-<p>チャネルを構成するQPU状態変換のクラス群</p>
-<dl class="py class">
-<dt id="quantum_simulator.channel.transformer.ObserveTransformer">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.transformer.</code><code class="sig-name descname">ObserveTransformer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">observable</span><span class="p">:</span> <span class="n"><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">quantum_simulator.base.observable.Observable</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#ObserveTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">quantum_simulator.channel.transformer.Transformer</span></code></a></p>
-<p>観測によるQPU状態変換のクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>observable (Observable): 変換に利用する観測量</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.transformer.ObserveTransformer.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#ObserveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>QPU状態変換のメソッド</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>state (State): 変換前のQPU状態
-index (Optional[int]): 古典情報を格納するレジスタ番号。指定されなければ観測結果は捨てられます</p>
-</dd>
-<dt>Returns:</dt><dd><p>State: 変換後のQPU状態</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="quantum_simulator.channel.transformer.TimeEvolveTransformer">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.transformer.</code><code class="sig-name descname">TimeEvolveTransformer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_evolution</span><span class="p">:</span> <span class="n"><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#TimeEvolveTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">quantum_simulator.channel.transformer.Transformer</span></code></a></p>
-<p>時間発展によるQPU状態変換のクラス</p>
-<dl class="simple">
-<dt>Attributes:</dt><dd><p>time_evolution (TimeEvolution): 変換に利用する時間発展</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="quantum_simulator.channel.transformer.TimeEvolveTransformer.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#TimeEvolveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>QPU状態変換のメソッド</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>state (State): 変換前のQPU状態
-index (Optional[int]): 古典情報を格納するレジスタ番号。本変換では無視されます</p>
-</dd>
-<dt>Returns:</dt><dd><p>State: 変換後のQPU状態</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="quantum_simulator.channel.transformer.Transformer">
-<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.transformer.</code><code class="sig-name descname">Transformer</code><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#Transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.Transformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-<p>QPU状態変換の抽象クラス</p>
-<dl class="py method">
-<dt id="quantum_simulator.channel.transformer.Transformer.transform">
-<em class="property">abstract </em><code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#Transformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.Transformer.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>QPU状態変換の抽象メソッド</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>state (State): 変換前のQPU状態
-index (Optional[int]): 古典情報を格納するレジスタ番号</p>
-</dd>
-<dt>Returns:</dt><dd><p>State: 変換後のQPU状態</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.channel">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-quantum_simulator.channel" title="Permalink to this headline">¶</a></h2>
-</div>
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
 
-
-          </div>
           
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">quantum_simulator</a></h1>
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="quantum_simulator.html">quantum_simulator package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="quantum_simulator.html#subpackages">Subpackages</a><ul class="current">
@@ -351,53 +104,649 @@ index (Optional[int]): 古典情報を格納するレジスタ番号</p>
 </li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="quantum_simulator.html">quantum_simulator package</a><ul>
-      <li>Previous: <a href="quantum_simulator.base.html" title="previous chapter">quantum_simulator.base package</a></li>
-      <li>Next: <a href="quantum_simulator.major.html" title="next chapter">quantum_simulator.major package</a></li>
-  </ul></li>
-  </ul></li>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quantum-simulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="quantum_simulator.html">quantum_simulator package</a> &raquo;</li>
+        
+      <li>quantum_simulator.channel package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/quantum_simulator.channel.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quantum-simulator-channel-package">
+<h1>quantum_simulator.channel package<a class="headerlink" href="#quantum-simulator-channel-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-quantum_simulator.channel.channel">
+<span id="quantum-simulator-channel-channel-module"></span><h2>quantum_simulator.channel.channel module<a class="headerlink" href="#module-quantum_simulator.channel.channel" title="Permalink to this headline">¶</a></h2>
+<p>量子チャネルを表現するクラス群</p>
+<dl class="py class">
+<dt id="quantum_simulator.channel.channel.Channel">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.channel.</code><code class="sig-name descname">Channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubit_count</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">register_count</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">noise</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>量子チャネルの抽象クラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.channel.Channel.qubit_count">
+<code class="sig-name descname">qubit_count</code><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.qubit_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>チャネル内のqubit数</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.channel.Channel.register_count">
+<code class="sig-name descname">register_count</code><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.register_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>チャネル内の古典レジスタ数</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.channel.Channel.noise">
+<code class="sig-name descname">noise</code><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>初期化時に発生し得るノイズとしての時間発展</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Optional[TImeEvolution]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.channel.Channel.transformers">
+<code class="sig-name descname">transformers</code><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.transformers" title="Permalink to this definition">¶</a></dt>
+<dd><p>変換の列</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer">Transformer</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.channel.Channel.states">
+<code class="sig-name descname">states</code><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.states" title="Permalink to this definition">¶</a></dt>
+<dd><p>QPU状態の列</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List(<a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">State</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>qubit_count</strong> (<em>int</em>) – チャネル内のqubit数</p></li>
+<li><p><strong>register_count</strong> (<em>int</em>) – チャネル内の古典レジスタ数</p></li>
+<li><p><strong>noise</strong> (<em>Optional</em><em>[</em><em>TImeEvolution</em><em>]</em>) – 初期化時に発生し得るノイズとしての時間発展</p></li>
 </ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.channel.Channel.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">output_indices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>CPUから見たQPUによる計算の適用</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_simulator.channel.channel.Channel.calculate">
+<em class="property">abstract </em><code class="sig-name descname">calculate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>ユーザ実装の量子チャネルの計算部</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_simulator.channel.channel.Channel.finalize">
+<code class="sig-name descname">finalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_indices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>最終処理を行い、計算結果を取得する</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output_indices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 出力結果を観測するQubit番号のリスト</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>最終的な計算結果</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_simulator.channel.channel.Channel.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformer配列とState配列を初期化する</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>int</em>) – 入力情報</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_simulator.channel.channel.Channel.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transformer</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer">quantum_simulator.channel.transformer.Transformer</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/channel.html#Channel.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.channel.Channel.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformerを用い、状態を次の状態に遷移させる</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transformer</strong> (<a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer"><em>Transformer</em></a>) – 利用する状態変換</p></li>
+<li><p><strong>index</strong> (<em>Optionnal</em><em>[</em><em>int</em><em>]</em>) – 古典情報が得られた場合に格納するレジスタ番号</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+<div class="section" id="module-quantum_simulator.channel.finalizer">
+<span id="quantum-simulator-channel-finalizer-module"></span><h2>quantum_simulator.channel.finalizer module<a class="headerlink" href="#module-quantum_simulator.channel.finalizer" title="Permalink to this headline">¶</a></h2>
+<p>終了処理を表現するクラス群</p>
+<dl class="py class">
+<dt id="quantum_simulator.channel.finalizer.Finalizer">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.finalizer.</code><code class="sig-name descname">Finalizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_indices</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/finalizer.html#Finalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.finalizer.Finalizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>終了処理を表すクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.finalizer.Finalizer.output_indices">
+<code class="sig-name descname">output_indices</code><a class="headerlink" href="#quantum_simulator.channel.finalizer.Finalizer.output_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>観測対象のQubit番号の昇順リスト</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output_indices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – 観測対象のQubit番号のリスト</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.finalizer.Finalizer.finalize">
+<code class="sig-name descname">finalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/quantum_simulator/channel/finalizer.html#Finalizer.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.finalizer.Finalizer.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>最終状態を観測し、計算結果を出力する</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State"><em>State</em></a>) – 観測対象の状態¥</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>最終的な計算結果</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.channel.initializer">
+<span id="quantum-simulator-channel-initializer-module"></span><h2>quantum_simulator.channel.initializer module<a class="headerlink" href="#module-quantum_simulator.channel.initializer" title="Permalink to this headline">¶</a></h2>
+<p>チャネル通過時の初期化するクラス群</p>
+<dl class="py class">
+<dt id="quantum_simulator.channel.initializer.Allocator">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.initializer.</code><code class="sig-name descname">Allocator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">qubit_count</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">register_count</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Allocator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>必要なだけ量子ビットと古典レジスタを用意するクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.initializer.Allocator.input">
+<code class="sig-name descname">input</code><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>入力値(非負値)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.initializer.Allocator.qubit_count">
+<code class="sig-name descname">qubit_count</code><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator.qubit_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>確保するQubit数</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.initializer.Allocator.register_count">
+<code class="sig-name descname">register_count</code><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator.register_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>確保する古典レジスタ数</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>int</em>) – 入力値(非負値)</p></li>
+<li><p><strong>qubit_count</strong> (<em>int</em>) – 確保するQubit数</p></li>
+<li><p><strong>register_count</strong> (<em>int</em>) – 確保する古典レジスタ数</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.initializer.Allocator.allocate">
+<code class="sig-name descname">allocate</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Allocator.allocate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Allocator.allocate" title="Permalink to this definition">¶</a></dt>
+<dd><p>要求された量子ビットおよび古典レジスタを用意する</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>量子ビットと古典レジスタを用意した直後の状態</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">State</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="quantum_simulator.channel.initializer.Initializer">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.initializer.</code><code class="sig-name descname">Initializer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">allocator</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.initializer.Allocator" title="quantum_simulator.channel.initializer.Allocator">quantum_simulator.channel.initializer.Allocator</a></span></em>, <em class="sig-param"><span class="n">noise</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Initializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Initializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Allocatorが確保した量子ビットを初期化するクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.initializer.Initializer.allocator">
+<code class="sig-name descname">allocator</code><a class="headerlink" href="#quantum_simulator.channel.initializer.Initializer.allocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocatorインスタンス</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.channel.initializer.Allocator" title="quantum_simulator.channel.initializer.Allocator">Allocator</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.initializer.Initializer.noise">
+<code class="sig-name descname">noise</code><a class="headerlink" href="#quantum_simulator.channel.initializer.Initializer.noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>ノイズとして作用する任意の時間発展</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>allocator</strong> (<a class="reference internal" href="#quantum_simulator.channel.initializer.Allocator" title="quantum_simulator.channel.initializer.Allocator"><em>Allocator</em></a>) – Allocatorインスタンス</p></li>
+<li><p><strong>noise</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a><em>]</em>) – ノイズとして作用する任意の時間発展</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.initializer.Initializer.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/initializer.html#Initializer.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.initializer.Initializer.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>量子ビットと古典レジスタ確保後、ノイズをかけたのち、状態初期化の時間発展を適用する
+最終的に初期化された状態(QubitsとRegistersの組)を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>最終的な初期化状態</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">State</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.channel.registers">
+<span id="quantum-simulator-channel-registers-module"></span><h2>quantum_simulator.channel.registers module<a class="headerlink" href="#module-quantum_simulator.channel.registers" title="Permalink to this headline">¶</a></h2>
+<p>QPUのレジスタを表現するクラス群</p>
+<dl class="py class">
+<dt id="quantum_simulator.channel.registers.Registers">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.registers.</code><code class="sig-name descname">Registers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">count</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/registers.html#Registers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.registers.Registers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>QPUの古典レジスタのクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.registers.Registers.count">
+<code class="sig-name descname">count</code><a class="headerlink" href="#quantum_simulator.channel.registers.Registers.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>内包するレジスタの数</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.registers.Registers.values">
+<code class="sig-name descname">values</code><a class="headerlink" href="#quantum_simulator.channel.registers.Registers.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>レジスタの値リスト</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>count</strong> (<em>int</em>) – 初期化するレジスタの数</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.registers.Registers.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>float<span class="p">]</span><a class="reference internal" href="_modules/quantum_simulator/channel/registers.html#Registers.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.registers.Registers.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>指定された番号のレジスタに格納された値を取得する</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – 取得したいレジスタの番号</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>レジスタに格納された値</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="quantum_simulator.channel.registers.Registers.put">
+<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/registers.html#Registers.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.registers.Registers.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>指定された番号のレジスタに値を格納する</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – 値を格納したいレジスタの番号</p></li>
+<li><p><strong>value</strong> (<em>float</em>) – 格納する値</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.channel.state">
+<span id="quantum-simulator-channel-state-module"></span><h2>quantum_simulator.channel.state module<a class="headerlink" href="#module-quantum_simulator.channel.state" title="Permalink to this headline">¶</a></h2>
+<p>QPU状態を表現するクラス群</p>
+<dl class="py class">
+<dt id="quantum_simulator.channel.state.State">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.state.</code><code class="sig-name descname">State</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">qubits</span><span class="p">:</span> <span class="n"><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">quantum_simulator.base.qubits.Qubits</a></span></em>, <em class="sig-param"><span class="n">registers</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.registers.Registers" title="quantum_simulator.channel.registers.Registers">quantum_simulator.channel.registers.Registers</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/state.html#State"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.state.State" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>QPU内における各変換前後の状態を表すクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.state.State.qubits">
+<code class="sig-name descname">qubits</code><a class="headerlink" href="#quantum_simulator.channel.state.State.qubits" title="Permalink to this definition">¶</a></dt>
+<dd><p>QPU内のQubit系</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.state.State.registers">
+<code class="sig-name descname">registers</code><a class="headerlink" href="#quantum_simulator.channel.state.State.registers" title="Permalink to this definition">¶</a></dt>
+<dd><p>QPU内の古典レジスタ群</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.channel.registers.Registers" title="quantum_simulator.channel.registers.Registers">Registers</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>qubits</strong> (<a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits"><em>Qubits</em></a>) – QPU内のQubit系</p></li>
+<li><p><strong>registers</strong> (<a class="reference internal" href="#quantum_simulator.channel.registers.Registers" title="quantum_simulator.channel.registers.Registers"><em>Registers</em></a>) – QPU内の古典レジスタ群</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.channel.transformer">
+<span id="quantum-simulator-channel-transformer-module"></span><h2>quantum_simulator.channel.transformer module<a class="headerlink" href="#module-quantum_simulator.channel.transformer" title="Permalink to this headline">¶</a></h2>
+<p>チャネルを構成するQPU状態変換のクラス群</p>
+<dl class="py class">
+<dt id="quantum_simulator.channel.transformer.ObserveTransformer">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.transformer.</code><code class="sig-name descname">ObserveTransformer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">observable</span><span class="p">:</span> <span class="n"><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">quantum_simulator.base.observable.Observable</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#ObserveTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">quantum_simulator.channel.transformer.Transformer</span></code></a></p>
+<p>観測によるQPU状態変換のクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.transformer.ObserveTransformer.observable">
+<code class="sig-name descname">observable</code><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer.observable" title="Permalink to this definition">¶</a></dt>
+<dd><p>変換に利用する観測量</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">Observable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State"><em>State</em></a>) – 変換前のQPU状態</p></li>
+<li><p><strong>observable</strong> (<a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable"><em>Observable</em></a>) – 変換に利用する観測量</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.transformer.ObserveTransformer.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#ObserveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.ObserveTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>QPU状態変換のメソッド</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State"><em>State</em></a>) – 変換前のQPU状態</p></li>
+<li><p><strong>index</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – 古典情報を格納するレジスタ番号。指定されなければ観測結果は捨てられます</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>変換後のQPU状態</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">State</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="quantum_simulator.channel.transformer.TimeEvolveTransformer">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.transformer.</code><code class="sig-name descname">TimeEvolveTransformer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_evolution</span><span class="p">:</span> <span class="n"><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">quantum_simulator.base.time_evolution.TimeEvolution</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#TimeEvolveTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#quantum_simulator.channel.transformer.Transformer" title="quantum_simulator.channel.transformer.Transformer"><code class="xref py py-class docutils literal notranslate"><span class="pre">quantum_simulator.channel.transformer.Transformer</span></code></a></p>
+<p>時間発展によるQPU状態変換のクラス</p>
+<dl class="py attribute">
+<dt id="quantum_simulator.channel.transformer.TimeEvolveTransformer.time_evolution">
+<code class="sig-name descname">time_evolution</code><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer.time_evolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>変換に利用する時間発展</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time_evolution</strong> (<a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution"><em>TimeEvolution</em></a>) – 変換に利用する時間発展</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="quantum_simulator.channel.transformer.TimeEvolveTransformer.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#TimeEvolveTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.TimeEvolveTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>QPU状態変換のメソッド</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State"><em>State</em></a>) – 変換前のQPU状態</p></li>
+<li><p><strong>index</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – 古典情報を格納するレジスタ番号。本変換では無視されます</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>変換後のQPU状態</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">State</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="quantum_simulator.channel.transformer.Transformer">
+<em class="property">class </em><code class="sig-prename descclassname">quantum_simulator.channel.transformer.</code><code class="sig-name descname">Transformer</code><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#Transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.Transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>QPU状態変換の抽象クラス</p>
+<dl class="py method">
+<dt id="quantum_simulator.channel.transformer.Transformer.transform">
+<em class="property">abstract </em><code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a></span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">quantum_simulator.channel.state.State</a><a class="reference internal" href="_modules/quantum_simulator/channel/transformer.html#Transformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#quantum_simulator.channel.transformer.Transformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>QPU状態変換の抽象メソッド</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State"><em>State</em></a>) – 変換前のQPU状態</p></li>
+<li><p><strong>index</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – 古典情報を格納するレジスタ番号</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>変換後のQPU状態</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#quantum_simulator.channel.state.State" title="quantum_simulator.channel.state.State">State</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.channel">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-quantum_simulator.channel" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quantum_simulator.major.html" class="btn btn-neutral float-right" title="quantum_simulator.major package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="quantum_simulator.base.html" class="btn btn-neutral float-left" title="quantum_simulator.base package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Tatsunori Saito
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2020, Author.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/quantum_simulator.channel.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

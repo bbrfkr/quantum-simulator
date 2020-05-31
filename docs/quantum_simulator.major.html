@@ -1,224 +1,85 @@
 
-<!DOCTYPE html>
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>quantum_simulator.major package &#8212; quantum_simulator  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>quantum_simulator.major package &mdash; quantum-simulator  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="quantum_simulator.channel package" href="quantum_simulator.channel.html" />
+    <link rel="prev" title="quantum_simulator.channel package" href="quantum_simulator.channel.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> quantum-simulator
+          
+
+          
+          </a>
+
+          
             
-  <div class="section" id="quantum-simulator-major-package">
-<h1>quantum_simulator.major package<a class="headerlink" href="#quantum-simulator-major-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-quantum_simulator.major.observable">
-<span id="quantum-simulator-major-observable-module"></span><h2>quantum_simulator.major.observable module<a class="headerlink" href="#module-quantum_simulator.major.observable" title="Permalink to this headline">¶</a></h2>
-<p>quantum_simulator.base.observableモジュール内クラスのよく知られたオブジェクト群</p>
-<dl class="py data">
-<dt id="quantum_simulator.major.observable.BELL_OBSERVABLE">
-<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">BELL_OBSERVABLE</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.BELL_OBSERVABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Observable: Bell基底による観測量</p>
-</dd></dl>
+            
+          
 
-<dl class="py data">
-<dt id="quantum_simulator.major.observable.IDENT_OBSERVABLE">
-<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">IDENT_OBSERVABLE</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.IDENT_OBSERVABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Observable: 恒等作用素(観測量)</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.observable.ONE_PROJECTION">
-<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">ONE_PROJECTION</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.ONE_PROJECTION" title="Permalink to this definition">¶</a></dt>
-<dd><p>Observable: 標準基底に対する真偽観測(i.e., ｜1＞＜1｜)</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.observable.ZERO_OBSERVABLE">
-<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">ZERO_OBSERVABLE</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.ZERO_OBSERVABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Observable: 零作用素(観測量)</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.observable.ZERO_PROJECTION">
-<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">ZERO_PROJECTION</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.ZERO_PROJECTION" title="Permalink to this definition">¶</a></dt>
-<dd><p>Observable: 標準基底に対する反真偽観測(i.e., ｜0＞＜0｜)</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.major.pure_qubits">
-<span id="quantum-simulator-major-pure-qubits-module"></span><h2>quantum_simulator.major.pure_qubits module<a class="headerlink" href="#module-quantum_simulator.major.pure_qubits" title="Permalink to this headline">¶</a></h2>
-<p>quantum_simulator.base.pure_qubitsモジュール内クラスのよく知られたオブジェクト群</p>
-<dl class="py data">
-<dt id="quantum_simulator.major.pure_qubits.BELL_BASIS">
-<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">BELL_BASIS</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.OrthogonalSystem object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.BELL_BASIS" title="Permalink to this definition">¶</a></dt>
-<dd><p>OrthogonalSystem: Bell基底</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.pure_qubits.MINUS">
-<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">MINUS</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.MINUS" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: マイナス状態にあるQubit。｜-＞</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.pure_qubits.ONE">
-<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">ONE</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.ONE" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: 1状態にあるQubit。｜1＞</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.pure_qubits.PLUS">
-<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">PLUS</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.PLUS" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: プラス状態にあるQubit。｜+＞</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.pure_qubits.ZERO">
-<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">ZERO</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.ZERO" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: 0状態にあるQubit。｜0＞</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.major.qubits">
-<span id="quantum-simulator-major-qubits-module"></span><h2>quantum_simulator.major.qubits module<a class="headerlink" href="#module-quantum_simulator.major.qubits" title="Permalink to this headline">¶</a></h2>
-<p>quantum_simulator.base.qubitsモジュール内クラスのよく知られたオブジェクト群</p>
-<dl class="py data">
-<dt id="quantum_simulator.major.qubits.BELL_BASIS">
-<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">BELL_BASIS</code><em class="property"> = [&lt;quantum_simulator.base.qubits.Qubits object&gt;, &lt;quantum_simulator.base.qubits.Qubits object&gt;, &lt;quantum_simulator.base.qubits.Qubits object&gt;, &lt;quantum_simulator.base.qubits.Qubits object&gt;]</em><a class="headerlink" href="#quantum_simulator.major.qubits.BELL_BASIS" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[Qubits]: Bell基底</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.qubits.MINUS">
-<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">MINUS</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.MINUS" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: マイナス状態にあるQubit。｜-＞＜-｜</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.qubits.ONE">
-<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">ONE</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.ONE" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: 1状態にあるQubit。｜1＞＜1｜</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.qubits.PLUS">
-<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">PLUS</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.PLUS" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: プラス状態にあるQubit。｜+＞＜+｜</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.qubits.ZERO">
-<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">ZERO</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.ZERO" title="Permalink to this definition">¶</a></dt>
-<dd><p>PureQubits: 0状態にあるQubit。｜0＞＜0｜</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.major.time_evolution">
-<span id="quantum-simulator-major-time-evolution-module"></span><h2>quantum_simulator.major.time_evolution module<a class="headerlink" href="#module-quantum_simulator.major.time_evolution" title="Permalink to this headline">¶</a></h2>
-<p>quantum_simulator.base.time_evolutionモジュール内クラスのよく知られたオブジェクト群</p>
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.CCNOT_GATE">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">CCNOT_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.CCNOT_GATE" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: CONTROLED-CONTROLED-NOT (Toffoli)ゲート</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.CNOT_GATE">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">CNOT_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.CNOT_GATE" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: CONTROLED-NOTゲート</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.HADAMARD_GATE">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">HADAMARD_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.HADAMARD_GATE" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: Hadamardゲート</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.IDENT_EVOLUTION">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">IDENT_EVOLUTION</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.IDENT_EVOLUTION" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: 恒等作用素(時間発展)</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.NOT_GATE">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">NOT_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.NOT_GATE" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: NOTゲート</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.PAULI_MATRIX_X">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">PAULI_MATRIX_X</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.PAULI_MATRIX_X" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: Pauli行列 x</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.PAULI_MATRIX_Y">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">PAULI_MATRIX_Y</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.PAULI_MATRIX_Y" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: Pauli行列 y</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.PAULI_MATRIX_Z">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">PAULI_MATRIX_Z</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.PAULI_MATRIX_Z" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: Pauli行列 z</p>
-</dd></dl>
-
-<dl class="py data">
-<dt id="quantum_simulator.major.time_evolution.SWAP_GATE">
-<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">SWAP_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.SWAP_GATE" title="Permalink to this definition">¶</a></dt>
-<dd><p>TimeEvolution: SWAPゲート</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-quantum_simulator.major">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-quantum_simulator.major" title="Permalink to this headline">¶</a></h2>
-</div>
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
 
-
-          </div>
           
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">quantum_simulator</a></h1>
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="quantum_simulator.html">quantum_simulator package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="quantum_simulator.html#subpackages">Subpackages</a><ul class="current">
@@ -240,52 +101,405 @@
 </li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="quantum_simulator.html">quantum_simulator package</a><ul>
-      <li>Previous: <a href="quantum_simulator.channel.html" title="previous chapter">quantum_simulator.channel package</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quantum-simulator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="quantum_simulator.html">quantum_simulator package</a> &raquo;</li>
+        
+      <li>quantum_simulator.major package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/quantum_simulator.major.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quantum-simulator-major-package">
+<h1>quantum_simulator.major package<a class="headerlink" href="#quantum-simulator-major-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-quantum_simulator.major.observable">
+<span id="quantum-simulator-major-observable-module"></span><h2>quantum_simulator.major.observable module<a class="headerlink" href="#module-quantum_simulator.major.observable" title="Permalink to this headline">¶</a></h2>
+<p>quantum_simulator.base.observableモジュール内クラスのよく知られたオブジェクト群</p>
+<dl class="py data">
+<dt id="quantum_simulator.major.observable.BELL_OBSERVABLE">
+<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">BELL_OBSERVABLE</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.BELL_OBSERVABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bell基底による観測量</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">Observable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.observable.IDENT_OBSERVABLE">
+<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">IDENT_OBSERVABLE</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.IDENT_OBSERVABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>恒等作用素(観測量)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">Observable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.observable.ONE_PROJECTION">
+<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">ONE_PROJECTION</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.ONE_PROJECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>標準基底に対する真偽観測(i.e., ｜1＞＜1｜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">Observable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.observable.ZERO_OBSERVABLE">
+<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">ZERO_OBSERVABLE</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.ZERO_OBSERVABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>零作用素(観測量)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">Observable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.observable.ZERO_PROJECTION">
+<code class="sig-prename descclassname">quantum_simulator.major.observable.</code><code class="sig-name descname">ZERO_PROJECTION</code><em class="property"> = &lt;quantum_simulator.base.observable.Observable object&gt;</em><a class="headerlink" href="#quantum_simulator.major.observable.ZERO_PROJECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>標準基底に対する反真偽観測(i.e., ｜0＞＜0｜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.observable.Observable" title="quantum_simulator.base.observable.Observable">Observable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.major.pure_qubits">
+<span id="quantum-simulator-major-pure-qubits-module"></span><h2>quantum_simulator.major.pure_qubits module<a class="headerlink" href="#module-quantum_simulator.major.pure_qubits" title="Permalink to this headline">¶</a></h2>
+<p>quantum_simulator.base.pure_qubitsモジュール内クラスのよく知られたオブジェクト群</p>
+<dl class="py data">
+<dt id="quantum_simulator.major.pure_qubits.BELL_BASIS">
+<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">BELL_BASIS</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.OrthogonalSystem object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.BELL_BASIS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bell基底</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.OrthogonalSystem" title="quantum_simulator.base.pure_qubits.OrthogonalSystem">OrthogonalSystem</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.pure_qubits.MINUS">
+<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">MINUS</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.MINUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>マイナス状態にあるQubit。｜-＞</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.pure_qubits.ONE">
+<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">ONE</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.ONE" title="Permalink to this definition">¶</a></dt>
+<dd><p>1状態にあるQubit。｜1＞</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.pure_qubits.PLUS">
+<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">PLUS</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.PLUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>プラス状態にあるQubit。｜+＞</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.pure_qubits.ZERO">
+<code class="sig-prename descclassname">quantum_simulator.major.pure_qubits.</code><code class="sig-name descname">ZERO</code><em class="property"> = &lt;quantum_simulator.base.pure_qubits.PureQubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.pure_qubits.ZERO" title="Permalink to this definition">¶</a></dt>
+<dd><p>0状態にあるQubit。｜0＞</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.major.qubits">
+<span id="quantum-simulator-major-qubits-module"></span><h2>quantum_simulator.major.qubits module<a class="headerlink" href="#module-quantum_simulator.major.qubits" title="Permalink to this headline">¶</a></h2>
+<p>quantum_simulator.base.qubitsモジュール内クラスのよく知られたオブジェクト群</p>
+<dl class="py data">
+<dt id="quantum_simulator.major.qubits.BELL_BASIS">
+<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">BELL_BASIS</code><em class="property"> = [&lt;quantum_simulator.base.qubits.Qubits object&gt;, &lt;quantum_simulator.base.qubits.Qubits object&gt;, &lt;quantum_simulator.base.qubits.Qubits object&gt;, &lt;quantum_simulator.base.qubits.Qubits object&gt;]</em><a class="headerlink" href="#quantum_simulator.major.qubits.BELL_BASIS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bell基底</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits" title="quantum_simulator.base.qubits.Qubits">Qubits</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.qubits.MINUS">
+<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">MINUS</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.MINUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>マイナス状態にあるQubit。｜-＞＜-｜</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.qubits.ONE">
+<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">ONE</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.ONE" title="Permalink to this definition">¶</a></dt>
+<dd><p>1状態にあるQubit。｜1＞＜1｜</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.qubits.PLUS">
+<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">PLUS</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.PLUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>プラス状態にあるQubit。｜+＞＜+｜</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.qubits.ZERO">
+<code class="sig-prename descclassname">quantum_simulator.major.qubits.</code><code class="sig-name descname">ZERO</code><em class="property"> = &lt;quantum_simulator.base.qubits.Qubits object&gt;</em><a class="headerlink" href="#quantum_simulator.major.qubits.ZERO" title="Permalink to this definition">¶</a></dt>
+<dd><p>0状態にあるQubit。｜0＞＜0｜</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.pure_qubits.PureQubits" title="quantum_simulator.base.pure_qubits.PureQubits">PureQubits</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.major.time_evolution">
+<span id="quantum-simulator-major-time-evolution-module"></span><h2>quantum_simulator.major.time_evolution module<a class="headerlink" href="#module-quantum_simulator.major.time_evolution" title="Permalink to this headline">¶</a></h2>
+<p>quantum_simulator.base.time_evolutionモジュール内クラスのよく知られたオブジェクト群</p>
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.CCNOT_GATE">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">CCNOT_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.CCNOT_GATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONTROLED-CONTROLED-NOT (Toffoli)ゲート</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.CNOT_GATE">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">CNOT_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.CNOT_GATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONTROLED-NOTゲート</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.HADAMARD_GATE">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">HADAMARD_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.HADAMARD_GATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hadamardゲート</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.IDENT_EVOLUTION">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">IDENT_EVOLUTION</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.IDENT_EVOLUTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>恒等作用素(時間発展)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.NOT_GATE">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">NOT_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.NOT_GATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTゲート</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.PAULI_MATRIX_X">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">PAULI_MATRIX_X</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.PAULI_MATRIX_X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pauli行列 x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.PAULI_MATRIX_Y">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">PAULI_MATRIX_Y</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.PAULI_MATRIX_Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pauli行列 y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.PAULI_MATRIX_Z">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">PAULI_MATRIX_Z</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.PAULI_MATRIX_Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pauli行列 z</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quantum_simulator.major.time_evolution.SWAP_GATE">
+<code class="sig-prename descclassname">quantum_simulator.major.time_evolution.</code><code class="sig-name descname">SWAP_GATE</code><em class="property"> = &lt;quantum_simulator.base.time_evolution.TimeEvolution object&gt;</em><a class="headerlink" href="#quantum_simulator.major.time_evolution.SWAP_GATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>SWAPゲート</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quantum_simulator.base.html#quantum_simulator.base.time_evolution.TimeEvolution" title="quantum_simulator.base.time_evolution.TimeEvolution">TimeEvolution</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-quantum_simulator.major">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-quantum_simulator.major" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="quantum_simulator.channel.html" class="btn btn-neutral float-left" title="quantum_simulator.channel package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Tatsunori Saito
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2020, Author.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/quantum_simulator.major.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>
