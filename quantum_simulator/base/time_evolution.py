@@ -2,11 +2,7 @@
 時間発展を記述するクラス群
 """
 
-import os
 from typing import List
-
-import cupy
-import numpy
 
 from quantum_simulator.base.error import (
     IncompatibleDimensionError,
@@ -15,9 +11,10 @@ from quantum_simulator.base.error import (
 )
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits, combine_ons
 from quantum_simulator.base.qubits import Qubits, is_qubits_dim, resolve_arrays
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose
 
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = xp_factory()  # typing: numpy
 
 
 class TimeEvolution:

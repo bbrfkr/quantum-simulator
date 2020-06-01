@@ -2,12 +2,8 @@
 観測量に関するクラス群
 """
 
-import os
 from random import choices
 from typing import List, Tuple
-
-import cupy
-import numpy
 
 import quantum_simulator.base.pure_qubits as pure_qubits
 from quantum_simulator.base.error import (
@@ -22,9 +18,10 @@ from quantum_simulator.base.qubits import (
     resolve_arrays,
     resolve_eigen,
 )
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, is_real
 
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = xp_factory()  # typing: numpy
 
 
 class Observable:  # pylint: disable=too-few-public-methods

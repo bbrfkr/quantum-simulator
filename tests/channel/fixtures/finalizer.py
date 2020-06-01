@@ -1,8 +1,3 @@
-import sys
-from unittest.mock import Mock
-
-sys.modules["cupy"] = Mock()
-
 import pytest
 
 from quantum_simulator.base.qubits import Qubits

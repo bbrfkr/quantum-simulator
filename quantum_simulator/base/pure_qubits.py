@@ -2,11 +2,9 @@
 純粋状態のQubit系に関するクラス群
 """
 
-import os
 from math import ceil
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
-import cupy
 import numpy
 
 from quantum_simulator.base.error import (
@@ -14,10 +12,10 @@ from quantum_simulator.base.error import (
     NoQubitsInputError,
     QubitCountNotMatchError,
 )
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, is_pow2
 
-np_array = Union[numpy.array, cupy.array]
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = xp_factory()  # typing: numpy
 
 
 class PureQubits:
@@ -145,7 +143,7 @@ class OrthogonalSystem:
         return True
 
 
-def _is_pure_qubits(array: np_array) -> bool:
+def _is_pure_qubits(array: numpy.array) -> bool:
     """
     与えられたnp.arrayがQubit系を表現しているか判定する。
 
@@ -176,7 +174,7 @@ def _is_pure_qubits(array: np_array) -> bool:
     return True
 
 
-def _count_qubits(pure_qubits: np_array) -> int:
+def _count_qubits(pure_qubits: numpy.array) -> int:
     """
     与えられたnp.arrayがQubit系であることを仮定し、内包するQubit数を返す。
 
@@ -196,7 +194,7 @@ def _count_qubits(pure_qubits: np_array) -> int:
     return count
 
 
-def _resolve_arrays(pure_qubits: np_array) -> Tuple[np_array, np_array]:
+def _resolve_arrays(pure_qubits: numpy.array) -> Tuple[numpy.array, numpy.array]:
     """
     与えられたnp.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
 

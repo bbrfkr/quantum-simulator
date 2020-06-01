@@ -2,24 +2,22 @@
 baseパッケージ内で利用するユーティリティメソッド群
 """
 
-import os
-from typing import List, Union
+from typing import List
 
-import cupy
 import numpy
 
 from quantum_simulator.base.error import NegativeValueError
-
-np_array = Union[numpy.array, cupy.array]
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+from quantum_simulator.base.switch_cupy import xp_factory
 
 # 計算時の近似桁数
 RELATIVE_TOLERANCE = 1.0e-5
 ABSOLUTE_TOLERANCE = 1.0e-8
 AROUNDED_DECIMALS = 5
 
+np = xp_factory()  # typing: numpy
 
-def allclose(a: np_array, b: np_array) -> bool:
+
+def allclose(a: numpy.array, b: numpy.array) -> bool:
     """
     numpy.allcloseの本モジュール用ラッパー。２つのnp.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
 
@@ -33,7 +31,7 @@ def allclose(a: np_array, b: np_array) -> bool:
     return np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
 
 
-def around(a: np_array) -> np_array:
+def around(a: numpy.array) -> numpy.array:
     """
     numpy.aroundの本モジュール用ラッパー。np.arrayの各要素をモジュール指定の桁数で丸める
 
@@ -113,7 +111,7 @@ def is_probabilities(target_list: List[float]) -> bool:
     return True
 
 
-def is_real(array: np_array) -> bool:
+def is_real(array: numpy.array) -> bool:
     """
     与えられたnp.arrayのデータ型が近似的に実数であるか判定する
 
