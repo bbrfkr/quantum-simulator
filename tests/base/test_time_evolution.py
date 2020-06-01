@@ -1,8 +1,3 @@
-import sys
-from unittest.mock import Mock
-
-sys.modules["cupy"] = Mock()
-
 import numpy
 import pytest
 
@@ -16,8 +11,6 @@ from quantum_simulator.base.time_evolution import (
     multiple_compose,
 )
 from quantum_simulator.base.utils import allclose
-
-np = numpy
 
 
 class TestTimeEvolution:
@@ -34,9 +27,9 @@ class TestTimeEvolution:
         matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
-        expected_matrix = np.array(dict_for_test_unitary_constructor["matrix"])
+        expected_matrix = numpy.array(dict_for_test_unitary_constructor["matrix"])
         expected_matrix_dim = dict_for_test_unitary_constructor["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_unitary_constructor["ndarray"])
+        expected_ndarray = numpy.array(dict_for_test_unitary_constructor["ndarray"])
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
@@ -74,9 +67,9 @@ class TestTimeEvolution:
         matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
-        expected_matrix = np.array(dict_for_test_create_from_onb["matrix"])
+        expected_matrix = numpy.array(dict_for_test_create_from_onb["matrix"])
         expected_matrix_dim = dict_for_test_create_from_onb["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_create_from_onb["ndarray"])
+        expected_ndarray = numpy.array(dict_for_test_create_from_onb["ndarray"])
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
@@ -96,9 +89,9 @@ class TestTimeEvolution:
         matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
-        expected_matrix = np.array(dict_for_test_unitary_combine["matrix"])
+        expected_matrix = numpy.array(dict_for_test_unitary_combine["matrix"])
         expected_matrix_dim = dict_for_test_unitary_combine["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_unitary_combine["ndarray"])
+        expected_ndarray = numpy.array(dict_for_test_unitary_combine["ndarray"])
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
@@ -117,9 +110,11 @@ class TestTimeEvolution:
         matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
-        expected_matrix = np.array(dict_for_test_unitary_multiple_combine["matrix"])
+        expected_matrix = numpy.array(dict_for_test_unitary_multiple_combine["matrix"])
         expected_matrix_dim = dict_for_test_unitary_multiple_combine["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_unitary_multiple_combine["ndarray"])
+        expected_ndarray = numpy.array(
+            dict_for_test_unitary_multiple_combine["ndarray"]
+        )
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
@@ -139,9 +134,9 @@ class TestTimeEvolution:
         matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
-        expected_matrix = np.array(dict_for_test_unitary_compose["matrix"])
+        expected_matrix = numpy.array(dict_for_test_unitary_compose["matrix"])
         expected_matrix_dim = dict_for_test_unitary_compose["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_unitary_compose["ndarray"])
+        expected_ndarray = numpy.array(dict_for_test_unitary_compose["ndarray"])
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
@@ -160,9 +155,11 @@ class TestTimeEvolution:
         matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
-        expected_matrix = np.array(dict_for_test_unitary_multiple_compose["matrix"])
+        expected_matrix = numpy.array(dict_for_test_unitary_multiple_compose["matrix"])
         expected_matrix_dim = dict_for_test_unitary_multiple_compose["matrix_dim"]
-        expected_ndarray = np.array(dict_for_test_unitary_multiple_compose["ndarray"])
+        expected_ndarray = numpy.array(
+            dict_for_test_unitary_multiple_compose["ndarray"]
+        )
 
         assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)

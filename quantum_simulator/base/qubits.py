@@ -2,10 +2,8 @@
 一般的に混合状態のQubit系に関するクラス群
 """
 
-import os
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
-import cupy
 import numpy
 
 from quantum_simulator.base import pure_qubits
@@ -17,6 +15,7 @@ from quantum_simulator.base.error import (
     ReductionError,
 )
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import (
     allclose,
     around,
@@ -25,8 +24,7 @@ from quantum_simulator.base.utils import (
     is_real,
 )
 
-np_array = Union[numpy.array, cupy.array]
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = xp_factory()  # typing: numpy
 
 
 class Qubits:
@@ -36,8 +34,8 @@ class Qubits:
     Attributes:
         eigen_values (List[float]): Qubitsの固有値のリスト
         eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
-        ndarray (np.array): ndarray形式のQubits
-        matrix (np.array): 行列形式のQubits
+        ndarray (numpy.array): ndarray形式のQubits
+        matrix (numpy.array): 行列形式のQubits
         matrix_dim (int): Qubitsの行列の次元
         qubit_count (int): Qubitsに内包されているQubitの数
     """
@@ -114,12 +112,12 @@ class Qubits:
         return False
 
 
-def is_qubits_dim(array: np_array) -> bool:
+def is_qubits_dim(array: numpy.array) -> bool:
     """
-    与えられたnp.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
+    与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
 
     Args:
-        array (np.array): 判定対象のnp.array
+        array (numpy.array): 判定対象のnumpy.array
 
     Returns:
         bool: 判定結果
@@ -166,12 +164,12 @@ def is_qubits_dim(array: np_array) -> bool:
     return True
 
 
-def resolve_arrays(array: np_array) -> Tuple[np_array, np_array]:
+def resolve_arrays(array: numpy.array) -> Tuple[numpy.array, numpy.array]:
     """
-    与えられたnp.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
+    与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
 
     Args:
-        array (np.array): 計算対象のnp.array
+        array (numpy.array): 計算対象のnumpy.array
 
     Returns:
         Tuple[numy.array, numy.array]: 行列形式のnumy.arrayとndarray形式のnumy.array
@@ -198,12 +196,12 @@ def resolve_arrays(array: np_array) -> Tuple[np_array, np_array]:
     return (matrix, ndarray)
 
 
-def resolve_eigen(matrix: np_array) -> Tuple[List[complex], List[PureQubits]]:
+def resolve_eigen(matrix: numpy.array) -> Tuple[List[complex], List[PureQubits]]:
     """
-    行列形式のnp.arrayを仮定し、その固有値・固有状態を導出する
+    行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する
 
     Args:
-        matrix (np.array): 計算対象のnp.array
+        matrix (numpy.array): 計算対象のnumpy.array
 
     Returns:
         Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組
@@ -294,7 +292,7 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
         raise NotMatchCountError(message)
 
     # 密度行列から再度密度行列を導出する
-    density_matrix = probabilities[-1] * qubits_list[-1].matrix  # type: np_array
+    density_matrix = probabilities[-1] * qubits_list[-1].matrix  # type: numpy.array
 
     for index in range(len_qubits_list - 1):
         added_matrix = probabilities[index] * qubits_list[index].matrix

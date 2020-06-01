@@ -1,8 +1,3 @@
-import sys
-from unittest.mock import Mock
-
-sys.modules["cupy"] = Mock()
-
 import numpy
 import pytest
 
@@ -25,9 +20,10 @@ from quantum_simulator.base.qubits import (
     resolve_eigen,
     specialize,
 )
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose
 
-np = numpy
+np = xp_factory()  # typing: numpy
 
 
 class TestQubits:
@@ -57,7 +53,7 @@ class TestQubits:
         matrix, ndarray = resolve_arrays(target)
         expected_matrix = np.array(dict_for_test_qubits_resolve_arrays["matrix"])
         expected_ndarray = np.array(dict_for_test_qubits_resolve_arrays["ndarray"])
-        assert np.allclose(matrix, expected_matrix)
+        assert numpy.allclose(matrix, expected_matrix)
         assert matrix.shape == expected_matrix.shape
         assert ndarray.shape == expected_ndarray.shape
 

@@ -1,8 +1,3 @@
-import sys
-from unittest.mock import Mock
-
-sys.modules["cupy"] = Mock()
-
 from test.support import captured_stdout
 
 import numpy
@@ -27,9 +22,10 @@ from quantum_simulator.base.pure_qubits import (
     multiple_combine,
     multiple_combine_ons,
 )
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose
 
-np = numpy
+np = xp_factory()  # typing: numpy
 
 
 class TestPureQubits:
@@ -70,9 +66,9 @@ class TestPureQubits:
         expected_ndarray = np.array(
             dict_for_test_pure_qubits__resolve_arrays["ndarray"]
         )
-        assert np.all(vector == expected_vector)
+        assert numpy.all(vector == expected_vector)
         assert vector.shape == expected_vector.shape
-        assert np.all(ndarray == expected_ndarray)
+        assert numpy.all(ndarray == expected_ndarray)
         assert ndarray.shape == expected_ndarray.shape
 
     def test_for_success_constructor(self, dict_for_test_pure_qubits_constructor):

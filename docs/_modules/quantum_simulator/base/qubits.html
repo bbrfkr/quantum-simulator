@@ -148,10 +148,8 @@
 <span class="sd">一般的に混合状態のQubit系に関するクラス群</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">cupy</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base</span> <span class="kn">import</span> <span class="n">pure_qubits</span>
@@ -163,6 +161,7 @@
     <span class="n">ReductionError</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">PureQubits</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.switch_cupy</span> <span class="kn">import</span> <span class="n">xp_factory</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">allclose</span><span class="p">,</span>
     <span class="n">around</span><span class="p">,</span>
@@ -171,8 +170,7 @@
     <span class="n">is_real</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">np_array</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">cupy</span><span class="o">.</span><span class="n">array</span><span class="p">]</span>
-<span class="n">np</span> <span class="o">=</span> <span class="n">cupy</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_CUPY&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="k">else</span> <span class="n">numpy</span>
+<span class="n">np</span> <span class="o">=</span> <span class="n">xp_factory</span><span class="p">()</span>  <span class="c1"># typing: numpy</span>
 
 
 <div class="viewcode-block" id="Qubits"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits">[docs]</a><span class="k">class</span> <span class="nc">Qubits</span><span class="p">:</span>
@@ -182,8 +180,8 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        eigen_values (List[float]): Qubitsの固有値のリスト</span>
 <span class="sd">        eigen_states (List[PureQubits]): Qubitsの固有状態のリスト</span>
-<span class="sd">        ndarray (np.array): ndarray形式のQubits</span>
-<span class="sd">        matrix (np.array): 行列形式のQubits</span>
+<span class="sd">        ndarray (numpy.array): ndarray形式のQubits</span>
+<span class="sd">        matrix (numpy.array): 行列形式のQubits</span>
 <span class="sd">        matrix_dim (int): Qubitsの行列の次元</span>
 <span class="sd">        qubit_count (int): Qubitsに内包されているQubitの数</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -260,12 +258,12 @@
         <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
-<div class="viewcode-block" id="is_qubits_dim"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.is_qubits_dim">[docs]</a><span class="k">def</span> <span class="nf">is_qubits_dim</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="is_qubits_dim"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.is_qubits_dim">[docs]</a><span class="k">def</span> <span class="nf">is_qubits_dim</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnp.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</span>
+<span class="sd">    与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (np.array): 判定対象のnp.array</span>
+<span class="sd">        array (numpy.array): 判定対象のnumpy.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: 判定結果</span>
@@ -312,12 +310,12 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="resolve_arrays"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.resolve_arrays">[docs]</a><span class="k">def</span> <span class="nf">resolve_arrays</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np_array</span><span class="p">,</span> <span class="n">np_array</span><span class="p">]:</span>
+<div class="viewcode-block" id="resolve_arrays"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.resolve_arrays">[docs]</a><span class="k">def</span> <span class="nf">resolve_arrays</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnp.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</span>
+<span class="sd">    与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (np.array): 計算対象のnp.array</span>
+<span class="sd">        array (numpy.array): 計算対象のnumpy.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[numy.array, numy.array]: 行列形式のnumy.arrayとndarray形式のnumy.array</span>
@@ -344,12 +342,12 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="resolve_eigen"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.resolve_eigen">[docs]</a><span class="k">def</span> <span class="nf">resolve_eigen</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">]]:</span>
+<div class="viewcode-block" id="resolve_eigen"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.resolve_eigen">[docs]</a><span class="k">def</span> <span class="nf">resolve_eigen</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    行列形式のnp.arrayを仮定し、その固有値・固有状態を導出する</span>
+<span class="sd">    行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        matrix (np.array): 計算対象のnp.array</span>
+<span class="sd">        matrix (numpy.array): 計算対象のnumpy.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組</span>
@@ -440,7 +438,7 @@
         <span class="k">raise</span> <span class="n">NotMatchCountError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="c1"># 密度行列から再度密度行列を導出する</span>
-    <span class="n">density_matrix</span> <span class="o">=</span> <span class="n">probabilities</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">qubits_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">matrix</span>  <span class="c1"># type: np_array</span>
+    <span class="n">density_matrix</span> <span class="o">=</span> <span class="n">probabilities</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">qubits_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">matrix</span>  <span class="c1"># type: numpy.array</span>
 
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_qubits_list</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">added_matrix</span> <span class="o">=</span> <span class="n">probabilities</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">matrix</span>

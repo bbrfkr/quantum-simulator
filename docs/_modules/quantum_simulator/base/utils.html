@@ -148,30 +148,28 @@
 <span class="sd">baseパッケージ内で利用するユーティリティメソッド群</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="kn">import</span> <span class="nn">cupy</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="n">NegativeValueError</span>
-
-<span class="n">np_array</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">cupy</span><span class="o">.</span><span class="n">array</span><span class="p">]</span>
-<span class="n">np</span> <span class="o">=</span> <span class="n">cupy</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;USE_CUPY&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span> <span class="k">else</span> <span class="n">numpy</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.switch_cupy</span> <span class="kn">import</span> <span class="n">xp_factory</span>
 
 <span class="c1"># 計算時の近似桁数</span>
 <span class="n">RELATIVE_TOLERANCE</span> <span class="o">=</span> <span class="mf">1.0e-5</span>
 <span class="n">ABSOLUTE_TOLERANCE</span> <span class="o">=</span> <span class="mf">1.0e-8</span>
 <span class="n">AROUNDED_DECIMALS</span> <span class="o">=</span> <span class="mi">5</span>
 
+<span class="n">np</span> <span class="o">=</span> <span class="n">xp_factory</span><span class="p">()</span>  <span class="c1"># typing: numpy</span>
 
-<div class="viewcode-block" id="allclose"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.utils.allclose">[docs]</a><span class="k">def</span> <span class="nf">allclose</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np_array</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+<div class="viewcode-block" id="allclose"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.utils.allclose">[docs]</a><span class="k">def</span> <span class="nf">allclose</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    numpy.allcloseの本モジュール用ラッパー。２つのnp.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。</span>
+<span class="sd">    numpy.allcloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a (np.array): 比較対象1つ目</span>
-<span class="sd">        b (np.array): 比較対象2つ目</span>
+<span class="sd">        a (numpy.array): 比較対象1つ目</span>
+<span class="sd">        b (numpy.array): 比較対象2つ目</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        bool: 比較結果</span>
@@ -179,15 +177,15 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">RELATIVE_TOLERANCE</span><span class="p">,</span> <span class="n">ABSOLUTE_TOLERANCE</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="around"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.utils.around">[docs]</a><span class="k">def</span> <span class="nf">around</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np_array</span><span class="p">:</span>
+<div class="viewcode-block" id="around"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.utils.around">[docs]</a><span class="k">def</span> <span class="nf">around</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    numpy.aroundの本モジュール用ラッパー。np.arrayの各要素をモジュール指定の桁数で丸める</span>
+<span class="sd">    numpy.aroundの本モジュール用ラッパー。numpy.arrayの各要素をモジュール指定の桁数で丸める</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a (np.array): 比較対象1つ目</span>
+<span class="sd">        a (numpy.array): 比較対象1つ目</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        np.array: aを丸めた結果</span>
+<span class="sd">        numpy.array: aを丸めた結果</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">AROUNDED_DECIMALS</span><span class="p">)</span></div>
 
@@ -259,12 +257,12 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_real"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.utils.is_real">[docs]</a><span class="k">def</span> <span class="nf">is_real</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">np_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="is_real"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.utils.is_real">[docs]</a><span class="k">def</span> <span class="nf">is_real</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnp.arrayのデータ型が近似的に実数であるか判定する</span>
+<span class="sd">    与えられたnumpy.arrayのデータ型が近似的に実数であるか判定する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (np.array): 判定対象のnp.array</span>
+<span class="sd">        array (numpy.array): 判定対象のnumpy.array</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        bool: 判定結果</span>

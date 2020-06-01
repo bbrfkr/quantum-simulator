@@ -2,12 +2,8 @@
 観測量に関するクラス群
 """
 
-import os
 from random import choices
 from typing import List, Tuple
-
-import cupy
-import numpy
 
 import quantum_simulator.base.pure_qubits as pure_qubits
 from quantum_simulator.base.error import (
@@ -22,9 +18,10 @@ from quantum_simulator.base.qubits import (
     resolve_arrays,
     resolve_eigen,
 )
+from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, is_real
 
-np = cupy if os.environ.get("USE_CUPY") == "True" else numpy
+np = xp_factory()  # typing: numpy
 
 
 class Observable:  # pylint: disable=too-few-public-methods
@@ -34,8 +31,8 @@ class Observable:  # pylint: disable=too-few-public-methods
     Attributes:
         eigen_values (List[float]): 観測量の固有値のリスト
         eigen_states (List[PureQubits]): 観測量の固有状態のリスト
-        ndarray (np.array): ndarray形式の観測量
-        matrix (np.array): 行列形式の観測量
+        ndarray (numpy.array): ndarray形式の観測量
+        matrix (numpy.array): 行列形式の観測量
         matrix_dim (int): 観測料の行列の次元
     """
 
