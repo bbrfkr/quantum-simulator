@@ -180,8 +180,8 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        eigen_values (List[float]): Qubitsの固有値のリスト</span>
 <span class="sd">        eigen_states (List[PureQubits]): Qubitsの固有状態のリスト</span>
-<span class="sd">        ndarray (numpy.array): ndarray形式のQubits</span>
-<span class="sd">        matrix (numpy.array): 行列形式のQubits</span>
+<span class="sd">        ndarray (np.array): ndarray形式のQubits</span>
+<span class="sd">        matrix (np.array): 行列形式のQubits</span>
 <span class="sd">        matrix_dim (int): Qubitsの行列の次元</span>
 <span class="sd">        qubit_count (int): Qubitsに内包されているQubitの数</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -260,10 +260,10 @@
 
 <div class="viewcode-block" id="is_qubits_dim"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.is_qubits_dim">[docs]</a><span class="k">def</span> <span class="nf">is_qubits_dim</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</span>
+<span class="sd">    与えられたnp.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (numpy.array): 判定対象のnumpy.array</span>
+<span class="sd">        array (np.array): 判定対象のnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: 判定結果</span>
@@ -312,10 +312,10 @@
 
 <div class="viewcode-block" id="resolve_arrays"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.resolve_arrays">[docs]</a><span class="k">def</span> <span class="nf">resolve_arrays</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</span>
+<span class="sd">    与えられたnp.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (numpy.array): 計算対象のnumpy.array</span>
+<span class="sd">        array (np.array): 計算対象のnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[numy.array, numy.array]: 行列形式のnumy.arrayとndarray形式のnumy.array</span>
@@ -344,10 +344,10 @@
 
 <div class="viewcode-block" id="resolve_eigen"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.resolve_eigen">[docs]</a><span class="k">def</span> <span class="nf">resolve_eigen</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する</span>
+<span class="sd">    行列形式のnp.arrayを仮定し、その固有値・固有状態を導出する</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        matrix (numpy.array): 計算対象のnumpy.array</span>
+<span class="sd">        matrix (np.array): 計算対象のnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組</span>

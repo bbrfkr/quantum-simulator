@@ -169,11 +169,11 @@
 <span class="sd">    純粋状態で一般的に複数粒子のQubit系クラス</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        ndarray (numpy.array): ndarray形式のPureQubits</span>
-<span class="sd">        vector (numpy.array): ベクトル形式のPureQubits</span>
+<span class="sd">        ndarray (np.array): ndarray形式のPureQubits</span>
+<span class="sd">        vector (np.array): ベクトル形式のPureQubits</span>
 <span class="sd">        qubit_count (int): PureQubitsに内包されているQubitの数</span>
-<span class="sd">        projection (numpy.array): PureQubitsに対応する射影のndarray</span>
-<span class="sd">        projection_matrix (numpy.array): PureQubitsに対応する射影行列</span>
+<span class="sd">        projection (np.array): PureQubitsに対応する射影のndarray</span>
+<span class="sd">        projection_matrix (np.array): PureQubitsに対応する射影行列</span>
 <span class="sd">        projection_matrix_dim (int): 射影行列の次元</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -291,10 +291,10 @@
 
 <span class="k">def</span> <span class="nf">_is_pure_qubits</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系を表現しているか判定する。</span>
+<span class="sd">    与えられたnp.arrayがQubit系を表現しているか判定する。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (numpy.array): 判定対象のnumpy.array</span>
+<span class="sd">        array (np.array): 判定対象のnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: 判定結果</span>
@@ -322,10 +322,10 @@
 
 <span class="k">def</span> <span class="nf">_count_qubits</span><span class="p">(</span><span class="n">pure_qubits</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系であることを仮定し、内包するQubit数を返す。</span>
+<span class="sd">    与えられたnp.arrayがQubit系であることを仮定し、内包するQubit数を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array</span>
+<span class="sd">        pure_qubits (np.array): PureQubitsの候補となるnp.array</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        int: 内包するQubit数</span>
@@ -342,13 +342,13 @@
 
 <span class="k">def</span> <span class="nf">_resolve_arrays</span><span class="p">(</span><span class="n">pure_qubits</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnumpy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。</span>
+<span class="sd">    与えられたnp.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array</span>
+<span class="sd">        pure_qubits (np.array): PureQubitsの候補となるnp.array</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple[numpy.array, numpy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現</span>
+<span class="sd">        Tuple[np.array, np.array]: pure_qubitsに対応する、ベクトル表現とndarray表現</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vector</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>

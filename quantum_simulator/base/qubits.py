@@ -34,8 +34,8 @@ class Qubits:
     Attributes:
         eigen_values (List[float]): Qubitsの固有値のリスト
         eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
-        ndarray (numpy.array): ndarray形式のQubits
-        matrix (numpy.array): 行列形式のQubits
+        ndarray (np.array): ndarray形式のQubits
+        matrix (np.array): 行列形式のQubits
         matrix_dim (int): Qubitsの行列の次元
         qubit_count (int): Qubitsに内包されているQubitの数
     """
@@ -114,10 +114,10 @@ class Qubits:
 
 def is_qubits_dim(array: numpy.array) -> bool:
     """
-    与えられたnumpy.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
+    与えられたnp.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (np.array): 判定対象のnp.array
 
     Returns:
         bool: 判定結果
@@ -166,10 +166,10 @@ def is_qubits_dim(array: numpy.array) -> bool:
 
 def resolve_arrays(array: numpy.array) -> Tuple[numpy.array, numpy.array]:
     """
-    与えられたnumpy.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
+    与えられたnp.arrayがQubit系の空間上に存在することを仮定し、その行列形式とndarray形式を導出する
 
     Args:
-        array (numpy.array): 計算対象のnumpy.array
+        array (np.array): 計算対象のnp.array
 
     Returns:
         Tuple[numy.array, numy.array]: 行列形式のnumy.arrayとndarray形式のnumy.array
@@ -198,10 +198,10 @@ def resolve_arrays(array: numpy.array) -> Tuple[numpy.array, numpy.array]:
 
 def resolve_eigen(matrix: numpy.array) -> Tuple[List[complex], List[PureQubits]]:
     """
-    行列形式のnumpy.arrayを仮定し、その固有値・固有状態を導出する
+    行列形式のnp.arrayを仮定し、その固有値・固有状態を導出する
 
     Args:
-        matrix (numpy.array): 計算対象のnumpy.array
+        matrix (np.array): 計算対象のnp.array
 
     Returns:
         Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組

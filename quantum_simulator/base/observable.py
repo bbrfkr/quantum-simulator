@@ -31,8 +31,8 @@ class Observable:  # pylint: disable=too-few-public-methods
     Attributes:
         eigen_values (List[float]): 観測量の固有値のリスト
         eigen_states (List[PureQubits]): 観測量の固有状態のリスト
-        ndarray (numpy.array): ndarray形式の観測量
-        matrix (numpy.array): 行列形式の観測量
+        ndarray (np.array): ndarray形式の観測量
+        matrix (np.array): 行列形式の観測量
         matrix_dim (int): 観測料の行列の次元
     """
 

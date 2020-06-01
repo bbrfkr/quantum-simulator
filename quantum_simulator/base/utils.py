@@ -19,11 +19,11 @@ np = xp_factory()  # typing: numpy
 
 def allclose(a: numpy.array, b: numpy.array) -> bool:
     """
-    numpy.allcloseの本モジュール用ラッパー。２つのnumpy.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
+    numpy.allcloseの本モジュール用ラッパー。２つのnp.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
 
     Args:
-        a (numpy.array): 比較対象1つ目
-        b (numpy.array): 比較対象2つ目
+        a (np.array): 比較対象1つ目
+        b (np.array): 比較対象2つ目
 
     Return:
         bool: 比較結果
@@ -33,13 +33,13 @@ def allclose(a: numpy.array, b: numpy.array) -> bool:
 
 def around(a: numpy.array) -> numpy.array:
     """
-    numpy.aroundの本モジュール用ラッパー。numpy.arrayの各要素をモジュール指定の桁数で丸める
+    numpy.aroundの本モジュール用ラッパー。np.arrayの各要素をモジュール指定の桁数で丸める
 
     Args:
-        a (numpy.array): 比較対象1つ目
+        a (np.array): 比較対象1つ目
 
     Return:
-        numpy.array: aを丸めた結果
+        np.array: aを丸めた結果
     """
     return np.around(a, AROUNDED_DECIMALS)
 
@@ -113,10 +113,10 @@ def is_probabilities(target_list: List[float]) -> bool:
 
 def is_real(array: numpy.array) -> bool:
     """
-    与えられたnumpy.arrayのデータ型が近似的に実数であるか判定する
+    与えられたnp.arrayのデータ型が近似的に実数であるか判定する
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (np.array): 判定対象のnp.array
 
     Return:
         bool: 判定結果

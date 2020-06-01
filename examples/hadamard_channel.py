@@ -18,5 +18,5 @@ class HadamardChannel(Channel):
         self.transform(TimeEvolveTransformer(hadamard_gate))
 
 
-test_channel = HadamardChannel(6, 6)
+test_channel = HadamardChannel(7, 7)
 print(test_channel.apply(test_channel.apply(0, [0, 1, 2, 3, 4, 5]), [0, 1, 2, 3, 4, 5]))

@@ -23,11 +23,11 @@ class PureQubits:
     純粋状態で一般的に複数粒子のQubit系クラス
 
     Attributes:
-        ndarray (numpy.array): ndarray形式のPureQubits
-        vector (numpy.array): ベクトル形式のPureQubits
+        ndarray (np.array): ndarray形式のPureQubits
+        vector (np.array): ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
-        projection (numpy.array): PureQubitsに対応する射影のndarray
-        projection_matrix (numpy.array): PureQubitsに対応する射影行列
+        projection (np.array): PureQubitsに対応する射影のndarray
+        projection_matrix (np.array): PureQubitsに対応する射影行列
         projection_matrix_dim (int): 射影行列の次元
     """
 
@@ -145,10 +145,10 @@ class OrthogonalSystem:
 
 def _is_pure_qubits(array: numpy.array) -> bool:
     """
-    与えられたnumpy.arrayがQubit系を表現しているか判定する。
+    与えられたnp.arrayがQubit系を表現しているか判定する。
 
     Args:
-        array (numpy.array): 判定対象のnumpy.array
+        array (np.array): 判定対象のnp.array
 
     Returns:
         bool: 判定結果
@@ -176,10 +176,10 @@ def _is_pure_qubits(array: numpy.array) -> bool:
 
 def _count_qubits(pure_qubits: numpy.array) -> int:
     """
-    与えられたnumpy.arrayがQubit系であることを仮定し、内包するQubit数を返す。
+    与えられたnp.arrayがQubit系であることを仮定し、内包するQubit数を返す。
 
     Args:
-        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+        pure_qubits (np.array): PureQubitsの候補となるnp.array
 
     Returns:
         int: 内包するQubit数
@@ -196,13 +196,13 @@ def _count_qubits(pure_qubits: numpy.array) -> int:
 
 def _resolve_arrays(pure_qubits: numpy.array) -> Tuple[numpy.array, numpy.array]:
     """
-    与えられたnumpy.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
+    与えられたnp.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
 
     Args:
-        pure_qubits (numpy.array): PureQubitsの候補となるnumpy.array
+        pure_qubits (np.array): PureQubitsの候補となるnp.array
 
     Returns:
-        Tuple[numpy.array, numpy.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
+        Tuple[np.array, np.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
     """
     vector = None
     ndarray = None
