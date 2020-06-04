@@ -86,7 +86,6 @@ class TestQubits:
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
         matrix = qubits.matrix
-        matrix_dim = qubits.matrix_dim
         ndarray = qubits.ndarray
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
@@ -94,7 +93,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_qubits_constructor["eigen_values"]
         expected_eigen_states = dict_for_test_qubits_constructor["eigen_states"]
         expected_matrix = np.array(dict_for_test_qubits_constructor["matrix"])
-        expected_matrix_dim = dict_for_test_qubits_constructor["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_qubits_constructor["ndarray"])
         expected_qubit_count = dict_for_test_qubits_constructor["qubit_count"]
         expected_is_pure = dict_for_test_qubits_constructor["is_pure"]
@@ -113,7 +111,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -129,7 +126,6 @@ class TestQubits:
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
         matrix = qubits.matrix
-        matrix_dim = qubits.matrix_dim
         ndarray = qubits.ndarray
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
@@ -137,7 +133,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_generalize["eigen_values"]
         expected_eigen_states = dict_for_test_generalize["eigen_states"]
         expected_matrix = np.array(dict_for_test_generalize["matrix"])
-        expected_matrix_dim = dict_for_test_generalize["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_generalize["ndarray"])
         expected_qubit_count = dict_for_test_generalize["qubit_count"]
         expected_is_pure = dict_for_test_generalize["is_pure"]
@@ -156,7 +151,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -172,17 +166,9 @@ class TestQubits:
         expected_ndarray = dict_for_test_specialize["ndarray"]
         expected_vector = dict_for_test_specialize["vector"]
         expected_qubit_count = dict_for_test_specialize["qubit_count"]
-        expected_projection = dict_for_test_specialize["projection"]
-        expected_projection_matrix = dict_for_test_specialize["projection_matrix"]
-        expected_projection_matrix_dim = dict_for_test_specialize[
-            "projection_matrix_dim"
-        ]
         assert allclose(result.ndarray, expected_ndarray)
         assert allclose(result.vector, expected_vector)
         assert result.qubit_count == expected_qubit_count
-        assert allclose(result.projection, expected_projection)
-        assert allclose(result.projection_matrix, expected_projection_matrix)
-        assert result.projection_matrix_dim == expected_projection_matrix_dim
 
     def test_for_success_convex_combination(self, dict_for_test_convex_combination):
         """convex_combinationメソッドの正常系テスト"""
@@ -193,7 +179,6 @@ class TestQubits:
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
         matrix = qubits.matrix
-        matrix_dim = qubits.matrix_dim
         ndarray = qubits.ndarray
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
@@ -201,7 +186,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_convex_combination["eigen_values"]
         expected_eigen_states = dict_for_test_convex_combination["eigen_states"]
         expected_matrix = np.array(dict_for_test_convex_combination["matrix"])
-        expected_matrix_dim = dict_for_test_convex_combination["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_convex_combination["ndarray"])
         expected_qubit_count = dict_for_test_convex_combination["qubit_count"]
         expected_is_pure = dict_for_test_convex_combination["is_pure"]
@@ -220,7 +204,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -237,7 +220,6 @@ class TestQubits:
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
         matrix = qubits.matrix
-        matrix_dim = qubits.matrix_dim
         ndarray = qubits.ndarray
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
@@ -245,7 +227,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_create_from_ons["eigen_values"]
         expected_eigen_states = dict_for_test_create_from_ons["eigen_states"]
         expected_matrix = np.array(dict_for_test_create_from_ons["matrix"])
-        expected_matrix_dim = dict_for_test_create_from_ons["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_create_from_ons["ndarray"])
         expected_qubit_count = dict_for_test_create_from_ons["qubit_count"]
         expected_is_pure = dict_for_test_create_from_ons["is_pure"]
@@ -264,7 +245,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -308,7 +288,6 @@ class TestQubits:
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
         matrix = qubits.matrix
-        matrix_dim = qubits.matrix_dim
         ndarray = qubits.ndarray
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
@@ -316,7 +295,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_qubits_combine["eigen_values"]
         expected_eigen_states = dict_for_test_qubits_combine["eigen_states"]
         expected_matrix = np.array(dict_for_test_qubits_combine["matrix"])
-        expected_matrix_dim = dict_for_test_qubits_combine["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_qubits_combine["ndarray"])
         expected_qubit_count = dict_for_test_qubits_combine["qubit_count"]
         expected_is_pure = dict_for_test_qubits_combine["is_pure"]
@@ -335,7 +313,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -352,7 +329,6 @@ class TestQubits:
         eigen_values = reduced_qubits.eigen_values
         eigen_states = reduced_qubits.eigen_states
         matrix = reduced_qubits.matrix
-        matrix_dim = reduced_qubits.matrix_dim
         ndarray = reduced_qubits.ndarray
         qubit_count = reduced_qubits.qubit_count
         is_pure = reduced_qubits.is_pure()
@@ -360,7 +336,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_reduction["eigen_values"]
         expected_eigen_states = dict_for_test_reduction["eigen_states"]
         expected_matrix = np.array(dict_for_test_reduction["matrix"])
-        expected_matrix_dim = dict_for_test_reduction["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_reduction["ndarray"])
         expected_qubit_count = dict_for_test_reduction["qubit_count"]
         expected_is_pure = dict_for_test_reduction["is_pure"]
@@ -379,7 +354,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -395,7 +369,6 @@ class TestQubits:
         eigen_values = qubits.eigen_values
         eigen_states = qubits.eigen_states
         matrix = qubits.matrix
-        matrix_dim = qubits.matrix_dim
         ndarray = qubits.ndarray
         qubit_count = qubits.qubit_count
         is_pure = qubits.is_pure()
@@ -403,7 +376,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_qubits_multiple_combine["eigen_values"]
         expected_eigen_states = dict_for_test_qubits_multiple_combine["eigen_states"]
         expected_matrix = np.array(dict_for_test_qubits_multiple_combine["matrix"])
-        expected_matrix_dim = dict_for_test_qubits_multiple_combine["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_qubits_multiple_combine["ndarray"])
         expected_qubit_count = dict_for_test_qubits_multiple_combine["qubit_count"]
         expected_is_pure = dict_for_test_qubits_multiple_combine["is_pure"]
@@ -422,7 +394,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -439,7 +410,6 @@ class TestQubits:
         eigen_values = reduced_qubits.eigen_values
         eigen_states = reduced_qubits.eigen_states
         matrix = reduced_qubits.matrix
-        matrix_dim = reduced_qubits.matrix_dim
         ndarray = reduced_qubits.ndarray
         qubit_count = reduced_qubits.qubit_count
         is_pure = reduced_qubits.is_pure()
@@ -447,7 +417,6 @@ class TestQubits:
         expected_eigen_values = dict_for_test_multiple_reduction["eigen_values"]
         expected_eigen_states = dict_for_test_multiple_reduction["eigen_states"]
         expected_matrix = np.array(dict_for_test_multiple_reduction["matrix"])
-        expected_matrix_dim = dict_for_test_multiple_reduction["matrix_dim"]
         expected_ndarray = np.array(dict_for_test_multiple_reduction["ndarray"])
         expected_qubit_count = dict_for_test_multiple_reduction["qubit_count"]
         expected_is_pure = dict_for_test_multiple_reduction["is_pure"]
@@ -466,7 +435,6 @@ class TestQubits:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert qubit_count == expected_qubit_count
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)

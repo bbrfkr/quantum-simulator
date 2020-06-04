@@ -33,7 +33,6 @@ class Observable:  # pylint: disable=too-few-public-methods
         eigen_states (List[PureQubits]): 観測量の固有状態のリスト
         ndarray (np.array): ndarray形式の観測量
         matrix (np.array): 行列形式の観測量
-        matrix_dim (int): 観測料の行列の次元
     """
 
     def __init__(self, hermite_array: list):
@@ -50,6 +49,7 @@ class Observable:  # pylint: disable=too-few-public-methods
 
         # 行列表現とndarray表現を導出
         matrix, ndarray = resolve_arrays(tmp_array)
+        del tmp_array
 
         # 固有値、固有状態の導出
         tmp_eigen_values, eigen_states = resolve_eigen(matrix)
@@ -60,16 +60,14 @@ class Observable:  # pylint: disable=too-few-public-methods
             raise InitializeError(message)
 
         eigen_values = np.real(tmp_eigen_values)
-
-        # 行列の次元を導出
-        matrix_dim = matrix.shape[0]
+        del tmp_eigen_values
 
         # 初期化
         self.eigen_values = eigen_values
         self.eigen_states = eigen_states
         self.ndarray = ndarray
         self.matrix = matrix
-        self.matrix_dim = matrix_dim
+        del eigen_states, eigen_values, ndarray, matrix
 
     def __str__(self):
         """
@@ -103,7 +101,9 @@ class Observable:  # pylint: disable=too-few-public-methods
             raise NotMatchDimensionError(message)
 
         # 期待値の導出
-        expected_value = np.trace(np.dot(self.matrix, target.matrix))
+        expected_value = np.trace(np.matmul(self.matrix, target.matrix))
+
+        del target
         return expected_value
 
 
@@ -147,18 +147,25 @@ def _resolve_observed_results(
         # まず固有値が一致しているインデックスリストから
         # 最後のインデックスを取得し、対応する1次元射影行列を取り出す
         last_index = degrated_indice_list[index_0][-1]
-        projection = eigen_states[last_index].projection_matrix
+        projection = np.outer(
+            eigen_states[last_index].vector, np.conj(eigen_states[last_index].vector)
+        )
 
         for index_1 in range(len(degrated_indice_list[index_0]) - 1):
             # インデックスリストからインデックスを取り出し
             # 射影行列同士を足して、目的の射影行列を作る
             target_index = degrated_indice_list[index_0][index_1]
             projection = np.add(
-                projection, eigen_states[target_index].projection_matrix
+                projection,
+                np.outer(
+                    eigen_states[target_index].vector,
+                    np.conj(eigen_states[target_index].vector),
+                ),
             )
 
         projections.append(Observable(projection))
 
+    del projection, last_index, eigen_values, eigen_states
     return (unique_eigen_values, projections)
 
 
@@ -181,13 +188,17 @@ def create_from_ons(observed_values: List[float], ons: OrthogonalSystem) -> Obse
         raise NotMatchCountError(message)
 
     qubits_list = ons.qubits_list
-    new_hermite_array = observed_values[-1] * qubits_list[-1].projection_matrix
+    new_hermite_array = observed_values[-1] * np.outer(
+        qubits_list[-1].vector, np.conj(qubits_list[-1].vector)
+    )
     for index in range(len(observed_values) - 1):
         new_hermite_array = np.add(
             new_hermite_array,
-            observed_values[index] * qubits_list[index].projection_matrix,
+            observed_values[index]
+            * np.outer(qubits_list[index].vector, np.conj(qubits_list[index].vector)),
         )
 
+    del observed_values, ons
     return Observable(new_hermite_array)
 
 
@@ -221,15 +232,20 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
 
     # 観測結果のランダムサンプリング
     observed_result = choices(observed_results, observed_probabilities)[0]
+    del observed_results_tuple, observed_results, observed_probabilities
 
     # 観測によるQubitの収束 - 射影の適用と規格化
     projection_matrix = observed_result[1].matrix
     target_matrix = target.matrix
 
     # 射影行列を両側から挟み、かつトレース値で割って規格化する
-    post_matrix = np.dot(np.dot(projection_matrix, target_matrix), projection_matrix)
+    post_matrix = np.matmul(
+        np.matmul(projection_matrix, target_matrix), projection_matrix
+    )
     observed_probability = np.trace(post_matrix)
     normalized_post_matrix = (1.0 / observed_probability) * post_matrix
+
+    del projection_matrix, target_matrix, post_matrix, observed_probability
 
     # 観測値の返却
     return (observed_result[0], Qubits(normalized_post_matrix))
@@ -248,20 +264,31 @@ def combine(observable_0: Observable, observable_1: Observable) -> Observable:
     """
 
     # 固有値および固有状態を結合したリストを作成
-    new_elements = [
-        (observable_0.eigen_values[index_0] * observable_1.eigen_values[index_1])
-        * pure_qubits.combine(
-            observable_0.eigen_states[index_0], observable_1.eigen_states[index_1]
-        ).projection_matrix
-        for index_0 in range(len(observable_0.eigen_values))
-        for index_1 in range(len(observable_1.eigen_values))
-    ]
+    new_elements = []
+    for index_0 in range(len(observable_0.eigen_values)):
+        for index_1 in range(len(observable_1.eigen_values)):
+            combined_pure_qubits = pure_qubits.combine(
+                observable_0.eigen_states[index_0], observable_1.eigen_states[index_1]
+            )
+            combined_projection_matrix = np.outer(
+                combined_pure_qubits.vector, np.conj(combined_pure_qubits.vector)
+            )
+
+            new_elements.append(
+                (
+                    observable_0.eigen_values[index_0]
+                    * observable_1.eigen_values[index_1]
+                )
+                * combined_projection_matrix
+            )
 
     new_hermite_array = new_elements[-1]
     for index in range(len(new_elements) - 1):
         new_hermite_array = np.add(new_hermite_array, new_elements[index])
 
     new_observable = Observable(new_hermite_array)
+
+    del new_elements, new_hermite_array
     return new_observable
 
 

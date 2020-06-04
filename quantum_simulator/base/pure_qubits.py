@@ -26,9 +26,6 @@ class PureQubits:
         ndarray (np.array): ndarray形式のPureQubits
         vector (np.array): ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
-        projection (np.array): PureQubitsに対応する射影のndarray
-        projection_matrix (np.array): PureQubitsに対応する射影行列
-        projection_matrix_dim (int): 射影行列の次元
     """
 
     def __init__(self, amplitudes: list):
@@ -45,25 +42,18 @@ class PureQubits:
 
         # 各Qubit表現形式の導出
         vector, ndarray = _resolve_arrays(tmp_array)
+        del tmp_array
 
         # 内包するQubit数を計算
         qubit_count = _count_qubits(ndarray)
-
-        # 射影作用素を導出
-        projection_matrix = np.outer(ndarray, np.conj(ndarray))
-
-        # 射影作用素に対応する行列を導出
-        projection_matrix_dim = projection_matrix.shape[0]
-        projection_shape = tuple([2 for index in range(qubit_count * 2)])
-        projection = projection_matrix.reshape(projection_shape)
 
         # 初期化
         self.ndarray = ndarray
         self.vector = vector
         self.qubit_count = qubit_count
-        self.projection = projection
-        self.projection_matrix = projection_matrix
-        self.projection_matrix_dim = projection_matrix_dim
+        del ndarray
+        del vector
+        del qubit_count
 
     def __str__(self):
         """
@@ -79,18 +69,6 @@ class PureQubits:
         PureQubitsのndarray表現を出力
         """
         print(self.ndarray)
-
-    def print_projection_matrix(self):
-        """
-        PureQubitsの射影行列を出力
-        """
-        print(self.projection_matrix)
-
-    def print_projection(self):
-        """
-        PureQubitsの射影行列に対応するndarray表現を出力
-        """
-        print(self.projection)
 
     def dirac_notation(self):
         """
@@ -233,6 +211,7 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     new_ndarray = np.tensordot(qubits_0.ndarray, qubits_1.ndarray, 0)
     new_qubits = PureQubits(new_ndarray)
 
+    del new_ndarray
     return new_qubits
 
 
@@ -252,8 +231,9 @@ def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalS
         for qubits_0 in ons_0.qubits_list
         for qubits_1 in ons_1.qubits_list
     ]
-
     new_ons = OrthogonalSystem(new_qubits)
+
+    del new_qubits
     return new_ons
 
 

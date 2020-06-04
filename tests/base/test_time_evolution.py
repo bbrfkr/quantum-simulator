@@ -26,14 +26,11 @@ class TestTimeEvolution:
         unitary = TimeEvolution(target)
 
         matrix = unitary.matrix
-        matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_constructor["matrix"])
-        expected_matrix_dim = dict_for_test_unitary_constructor["matrix_dim"]
         expected_ndarray = numpy.array(dict_for_test_unitary_constructor["ndarray"])
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -66,14 +63,11 @@ class TestTimeEvolution:
         unitary = create_from_onb(onb_0, onb_1)
 
         matrix = unitary.matrix
-        matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_create_from_onb["matrix"])
-        expected_matrix_dim = dict_for_test_create_from_onb["matrix_dim"]
         expected_ndarray = numpy.array(dict_for_test_create_from_onb["ndarray"])
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -88,14 +82,11 @@ class TestTimeEvolution:
         unitary = combine(unitary_0, unitary_1)
 
         matrix = unitary.matrix
-        matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_combine["matrix"])
-        expected_matrix_dim = dict_for_test_unitary_combine["matrix_dim"]
         expected_ndarray = numpy.array(dict_for_test_unitary_combine["ndarray"])
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -109,16 +100,13 @@ class TestTimeEvolution:
         unitary = multiple_combine(unitary_list)
 
         matrix = unitary.matrix
-        matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_multiple_combine["matrix"])
-        expected_matrix_dim = dict_for_test_unitary_multiple_combine["matrix_dim"]
         expected_ndarray = numpy.array(
             dict_for_test_unitary_multiple_combine["ndarray"]
         )
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -133,14 +121,11 @@ class TestTimeEvolution:
         unitary = compose(unitary_0, unitary_1)
 
         matrix = unitary.matrix
-        matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_compose["matrix"])
-        expected_matrix_dim = dict_for_test_unitary_compose["matrix_dim"]
         expected_ndarray = numpy.array(dict_for_test_unitary_compose["ndarray"])
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -154,16 +139,13 @@ class TestTimeEvolution:
         unitary = multiple_compose(unitary_list)
 
         matrix = unitary.matrix
-        matrix_dim = unitary.matrix_dim
         ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_multiple_compose["matrix"])
-        expected_matrix_dim = dict_for_test_unitary_multiple_compose["matrix_dim"]
         expected_ndarray = numpy.array(
             dict_for_test_unitary_multiple_compose["ndarray"]
         )
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)

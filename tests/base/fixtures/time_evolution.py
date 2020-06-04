@@ -23,7 +23,6 @@ from quantum_simulator.base.time_evolution import TimeEvolution
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
             ],
-            "matrix_dim": 2,
         },
         {
             "target": [
@@ -48,7 +47,6 @@ from quantum_simulator.base.time_evolution import TimeEvolution
                     [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]],
                 ],
             ],
-            "matrix_dim": 4,
         },
     ]
 )
@@ -140,7 +138,6 @@ def test_for_success_operate(request):
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
             ],
-            "matrix_dim": 2,
         },
         {
             "onb_0": OrthogonalSystem(
@@ -160,7 +157,6 @@ def test_for_success_operate(request):
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
-            "matrix_dim": 2,
         },
     ]
 )
@@ -192,7 +188,6 @@ def dict_for_test_create_from_onb(request):
                     [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]],
                 ],
             ],
-            "matrix_dim": 4,
         },
     ]
 )
@@ -270,7 +265,6 @@ def dict_for_test_unitary_combine(request):
                     ],
                 ],
             ],
-            "matrix_dim": 8,
         },
     ]
 )
@@ -294,7 +288,6 @@ def dict_for_test_unitary_multiple_combine(request):
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
-            "matrix_dim": 2,
         },
     ]
 )
@@ -324,7 +317,6 @@ def dict_for_test_unitary_compose(request):
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
             ],
-            "matrix_dim": 2,
         },
     ]
 )
