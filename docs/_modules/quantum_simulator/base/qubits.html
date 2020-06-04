@@ -182,7 +182,6 @@
 <span class="sd">        eigen_states (List[PureQubits]): Qubitsの固有状態のリスト</span>
 <span class="sd">        ndarray (np.array): ndarray形式のQubits</span>
 <span class="sd">        matrix (np.array): 行列形式のQubits</span>
-<span class="sd">        matrix_dim (int): Qubitsの行列の次元</span>
 <span class="sd">        qubit_count (int): Qubitsに内包されているQubitの数</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -199,6 +198,7 @@
 
         <span class="c1"># 行列表現とndarray表現を導出</span>
         <span class="n">matrix</span><span class="p">,</span> <span class="n">ndarray</span> <span class="o">=</span> <span class="n">resolve_arrays</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">tmp_array</span>
 
         <span class="c1"># 固有値と固有ベクトルを導出</span>
         <span class="n">tmp_eigen_values</span><span class="p">,</span> <span class="n">eigen_states</span> <span class="o">=</span> <span class="n">resolve_eigen</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
@@ -209,14 +209,12 @@
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="n">eigen_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp_eigen_values</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">tmp_eigen_values</span>
 
         <span class="c1"># 固有値全体が確率分布に対応できるかチェック</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_probabilities</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: リストから導出された固有値群は確率分布に対応しません&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-
-        <span class="c1"># 行列の次元を導出</span>
-        <span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Qubitの個数を導出</span>
         <span class="n">qubit_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
@@ -226,8 +224,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">eigen_states</span> <span class="o">=</span> <span class="n">eigen_states</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">matrix_dim</span> <span class="o">=</span> <span class="n">matrix_dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">=</span> <span class="n">qubit_count</span>
+        <span class="k">del</span> <span class="n">eigen_values</span>
+        <span class="k">del</span> <span class="n">eigen_states</span>
+        <span class="k">del</span> <span class="n">ndarray</span>
+        <span class="k">del</span> <span class="n">matrix</span>
+        <span class="k">del</span> <span class="n">qubit_count</span>
 
 <div class="viewcode-block" id="Qubits.__str__"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.qubits.Qubits.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -386,7 +388,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Qubits: 一般化後の純粋状態</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">density_array</span> <span class="o">=</span> <span class="n">pure_qubits</span><span class="o">.</span><span class="n">projection</span>
+    <span class="n">density_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">pure_qubits</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">pure_qubits</span><span class="o">.</span><span class="n">vector</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">Qubits</span><span class="p">(</span><span class="n">density_array</span><span class="p">)</span></div>
 
 
@@ -445,6 +447,8 @@
         <span class="n">density_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">density_matrix</span><span class="p">,</span> <span class="n">added_matrix</span><span class="p">)</span>
 
     <span class="n">qubits</span> <span class="o">=</span> <span class="n">Qubits</span><span class="p">(</span><span class="n">density_matrix</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">density_matrix</span>
     <span class="k">return</span> <span class="n">qubits</span></div>
 
 
@@ -499,6 +503,8 @@
     <span class="n">axis2</span> <span class="o">=</span> <span class="n">target_qubits</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">+</span> <span class="n">target_particle</span>
     <span class="n">reduced_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">reduced_array</span><span class="p">,</span> <span class="n">axis1</span><span class="o">=</span><span class="n">axis1</span><span class="p">,</span> <span class="n">axis2</span><span class="o">=</span><span class="n">axis2</span><span class="p">)</span>
 
+    <span class="k">del</span> <span class="n">target_qubits</span>
+    <span class="k">del</span> <span class="n">target_particle</span>
     <span class="k">return</span> <span class="n">Qubits</span><span class="p">(</span><span class="n">reduced_array</span><span class="p">)</span></div>
 
 
@@ -532,6 +538,10 @@
 
     <span class="c1"># 新しい状態の生成</span>
     <span class="n">new_qubits</span> <span class="o">=</span> <span class="n">convex_combination</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">generalized_eigen_states</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">qubits_0</span>
+    <span class="k">del</span> <span class="n">qubits_1</span>
+    <span class="k">del</span> <span class="n">generalized_eigen_states</span>
     <span class="k">return</span> <span class="n">new_qubits</span></div>
 
 
