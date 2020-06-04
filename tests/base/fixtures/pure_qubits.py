@@ -171,10 +171,7 @@ def dict_for_test_pure_qubits__resolve_arrays(request):
 @pytest.fixture(
     params=[
         # 単一Qubit
-        {
-            "target": [1 + 0j, 0j],
-            "dirac_notation": "(1+0j)|0> +\n0j|1>\n",
-        },
+        {"target": [1 + 0j, 0j], "dirac_notation": "(1+0j)|0> +\n0j|1>\n"},
         # 2粒子Qubit系
         {
             "target": [
