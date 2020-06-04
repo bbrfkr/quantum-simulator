@@ -36,13 +36,11 @@ class TestObservable:
         eigen_values = observable.eigen_values
         eigen_states = observable.eigen_states
         matrix = observable.matrix
-        matrix_dim = observable.matrix_dim
         ndarray = observable.ndarray
 
         expected_eigen_values = test_for_success_observable_constructor["eigen_values"]
         expected_eigen_states = test_for_success_observable_constructor["eigen_states"]
         expected_matrix = numpy.array(test_for_success_observable_constructor["matrix"])
-        expected_matrix_dim = test_for_success_observable_constructor["matrix_dim"]
         expected_ndarray = numpy.array(
             test_for_success_observable_constructor["ndarray"]
         )
@@ -61,7 +59,6 @@ class TestObservable:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -78,13 +75,11 @@ class TestObservable:
         eigen_values = observable.eigen_values
         eigen_states = observable.eigen_states
         matrix = observable.matrix
-        matrix_dim = observable.matrix_dim
         ndarray = observable.ndarray
 
         expected_eigen_values = test_for_success_create_from_ons["eigen_values"]
         expected_eigen_states = test_for_success_create_from_ons["eigen_states"]
         expected_matrix = numpy.array(test_for_success_create_from_ons["matrix"])
-        expected_matrix_dim = test_for_success_create_from_ons["matrix_dim"]
         expected_ndarray = numpy.array(test_for_success_create_from_ons["ndarray"])
 
         for expected_index in range(len(expected_eigen_values)):
@@ -101,7 +96,6 @@ class TestObservable:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -183,13 +177,11 @@ class TestObservable:
         eigen_values = observable.eigen_values
         eigen_states = observable.eigen_states
         matrix = observable.matrix
-        matrix_dim = observable.matrix_dim
         ndarray = observable.ndarray
 
         expected_eigen_values = test_for_success_observable_combine["eigen_values"]
         expected_eigen_states = test_for_success_observable_combine["eigen_states"]
         expected_matrix = numpy.array(test_for_success_observable_combine["matrix"])
-        expected_matrix_dim = test_for_success_observable_combine["matrix_dim"]
         expected_ndarray = numpy.array(test_for_success_observable_combine["ndarray"])
 
         for expected_index in range(len(expected_eigen_values)):
@@ -206,7 +198,6 @@ class TestObservable:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)
@@ -224,7 +215,6 @@ class TestObservable:
         eigen_values = observable.eigen_values
         eigen_states = observable.eigen_states
         matrix = observable.matrix
-        matrix_dim = observable.matrix_dim
         ndarray = observable.ndarray
 
         expected_eigen_values = test_for_success_observable_multiple_combine[
@@ -236,7 +226,6 @@ class TestObservable:
         expected_matrix = numpy.array(
             test_for_success_observable_multiple_combine["matrix"]
         )
-        expected_matrix_dim = test_for_success_observable_multiple_combine["matrix_dim"]
         expected_ndarray = numpy.array(
             test_for_success_observable_multiple_combine["ndarray"]
         )
@@ -255,7 +244,6 @@ class TestObservable:
 
             assert is_passed
 
-        assert matrix_dim == expected_matrix_dim
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
         assert allclose(matrix.shape, expected_matrix.shape)

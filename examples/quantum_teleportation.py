@@ -26,10 +26,6 @@ input_qubit = PureQubits([alpha, beta])
 print("##### 初期の入力状態 #####")
 print()
 
-print("### Matrix表示 ###")
-print(input_qubit.projection_matrix)
-print()
-
 print("### Dirac表記表示 ###")
 input_qubit.dirac_notation()
 print()

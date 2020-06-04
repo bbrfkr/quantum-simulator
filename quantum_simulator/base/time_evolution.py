@@ -24,7 +24,6 @@ class TimeEvolution:
     Attributes:
         ndarray: ndarray形式のユニタリ変換
         matrix: 行列形式のユニタリ変換
-        matrix_dim: ユニタリ変換の行列の次元
     """
 
     def __init__(self, unitary_array: list):
@@ -41,17 +40,18 @@ class TimeEvolution:
 
         # 行列表現とndarray表現の導出
         matrix, ndarray = resolve_arrays(tmp_array)
-        matrix_dim = matrix.shape[0]
+        del tmp_array
+
         # ユニタリ性のチェック
-        hermite_matrix = np.dot(matrix, np.conj(matrix.T))
-        if not allclose(hermite_matrix, np.identity(matrix_dim)):
+        hermite_matrix = np.matmul(matrix, np.conj(matrix.T))
+        if not allclose(hermite_matrix, np.identity(matrix.shape[0])):
             message = "[ERROR]: 与えられたリストはユニタリ変換ではありません"
             raise InitializeError(message)
+        del hermite_matrix
 
         # 初期化
         self.ndarray = ndarray
         self.matrix = matrix
-        self.matrix_dim = matrix_dim
 
     def __str__(self):
         """
@@ -78,12 +78,12 @@ class TimeEvolution:
         Returns:
             Qubits: 変換後のQubits
         """
-        if self.matrix_dim != qubits.matrix_dim:
+        if self.matrix.shape[0] != qubits.matrix.shape[0]:
             message = "[ERROR]: 変換対象のQubit数が不正です"
             raise IncompatibleDimensionError(message)
 
-        transformed_matrix = np.dot(
-            np.dot(self.matrix, qubits.matrix), np.conj(self.matrix.T)
+        transformed_matrix = np.matmul(
+            np.matmul(self.matrix, qubits.matrix), np.conj(self.matrix.T)
         )
 
         return Qubits(transformed_matrix)
@@ -126,6 +126,7 @@ def create_from_onb(
     for index in range(len_pre_ons - 1):
         matrix = np.add(matrix, elements_matrices[index])
 
+    del elements_matrices
     return TimeEvolution(matrix)
 
 
@@ -142,19 +143,17 @@ def combine(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolu
     """
     # 各ユニタリ行列を標準基底からの基底変換とみなして、ONBを抽出する
     matrix_0 = evolution_0.matrix
-    matrix_0_dim = evolution_0.matrix_dim
     onb_0 = OrthogonalSystem(
         [
             PureQubits(list(np.conj(np.conj(matrix_0)[:, index])))
-            for index in range(matrix_0_dim)
+            for index in range(matrix_0.shape[0])
         ]
     )
     matrix_1 = evolution_1.matrix
-    matrix_1_dim = evolution_1.matrix_dim
     onb_1 = OrthogonalSystem(
         [
             PureQubits(list(np.conj(np.conj(matrix_1)[:, index])))
-            for index in range(matrix_1_dim)
+            for index in range(matrix_1.shape[0])
         ]
     )
 
@@ -162,15 +161,17 @@ def combine(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolu
     post_onb = combine_ons(onb_0, onb_1)
 
     # 合成系における変換前の基底である標準基底を求める
-    identity = np.identity(matrix_0_dim * matrix_1_dim)
+    identity = np.identity(matrix_0.shape[0] * matrix_1.shape[0])
     pre_onb = OrthogonalSystem(
         [
             PureQubits(list(identity[:, index]))
-            for index in range(matrix_0_dim * matrix_1_dim)
+            for index in range(matrix_0.shape[0] * matrix_1.shape[0])
         ]
     )
 
     new_evolution = create_from_onb(pre_onb, post_onb)
+
+    del pre_onb, post_onb, identity, onb_0, onb_1, matrix_0, matrix_1
     return new_evolution
 
 

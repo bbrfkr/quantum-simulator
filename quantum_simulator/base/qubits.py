@@ -36,7 +36,6 @@ class Qubits:
         eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
         ndarray (np.array): ndarray形式のQubits
         matrix (np.array): 行列形式のQubits
-        matrix_dim (int): Qubitsの行列の次元
         qubit_count (int): Qubitsに内包されているQubitの数
     """
 
@@ -53,6 +52,7 @@ class Qubits:
 
         # 行列表現とndarray表現を導出
         matrix, ndarray = resolve_arrays(tmp_array)
+        del tmp_array
 
         # 固有値と固有ベクトルを導出
         tmp_eigen_values, eigen_states = resolve_eigen(matrix)
@@ -63,14 +63,12 @@ class Qubits:
             raise InitializeError(message)
 
         eigen_values = np.real(tmp_eigen_values)
+        del tmp_eigen_values
 
         # 固有値全体が確率分布に対応できるかチェック
         if not is_probabilities(eigen_values):
             message = "[ERROR]: リストから導出された固有値群は確率分布に対応しません"
             raise InitializeError(message)
-
-        # 行列の次元を導出
-        matrix_dim = matrix.shape[0]
 
         # Qubitの個数を導出
         qubit_count = int(len(ndarray.shape) / 2)
@@ -80,8 +78,12 @@ class Qubits:
         self.eigen_states = eigen_states
         self.ndarray = ndarray
         self.matrix = matrix
-        self.matrix_dim = matrix_dim
         self.qubit_count = qubit_count
+        del eigen_values
+        del eigen_states
+        del ndarray
+        del matrix
+        del qubit_count
 
     def __str__(self):
         """
@@ -240,7 +242,7 @@ def generalize(pure_qubits: PureQubits) -> Qubits:
     Returns:
         Qubits: 一般化後の純粋状態
     """
-    density_array = pure_qubits.projection
+    density_array = np.outer(pure_qubits.vector, np.conj(pure_qubits.vector))
     return Qubits(density_array)
 
 
@@ -299,6 +301,8 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
         density_matrix = np.add(density_matrix, added_matrix)
 
     qubits = Qubits(density_matrix)
+
+    del density_matrix
     return qubits
 
 
@@ -353,6 +357,8 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
     axis2 = target_qubits.qubit_count + target_particle
     reduced_array = np.trace(reduced_array, axis1=axis1, axis2=axis2)
 
+    del target_qubits
+    del target_particle
     return Qubits(reduced_array)
 
 
@@ -386,6 +392,10 @@ def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
 
     # 新しい状態の生成
     new_qubits = convex_combination(probabilities, generalized_eigen_states)
+
+    del qubits_0
+    del qubits_1
+    del generalized_eigen_states
     return new_qubits
 
 

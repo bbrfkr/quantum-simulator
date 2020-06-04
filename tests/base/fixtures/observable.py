@@ -15,7 +15,6 @@ from quantum_simulator.base.qubits import Qubits
             "eigen_values": [1.0, -1.0],
             "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
-            "matrix_dim": 2,
             "ndarray": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
         },
         # 2粒子Qubitに対する観測量(行列形式)
@@ -39,7 +38,6 @@ from quantum_simulator.base.qubits import Qubits
                 [0j, 0j, 3.0 + 0j, 0j],
                 [0j, 0j, 0j, -4.0 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[1.0 + 0j, 0j], [0j, 0j]], [[0j, -2.0 + 0j], [0j, 0j]]],
                 [[[0j, 0j], [3.0 + 0j, 0j]], [[0j, 0j], [0j, -4.0 + 0j]]],
@@ -64,7 +62,6 @@ from quantum_simulator.base.qubits import Qubits
                 [0j, 0j, 3.0 + 0j, 0j],
                 [0j, 0j, 0j, -4.0 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[1.0 + 0j, 0j], [0j, 0j]], [[0j, -2.0 + 0j], [0j, 0j]]],
                 [[[0j, 0j], [3.0 + 0j, 0j]], [[0j, 0j], [0j, -4.0 + 0j]]],
@@ -91,7 +88,6 @@ from quantum_simulator.base.qubits import Qubits
                 [0j, 0j, 3.5 + 0j, -0.5 + 0j],
                 [0j, 0j, -0.5 + 0j, 3.5 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[1.5 + 0j, -0.5 + 0j], [0j, 0j]], [[-0.5 + 0j, 1.5 + 0j], [0j, 0j]]],
                 [[[0j, 0j], [3.5 + 0j, -0.5 + 0j]], [[0j, 0j], [-0.5 + 0j, 3.5 + 0j]]],
@@ -115,7 +111,6 @@ def test_for_success_observable_constructor(request):
             "eigen_values": [1.0, -1.0],
             "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
-            "matrix_dim": 2,
             "ndarray": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
         },
         # 2粒子Qubitに対する観測量(行列形式)
@@ -142,7 +137,6 @@ def test_for_success_observable_constructor(request):
                 [0j, 0j, 3.0 + 0j, 0j],
                 [0j, 0j, 0j, -4.0 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[1.0 + 0j, 0j], [0j, 0j]], [[0j, -2.0 + 0j], [0j, 0j]]],
                 [[[0j, 0j], [3.0 + 0j, 0j]], [[0j, 0j], [0j, -4.0 + 0j]]],
@@ -172,7 +166,6 @@ def test_for_success_observable_constructor(request):
                 [0j, 0j, 3.5 + 0j, -0.5 + 0j],
                 [0j, 0j, -0.5 + 0j, 3.5 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[1.5 + 0j, -0.5 + 0j], [0j, 0j]], [[-0.5 + 0j, 1.5 + 0j], [0j, 0j]]],
                 [[[0j, 0j], [3.5 + 0j, -0.5 + 0j]], [[0j, 0j], [-0.5 + 0j, 3.5 + 0j]]],
@@ -323,7 +316,6 @@ def test_for_success_observe(request):
                 [0j, 0j, -0.5 + 0j, -0.5 + 0j],
                 [0j, 0j, -0.5 + 0j, -0.5 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[0.5 + 0j, 0.5 + 0j], [0j, 0j]], [[0.5 + 0j, 0.5 + 0j], [0j, 0j]]],
                 [
@@ -348,7 +340,6 @@ def test_for_success_observe(request):
                 [0j, 0j, -1.5 + 0j, -0.5 + 0j],
                 [0j, 0j, -0.5 + 0j, -1.5 + 0j],
             ],
-            "matrix_dim": 4,
             "ndarray": [
                 [[[1.5 + 0j, 0.5 + 0j], [0j, 0j]], [[0.5 + 0j, 1.5 + 0j], [0j, 0j]]],
                 [
@@ -388,7 +379,6 @@ def test_for_success_observable_combine(request):
                 [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
                 [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
             ],
-            "matrix_dim": 8,
             "ndarray": [
                 [
                     [

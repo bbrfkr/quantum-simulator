@@ -171,13 +171,7 @@ def dict_for_test_pure_qubits__resolve_arrays(request):
 @pytest.fixture(
     params=[
         # 単一Qubit
-        {
-            "target": [1 + 0j, 0j],
-            "projection": [[1 + 0j, 0j], [0j, 0j]],
-            "projection_matrix": [[1 + 0j, 0j], [0j, 0j]],
-            "projection_matrix_dim": 2,
-            "dirac_notation": "(1+0j)|0> +\n0j|1>\n",
-        },
+        {"target": [1 + 0j, 0j], "dirac_notation": "(1+0j)|0> +\n0j|1>\n"},
         # 2粒子Qubit系
         {
             "target": [
@@ -186,23 +180,6 @@ def dict_for_test_pure_qubits__resolve_arrays(request):
                 sqrt(0.25) + 0j,
                 sqrt(0.25) + 0j,
             ],
-            "projection": [
-                [
-                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
-                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
-                ],
-                [
-                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
-                    [[0.25 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
-                ],
-            ],
-            "projection_matrix": [
-                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
-                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
-                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
-                [0.25 + 0j, 0.25 + 0j, 0.25 + 0j, 0.25 + 0j],
-            ],
-            "projection_matrix_dim": 4,
             "dirac_notation": "(0.5+0j)|00> +\n(0.5+0j)|01> +\n"
             "(0.5+0j)|10> +\n(0.5+0j)|11>\n",
         },
@@ -218,51 +195,6 @@ def dict_for_test_pure_qubits__resolve_arrays(request):
                 0j,
                 sqrt(0.25) + 0j,
             ],
-            "projection": [
-                [
-                    [
-                        [
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                        ],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                    ],
-                    [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                        ],
-                    ],
-                ],
-                [
-                    [
-                        [
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                        ],
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                    ],
-                    [
-                        [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
-                        [
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                            [[0.25 + 0j, 0j], [0j, 0.25 + 0j]],
-                        ],
-                    ],
-                ],
-            ],
-            "projection_matrix": [
-                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
-                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
-                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
-                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
-                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
-                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
-                [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
-                [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0.25 + 0j, 0j, 0j, 0.25 + 0j],
-            ],
-            "projection_matrix_dim": 8,
             "dirac_notation": "(0.5+0j)|000> +\n0j|001> +\n0j|010> +\n(0.5+0j)|011> +\n"
             "(0.5+0j)|100> +\n0j|101> +\n0j|110> +\n(0.5+0j)|111>\n",
         },

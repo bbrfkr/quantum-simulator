@@ -76,17 +76,6 @@ class TestPureQubits:
         __init__メソッドの正常系テスト
         """
         qubits = PureQubits(dict_for_test_pure_qubits_constructor["target"])
-        assert allclose(
-            qubits.projection, dict_for_test_pure_qubits_constructor["projection"]
-        )
-        assert allclose(
-            qubits.projection_matrix,
-            dict_for_test_pure_qubits_constructor["projection_matrix"],
-        )
-        assert (
-            qubits.projection_matrix_dim
-            == dict_for_test_pure_qubits_constructor["projection_matrix_dim"]
-        )
         with captured_stdout() as stdout:
             qubits.dirac_notation()
         assert (
@@ -112,9 +101,6 @@ class TestPureQubits:
         assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count
-        assert allclose(result.projection, expected_result.projection)
-        assert allclose(result.projection_matrix, expected_result.projection_matrix)
-        assert result.projection_matrix_dim == expected_result.projection_matrix_dim
 
     def test_for_success_multiple_combine(
         self, dict_for_test_pure_qubits_multiple_combine
@@ -131,9 +117,6 @@ class TestPureQubits:
         assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count
-        assert allclose(result.projection, expected_result.projection)
-        assert allclose(result.projection_matrix, expected_result.projection_matrix)
-        assert result.projection_matrix_dim == expected_result.projection_matrix_dim
 
     def test_for_success_inner(self, dict_for_test_valid_inner_input):
         """
