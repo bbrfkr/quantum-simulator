@@ -161,73 +161,15 @@ def dict_for_test_qubits_resolve_arrays(request):
         # 単一Qubit
         {
             "target": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
-            "eigen_values": [0.3 + 0j, 0.7 + 0j],
-            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
-        },
-        {
-            "target": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
-            "eigen_values": [(2 + sqrt(2)) / 4 + 0j, (2 - sqrt(2)) / 4 + 0j],
-            "eigen_states": [
-                [
-                    -(1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
-                    -(1 / sqrt(4 + 2 * sqrt(2))) + 0j,
-                ],
-                [
-                    -(1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
-                    -(1 / sqrt(4 - 2 * sqrt(2))) + 0j,
-                ],
-            ],
-        },
-        # 2粒子Qubit系
-        {
-            "target": [
-                [0.5 + 0j, 0j, 0.25 + 0j, 0.25 + 0j],
-                [0j, 0j, 0j, 0j],
-                [0.25 + 0j, 0j, 0.25 + 0j, 0j],
-                [0.25 + 0j, 0j, 0j, 0.25 + 0j],
-            ],
-            "eigen_values": [0.25, 0.75],
-            "eigen_states": [
-                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [sqrt(2 / 3) + 0j, 0j, sqrt(1 / 6) + 0j, sqrt(1 / 6) + 0j],
-            ],
-        },
-    ]
-)
-def dict_for_test_resolve_eigen(request):
-    """resolve_eigenメソッドテスト用のfixture"""
-    return request.param
-
-
-@pytest.fixture(
-    params=[
-        # 単一Qubit
-        {
-            "target": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
-            "eigen_values": [0.3 + 0j, 0.7 + 0j],
-            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
             "ndarray": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
             "qubit_count": 1,
-            "is_pure": False,
         },
         {
             "target": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
-            "eigen_values": [(2 + sqrt(2)) / 4 + 0j, (2 - sqrt(2)) / 4 + 0j],
-            "eigen_states": [
-                [
-                    -(1 + sqrt(2)) * (1 / sqrt(4 + 2 * sqrt(2))) + 0j,
-                    -(1 / sqrt(4 + 2 * sqrt(2))) + 0j,
-                ],
-                [
-                    -(1 - sqrt(2)) * (1 / sqrt(4 - 2 * sqrt(2))) + 0j,
-                    -(1 / sqrt(4 - 2 * sqrt(2))) + 0j,
-                ],
-            ],
             "matrix": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
             "ndarray": [[0.75 + 0j, 0.25 + 0j], [0.25 + 0j, 0.25 + 0j]],
             "qubit_count": 1,
-            "is_pure": False,
         },
         # 2粒子Qubit系
         {
@@ -236,11 +178,6 @@ def dict_for_test_resolve_eigen(request):
                 [0j, 0j, 0j, 0j],
                 [0.25 + 0j, 0j, 0.25 + 0j, 0j],
                 [0.25 + 0j, 0j, 0j, 0.25 + 0j],
-            ],
-            "eigen_values": [0.25, 0.75],
-            "eigen_states": [
-                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [sqrt(2 / 3) + 0j, 0j, sqrt(1 / 6) + 0j, sqrt(1 / 6) + 0j],
             ],
             "matrix": [
                 [0.5 + 0j, 0j, 0.25 + 0j, 0.25 + 0j],
@@ -256,7 +193,6 @@ def dict_for_test_resolve_eigen(request):
                 ],
             ],
             "qubit_count": 2,
-            "is_pure": False,
         },
         {
             "target": [
@@ -265,8 +201,6 @@ def dict_for_test_resolve_eigen(request):
                 [0j, 0j, 0j, 0j],
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
             ],
-            "eigen_values": [1.0],
-            "eigen_states": [[-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 [0j, 0j, 0j, 0j],
@@ -278,7 +212,6 @@ def dict_for_test_resolve_eigen(request):
                 [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": True,
         },
     ]
 )
@@ -292,27 +225,19 @@ def dict_for_test_qubits_constructor(request):
         # 単一Qubit
         {
             "target": PureQubits([1.0 + 0j, 0j]),
-            "eigen_values": [1.0],
-            "eigen_states": [[1.0 + 0j, 0j]],
             "matrix": [[1.0 + 0j, 0j], [0j, 0j]],
             "ndarray": [[1.0 + 0j, 0j], [0j, 0j]],
             "qubit_count": 1,
-            "is_pure": True,
         },
         {
             "target": PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
-            "eigen_values": [1.0],
-            "eigen_states": [[-sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
             "matrix": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
             "ndarray": [[0.5 + 0j, -0.5 + 0j], [-0.5 + 0j, 0.5 + 0j]],
             "qubit_count": 1,
-            "is_pure": True,
         },
         # 2粒子系
         {
             "target": PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
-            "eigen_values": [1.0],
-            "eigen_states": [[-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 [0j, 0j, 0j, 0j],
@@ -324,7 +249,6 @@ def dict_for_test_qubits_constructor(request):
                 [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": True,
         },
     ]
 )
@@ -378,12 +302,9 @@ def dict_for_test_specialize(request):
                 generalize(PureQubits([0j, 1.0 + 0j])),
                 Qubits([[0j, 0j], [0j, 1.0 + 0j]]),
             ],
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
             "ndarray": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
             "qubit_count": 1,
-            "is_pure": False,
         },
         {
             "probabilities": [0.5, 0.5],
@@ -398,8 +319,6 @@ def dict_for_test_specialize(request):
                     ]
                 ),
             ],
-            "eigen_values": [1.0],
-            "eigen_states": [[-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0.5 + 0j],
                 [0j, 0j, 0j, 0j],
@@ -411,7 +330,6 @@ def dict_for_test_specialize(request):
                 [[[0j, 0j], [0j, 0j]], [[0.5 + 0j, 0j], [0j, 0.5 + 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": True,
         },
     ]
 )
@@ -480,12 +398,9 @@ def not_match_count_probabilities_and_qubits_list(request):
             "ons": OrthogonalSystem(
                 [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
             ),
-            "eigen_values": [0.3, 0.7],
-            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
             "ndarray": [[0.3 + 0j, 0j], [0j, 0.7 + 0j]],
             "qubit_count": 1,
-            "is_pure": False,
         },
         {
             "probabilities": [0.25, 0.75],
@@ -495,15 +410,9 @@ def not_match_count_probabilities_and_qubits_list(request):
                     PureQubits([-sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
                 ]
             ),
-            "eigen_values": [0.25, 0.75],
-            "eigen_states": [
-                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-            ],
             "matrix": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],
             "ndarray": [[0.5 + 0j, -0.25 + 0j], [-0.25 + 0j, 0.5 + 0j]],
             "qubit_count": 1,
-            "is_pure": False,
         },
     ]
 )
@@ -519,8 +428,6 @@ def dict_for_test_create_from_ons(request):
                 generalize(PureQubits([1.0 + 0j, 0j])),
                 generalize(PureQubits([0j, 1.0 + 0j])),
             ],
-            "eigen_values": [1.0],
-            "eigen_states": [[0j, 1.0 + 0j, 0j, 0j]],
             "matrix": [
                 [0j, 0j, 0j, 0j],
                 [0j, 1.0 + 0j, 0j, 0j],
@@ -532,7 +439,6 @@ def dict_for_test_create_from_ons(request):
                 [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": True,
         },
         {
             "qubits_list": [
@@ -545,11 +451,6 @@ def dict_for_test_create_from_ons(request):
                         [0.25 + 0j, 0j, 0j, 0.25 + 0j],
                     ]
                 ),
-            ],
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [
-                [-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
-                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
             ],
             "matrix": [
                 [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
@@ -584,7 +485,6 @@ def dict_for_test_create_from_ons(request):
                 ],
             ],
             "qubit_count": 3,
-            "is_pure": False,
         },
     ]
 )
@@ -604,8 +504,6 @@ def dict_for_test_qubits_combine(request):
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 1,
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [[1.0 + 0j, 0j, 0j, 0j], [0j, 1.0 + 0j, 0j, 0j]],
             "matrix": [
                 [0.5 + 0j, 0j, 0j, 0j],
                 [0j, 0.5 + 0j, 0j, 0j],
@@ -617,7 +515,6 @@ def dict_for_test_qubits_combine(request):
                 [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": False,
         },
         {
             "qubits": combine(
@@ -628,8 +525,6 @@ def dict_for_test_qubits_combine(request):
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 0,
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [[0j, 0j, 1.0 + 0j, 0j], [0j, 0j, 0j, 1.0 + 0j]],
             "matrix": [
                 [0j, 0j, 0j, 0j],
                 [0j, 0j, 0j, 0j],
@@ -641,7 +536,6 @@ def dict_for_test_qubits_combine(request):
                 [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0.5 + 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": False,
         },
         {
             "qubits": combine(
@@ -652,8 +546,6 @@ def dict_for_test_qubits_combine(request):
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ),
             "target_particle": 2,
-            "eigen_values": [1.0],
-            "eigen_states": [[0j, 1.0 + 0j, 0j, 0j]],
             "matrix": [
                 [0j, 0j, 0j, 0j],
                 [0j, 1.0 + 0j, 0j, 0j],
@@ -665,7 +557,6 @@ def dict_for_test_qubits_combine(request):
                 [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": True,
         },
     ]
 )
@@ -711,11 +602,6 @@ def invalid_reduction(request):
                 generalize(PureQubits([0j, 1.0 + 0j])),
                 Qubits([[0.5 + 0j, 0j], [0j, 0.5 + 0j]]),
             ],
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [
-                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
-                [0j, 0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j],
-            ],
             "matrix": [
                 [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
                 [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
@@ -749,7 +635,6 @@ def invalid_reduction(request):
                 ],
             ],
             "qubit_count": 3,
-            "is_pure": False,
         },
         {
             "qubits_list": [
@@ -762,11 +647,6 @@ def invalid_reduction(request):
                         [0.25 + 0j, 0j, 0j, 0.25 + 0j],
                     ]
                 ),
-            ],
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [
-                [-sqrt(0.5) + 0j, 0j, 0j, -sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
-                [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
             ],
             "matrix": [
                 [0.25 + 0j, 0j, 0j, 0.25 + 0j, 0j, 0j, 0j, 0j],
@@ -801,7 +681,6 @@ def invalid_reduction(request):
                 ],
             ],
             "qubit_count": 3,
-            "is_pure": False,
         },
     ]
 )
@@ -821,12 +700,9 @@ def dict_for_test_qubits_multiple_combine(request):
                 ]
             ),
             "target_particles": [0, 1],
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
             "ndarray": [[0.5 + 0j, 0j], [0j, 0.5 + 0j]],
             "qubit_count": 1,
-            "is_pure": False,
         },
         {
             "qubits": multiple_combine(
@@ -837,8 +713,6 @@ def dict_for_test_qubits_multiple_combine(request):
                 ]
             ),
             "target_particles": [0],
-            "eigen_values": [0.5, 0.5],
-            "eigen_states": [[0j, 0j, 1.0 + 0j, 0j], [0j, 0j, 0j, 1.0 + 0j]],
             "matrix": [
                 [0j, 0j, 0j, 0j],
                 [0j, 0j, 0j, 0j],
@@ -850,7 +724,6 @@ def dict_for_test_qubits_multiple_combine(request):
                 [[[0j, 0j], [0.5 + 0j, 0j]], [[0j, 0j], [0j, 0.5 + 0j]]],
             ],
             "qubit_count": 2,
-            "is_pure": False,
         },
         {
             "qubits": multiple_combine(
@@ -861,12 +734,9 @@ def dict_for_test_qubits_multiple_combine(request):
                 ]
             ),
             "target_particles": [0, 2],
-            "eigen_values": [1.0],
-            "eigen_states": [[0j, 1.0 + 0j]],
             "matrix": [[0j, 0j], [0j, 1.0 + 0j]],
             "ndarray": [[0j, 0j], [0j, 1.0 + 0j]],
             "qubit_count": 1,
-            "is_pure": True,
         },
     ]
 )

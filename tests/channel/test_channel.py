@@ -28,8 +28,6 @@ class TestChannel:
 
         state = channel.states[0]
         expected_state = dict_for_test["state"]
-        print(state.qubits.matrix)
-        print(expected_state.qubits.matrix)
         assert allclose(state.qubits.matrix, expected_state.qubits.matrix)
 
     @patch.multiple(Channel, __abstractmethods__=set())

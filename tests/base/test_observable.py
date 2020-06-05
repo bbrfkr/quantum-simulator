@@ -33,31 +33,13 @@ class TestObservable:
         target = test_for_success_observable_constructor["target"]
         observable = Observable(target)
 
-        eigen_values = observable.eigen_values
-        eigen_states = observable.eigen_states
         matrix = observable.matrix
         ndarray = observable.ndarray
 
-        expected_eigen_values = test_for_success_observable_constructor["eigen_values"]
-        expected_eigen_states = test_for_success_observable_constructor["eigen_states"]
         expected_matrix = numpy.array(test_for_success_observable_constructor["matrix"])
         expected_ndarray = numpy.array(
             test_for_success_observable_constructor["ndarray"]
         )
-
-        for expected_index in range(len(expected_eigen_values)):
-            is_passed = False
-
-            for result_index in range(len(eigen_values)):
-                if allclose(
-                    expected_eigen_values[expected_index], eigen_values[result_index]
-                ) and allclose(
-                    expected_eigen_states[expected_index],
-                    eigen_states[result_index].vector,
-                ):
-                    is_passed = True
-
-            assert is_passed
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -72,29 +54,11 @@ class TestObservable:
         ons = test_for_success_create_from_ons["ons"]
         observable = create_from_ons(observed_values, ons)
 
-        eigen_values = observable.eigen_values
-        eigen_states = observable.eigen_states
         matrix = observable.matrix
         ndarray = observable.ndarray
 
-        expected_eigen_values = test_for_success_create_from_ons["eigen_values"]
-        expected_eigen_states = test_for_success_create_from_ons["eigen_states"]
         expected_matrix = numpy.array(test_for_success_create_from_ons["matrix"])
         expected_ndarray = numpy.array(test_for_success_create_from_ons["ndarray"])
-
-        for expected_index in range(len(expected_eigen_values)):
-            is_passed = False
-
-            for result_index in range(len(eigen_values)):
-                if allclose(
-                    expected_eigen_values[expected_index], eigen_values[result_index]
-                ) and allclose(
-                    expected_eigen_states[expected_index],
-                    eigen_states[result_index].vector,
-                ):
-                    is_passed = True
-
-            assert is_passed
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -174,29 +138,11 @@ class TestObservable:
         target_1 = test_for_success_observable_combine["target_1"]
         observable = combine(target_0, target_1)
 
-        eigen_values = observable.eigen_values
-        eigen_states = observable.eigen_states
         matrix = observable.matrix
         ndarray = observable.ndarray
 
-        expected_eigen_values = test_for_success_observable_combine["eigen_values"]
-        expected_eigen_states = test_for_success_observable_combine["eigen_states"]
         expected_matrix = numpy.array(test_for_success_observable_combine["matrix"])
         expected_ndarray = numpy.array(test_for_success_observable_combine["ndarray"])
-
-        for expected_index in range(len(expected_eigen_values)):
-            is_passed = False
-
-            for result_index in range(len(eigen_values)):
-                if allclose(
-                    expected_eigen_values[expected_index], eigen_values[result_index]
-                ) and allclose(
-                    expected_eigen_states[expected_index],
-                    eigen_states[result_index].vector,
-                ):
-                    is_passed = True
-
-            assert is_passed
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
@@ -212,37 +158,14 @@ class TestObservable:
         target_list = test_for_success_observable_multiple_combine["target_list"]
         observable = multiple_combine(target_list)
 
-        eigen_values = observable.eigen_values
-        eigen_states = observable.eigen_states
         matrix = observable.matrix
         ndarray = observable.ndarray
-
-        expected_eigen_values = test_for_success_observable_multiple_combine[
-            "eigen_values"
-        ]
-        expected_eigen_states = test_for_success_observable_multiple_combine[
-            "eigen_states"
-        ]
         expected_matrix = numpy.array(
             test_for_success_observable_multiple_combine["matrix"]
         )
         expected_ndarray = numpy.array(
             test_for_success_observable_multiple_combine["ndarray"]
         )
-
-        for expected_index in range(len(expected_eigen_values)):
-            is_passed = False
-
-            for result_index in range(len(eigen_values)):
-                if allclose(
-                    expected_eigen_values[expected_index], eigen_values[result_index]
-                ) and allclose(
-                    expected_eigen_states[expected_index],
-                    eigen_states[result_index].vector,
-                ):
-                    is_passed = True
-
-            assert is_passed
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
