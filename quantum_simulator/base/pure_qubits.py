@@ -13,7 +13,7 @@ from quantum_simulator.base.error import (
     QubitCountNotMatchError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import is_pow2, isclose
+from quantum_simulator.base.utils import allclose, is_pow2
 
 np = xp_factory()  # typing: numpy
 
@@ -145,8 +145,8 @@ def _is_pure_qubits(array: numpy.array) -> bool:
                 return False
 
     # 長さが1、つまり確率が1になるかをチェック
-    norm = np.linalg.norm(array)
-    if not isclose(norm, 1.0):
+    norm = np.sqrt(np.sum(np.abs(array) ** 2))
+    if not allclose(norm, 1.0):
         return False
 
     return True
@@ -301,7 +301,7 @@ def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
     Returns:
         bool: qubits_0とqubits_1の内積が0か否か
     """
-    return isclose(inner(qubits_0, qubits_1), 0.0)
+    return allclose(inner(qubits_0, qubits_1), 0.0)
 
 
 def all_orthogonal(qubits_list: List[PureQubits]) -> bool:

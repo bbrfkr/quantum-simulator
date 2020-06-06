@@ -204,7 +204,7 @@ def compose(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolu
     Returns:
         TimeEvolution: 合成後のユニタリ変換
     """
-    composed_matrix = np.matmul(evolution_1.matrix, evolution_0.matrix)
+    composed_matrix = np.dot(evolution_1.matrix, evolution_0.matrix)
     return TimeEvolution(composed_matrix)
 
 

@@ -1,6 +1,5 @@
 from math import sqrt
 
-import numpy
 import pytest
 
 from quantum_simulator.base.observable import Observable
@@ -13,6 +12,8 @@ from quantum_simulator.base.qubits import Qubits
         # 単一Qubitに対する観測量
         {
             "target": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
+            "eigen_values": [1.0, -1.0],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
             "ndarray": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
         },
@@ -23,6 +24,13 @@ from quantum_simulator.base.qubits import Qubits
                 [0j, -2.0 + 0j, 0j, 0j],
                 [0j, 0j, 3.0 + 0j, 0j],
                 [0j, 0j, 0j, -4.0 + 0j],
+            ],
+            "eigen_values": [1.0, -2.0, 3.0, -4.0],
+            "eigen_states": [
+                [1.0 + 0j, 0j, 0j, 0j],
+                [0j, 1.0 + 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j],
+                [0j, 0j, 0j, 1.0 + 0j],
             ],
             "matrix": [
                 [1.0 + 0j, 0j, 0j, 0j],
@@ -40,6 +48,13 @@ from quantum_simulator.base.qubits import Qubits
             "target": [
                 [[[1.0 + 0j, 0j], [0j, 0j]], [[0j, -2.0 + 0j], [0j, 0j]]],
                 [[[0j, 0j], [3.0 + 0j, 0j]], [[0j, 0j], [0j, -4.0 + 0j]]],
+            ],
+            "eigen_values": [1.0, -2.0, 3.0, -4.0],
+            "eigen_states": [
+                [1.0 + 0j, 0j, 0j, 0j],
+                [0j, 1.0 + 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j],
+                [0j, 0j, 0j, 1.0 + 0j],
             ],
             "matrix": [
                 [1.0 + 0j, 0j, 0j, 0j],
@@ -59,6 +74,13 @@ from quantum_simulator.base.qubits import Qubits
                 [-0.5 + 0j, 1.5 + 0j, 0j, 0j],
                 [0j, 0j, 3.5 + 0j, -0.5 + 0j],
                 [0j, 0j, -0.5 + 0j, 3.5 + 0j],
+            ],
+            "eigen_values": [1.0, 2.0, 3.0, 4.0],
+            "eigen_states": [
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
             "matrix": [
                 [1.5 + 0j, -0.5 + 0j, 0j, 0j],
@@ -86,6 +108,8 @@ def test_for_success_observable_constructor(request):
             "ons": OrthogonalSystem(
                 [PureQubits([1.0 + 0j, 0j]), PureQubits([0j, 1.0 + 0j])]
             ),
+            "eigen_values": [1.0, -1.0],
+            "eigen_states": [[1.0 + 0j, 0j], [0j, 1.0 + 0j]],
             "matrix": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
             "ndarray": [[1.0 + 0j, 0j], [0j, -1.0 + 0j]],
         },
@@ -100,6 +124,13 @@ def test_for_success_observable_constructor(request):
                     PureQubits([0j, 0j, 0j, 1.0 + 0j]),
                 ]
             ),
+            "eigen_values": [1.0, -2.0, 3.0, -4.0],
+            "eigen_states": [
+                [1.0 + 0j, 0j, 0j, 0j],
+                [0j, 1.0 + 0j, 0j, 0j],
+                [0j, 0j, 1.0 + 0j, 0j],
+                [0j, 0j, 0j, 1.0 + 0j],
+            ],
             "matrix": [
                 [1.0 + 0j, 0j, 0j, 0j],
                 [0j, -2.0 + 0j, 0j, 0j],
@@ -122,6 +153,13 @@ def test_for_success_observable_constructor(request):
                     PureQubits([0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
                 ]
             ),
+            "eigen_values": [1.0, 2.0, 3.0, 4.0],
+            "eigen_states": [
+                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            ],
             "matrix": [
                 [1.5 + 0j, -0.5 + 0j, 0j, 0j],
                 [-0.5 + 0j, 1.5 + 0j, 0j, 0j],
@@ -187,8 +225,8 @@ def test_for_success_expected_value_for_pure(request):
         {
             "eigen_values": [2.0, 2.0],
             "eigen_states": [
-                numpy.array([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                numpy.array([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                PureQubits([sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
             ],
             "expected_eigen_values": [2.0],
             "expected_projections": [Observable([[1.0 + 0j, 0j], [0j, 1.0 + 0j]])],
@@ -197,10 +235,10 @@ def test_for_success_expected_value_for_pure(request):
         {
             "eigen_values": [2.0, 2.0, -1.0, 1.0],
             "eigen_states": [
-                numpy.array([1.0 + 0j, 0j, 0j, 0j]),
-                numpy.array([0j, 1.0 + 0j, 0j, 0j]),
-                numpy.array([0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-                numpy.array([0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
+                PureQubits([1.0 + 0j, 0j, 0j, 0j]),
+                PureQubits([0j, 1.0 + 0j, 0j, 0j]),
+                PureQubits([0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                PureQubits([0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j]),
             ],
             "expected_eigen_values": [2.0, -1.0, 1.0],
             "expected_projections": [
@@ -267,6 +305,11 @@ def test_for_success_observe(request):
         {
             "target_0": Observable([[1.0 + 0j, 0j], [0j, -1.0 + 0j]]),
             "target_1": Observable([[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]]),
+            "eigen_values": [1.0, -1.0],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            ],
             "matrix": [
                 [0.5 + 0j, 0.5 + 0j, 0j, 0j],
                 [0.5 + 0j, 0.5 + 0j, 0j, 0j],
@@ -284,6 +327,13 @@ def test_for_success_observe(request):
         {
             "target_0": Observable([[1.0 + 0j, 0j], [0j, -1.0 + 0j]]),
             "target_1": Observable([[1.5 + 0j, 0.5 + 0j], [0.5 + 0j, 1.5 + 0j]]),
+            "eigen_values": [2.0, -2.0, 1.0, -1.0],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
+                [0j, 0j, -sqrt(0.5) + 0j, sqrt(0.5) + 0j],
+            ],
             "matrix": [
                 [1.5 + 0j, 0.5 + 0j, 0j, 0j],
                 [0.5 + 0j, 1.5 + 0j, 0j, 0j],
@@ -313,6 +363,11 @@ def test_for_success_observable_combine(request):
                 Observable([[1.0 + 0j, 0j], [0j, 0j]]),
                 Observable([[1.0 + 0j, 0j], [0j, -1.0 + 0j]]),
                 Observable([[0.5 + 0j, 0.5 + 0j], [0.5 + 0j, 0.5 + 0j]]),
+            ],
+            "eigen_values": [1.0, -1.0],
+            "eigen_states": [
+                [sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j],
             ],
             "matrix": [
                 [0.5 + 0j, 0.5 + 0j, 0j, 0j, 0j, 0j, 0j, 0j],

@@ -2,7 +2,7 @@
 QPUのレジスタを表現するクラス群
 """
 
-from typing import List
+from typing import List, Optional
 
 
 class Registers:
@@ -19,11 +19,11 @@ class Registers:
         Args:
             count (int): 初期化するレジスタの数
         """
-        values = [0.0 for index in range(count)]  # type: List[float]
+        values = [None for index in range(count)]  # type: List[Optional[float]]
         self.count = count
         self.values = values
 
-    def get(self, index: int) -> float:
+    def get(self, index: int) -> Optional[float]:
         """
         指定された番号のレジスタに格納された値を取得する
 
@@ -31,7 +31,7 @@ class Registers:
             index (int): 取得したいレジスタの番号
 
         Returns:
-            float: レジスタに格納された値
+            Optional[float]: レジスタに格納された値
         """
         return self.values[index]
 
