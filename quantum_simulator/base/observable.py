@@ -206,7 +206,9 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
     ]
 
     # 観測結果のランダムサンプリング
-    observed_result = choices(observed_results, observed_probabilities)[0]
+    observed_index = choices(range(len(observed_probabilities)), observed_probabilities)[0]
+    observed_probability = observed_probabilities[observed_index]
+    observed_result = observed_results[observed_index]
     del observed_results_tuple, observed_results, observed_probabilities
 
     # 観測によるQubitの収束 - 射影の適用と規格化
@@ -215,9 +217,7 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
 
     # 射影行列を両側から挟み、かつトレース値で割って規格化する
     post_matrix = projection_matrix @ target_matrix @ projection_matrix
-    observed_probability = np.trace(post_matrix)
     normalized_post_matrix = (1.0 / observed_probability) * post_matrix
-
     del projection_matrix, target_matrix, post_matrix, observed_probability
 
     # 観測値の返却
