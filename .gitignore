@@ -4,5 +4,7 @@ __pycache__
 
 .vscode
 .venv
+cpu.stats
+gpu.stats
 
 *.egg-info
