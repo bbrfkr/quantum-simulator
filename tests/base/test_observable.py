@@ -61,7 +61,7 @@ class TestObservable:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_success_create_from_ons(self, test_for_success_create_from_ons):
@@ -98,7 +98,7 @@ class TestObservable:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_success_expected_value(self, test_for_success_expected_value_for_pure):
@@ -200,7 +200,7 @@ class TestObservable:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_success_observable_multiple_combine(
@@ -246,5 +246,5 @@ class TestObservable:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)

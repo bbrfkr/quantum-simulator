@@ -143,7 +143,7 @@ def specialize(qubits: Qubits) -> PureQubits:
         raise NotPureError(message)
 
     del qubits
-    return PureQubits(eigen_states[pure_index])
+    return PureQubits(eigen_states[:, pure_index])
 
 
 def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) -> Qubits:

@@ -29,7 +29,9 @@ def allclose(a: numpy.array, b: numpy.array) -> bool:
     Return:
         bool: 比較結果
     """
-    return np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
+    return np.all(around(a - b) == 0.0 + 0j)
+    
+    #np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
 
 
 def isclose(a: complex, b: complex) -> bool:

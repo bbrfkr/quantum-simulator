@@ -33,7 +33,7 @@ class TestTimeEvolution:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_invalid_unitary(self, dict_for_test_invalid_unitary):
@@ -70,7 +70,7 @@ class TestTimeEvolution:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_combine(self, dict_for_test_unitary_combine):
@@ -89,7 +89,7 @@ class TestTimeEvolution:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_multiple_combine(self, dict_for_test_unitary_multiple_combine):
@@ -109,7 +109,7 @@ class TestTimeEvolution:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_compose(self, dict_for_test_unitary_compose):
@@ -128,7 +128,7 @@ class TestTimeEvolution:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)
 
     def test_for_multiple_compose(self, dict_for_test_unitary_multiple_compose):
@@ -148,5 +148,5 @@ class TestTimeEvolution:
 
         assert allclose(matrix, expected_matrix)
         assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
+        assert matrix.shape == expected_matrix.shape
         assert allclose(ndarray.shape, expected_ndarray.shape)

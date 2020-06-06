@@ -3,7 +3,7 @@
 """
 
 import random
-
+import math
 from quantum_simulator.base import qubits, time_evolution
 from quantum_simulator.base.error import InitializeError
 from quantum_simulator.base.utils import allclose, count_bits
@@ -134,13 +134,13 @@ class Initializer:
         registers = mid_state.registers
 
         init_evolution = None
-        if allclose((input & 0b1), registers.get(0)):
+        if math.isclose((input & 0b1), registers.get(0)):
             init_evolution = IDENT_EVOLUTION
         else:
             init_evolution = NOT_GATE
 
         for index in range(qubit_count - 1):
-            if allclose(((input >> index + 1) & 0b1), registers.get(index + 1)):
+            if math.isclose(((input >> index + 1) & 0b1), registers.get(index + 1)):
                 init_evolution = time_evolution.combine(IDENT_EVOLUTION, init_evolution)
             else:
                 init_evolution = time_evolution.combine(NOT_GATE, init_evolution)

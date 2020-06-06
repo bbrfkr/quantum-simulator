@@ -18,7 +18,7 @@ from quantum_simulator.base.qubits import (
     is_qubits_dim
 )
 from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose, is_real, count_bits
+from quantum_simulator.base.utils import allclose, is_real, count_bits, isclose
 
 np = xp_factory()  # typing: numpy
 
@@ -76,8 +76,8 @@ class Observable:  # pylint: disable=too-few-public-methods
             message = "[ERROR]: 観測量の対象空間にQubit群が存在しません"
             raise NotMatchDimensionError(message)
 
-        # 期待値の導出
-        expected_value = np.trace(self.matrix @ target.matrix)
+        # 期待値の導出 trAρ
+        expected_value = np.einsum('ij,ji', self.matrix, target.matrix)
 
         del target
         return expected_value
@@ -123,8 +123,8 @@ def _resolve_observed_results(
         # まず固有値が一致しているインデックスリストから
         # 最後のインデックスを取得し、対応する1次元射影行列を取り出す
         last_index = degrated_indice_list[index_0][-1]
-        projection = np.outer(
-            eigen_states[last_index], np.conj(eigen_states[last_index])
+        projection = np.einsum('i,j', 
+            eigen_states[:, last_index], np.conj(eigen_states[:, last_index])
         )
 
         for index_1 in range(len(degrated_indice_list[index_0]) - 1):
@@ -133,9 +133,9 @@ def _resolve_observed_results(
             target_index = degrated_indice_list[index_0][index_1]
             projection = np.add(
                 projection,
-                np.outer(
-                    eigen_states[target_index],
-                    np.conj(eigen_states[target_index]),
+                np.einsum('i,j',
+                    eigen_states[:, target_index],
+                    np.conj(eigen_states[:, target_index]),
                 ),
             )
 
