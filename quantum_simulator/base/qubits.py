@@ -6,6 +6,7 @@ from typing import List, Tuple
 
 import numpy
 
+from quantum_simulator.base import pure_qubits
 from quantum_simulator.base.error import (
     InitializeError,
     InvalidProbabilitiesError,
@@ -16,11 +17,11 @@ from quantum_simulator.base.error import (
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import (
+    allclose,
     around,
     is_pow2,
     is_probabilities,
     is_real,
-    isclose,
 )
 
 np = xp_factory()  # typing: numpy
@@ -31,6 +32,8 @@ class Qubits:
     一般的に混合状態で複数粒子のQubit系クラス
 
     Attributes:
+        eigen_values (List[float]): Qubitsの固有値のリスト
+        eigen_states (List[PureQubits]): Qubitsの固有状態のリスト
         ndarray (np.array): ndarray形式のQubits
         matrix (np.array): 行列形式のQubits
         qubit_count (int): Qubitsに内包されているQubitの数
@@ -52,26 +55,32 @@ class Qubits:
         del tmp_array
 
         # 固有値と固有ベクトルを導出
-        tmp_eigen_values = numpy.linalg.eigvalsh(matrix)
+        tmp_eigen_values, eigen_states = resolve_eigen(matrix)
 
         # 固有値の虚部の有無をチェックし、floatに変換
         if not is_real(tmp_eigen_values):
             message = "[ERROR]: 与えられたリストには虚数の固有値が存在します"
             raise InitializeError(message)
 
+        eigen_values = np.real(tmp_eigen_values)
+        del tmp_eigen_values
+
         # 固有値全体が確率分布に対応できるかチェック
-        if not is_probabilities(np.real(tmp_eigen_values)):
+        if not is_probabilities(eigen_values):
             message = "[ERROR]: リストから導出された固有値群は確率分布に対応しません"
             raise InitializeError(message)
-        del tmp_eigen_values
 
         # Qubitの個数を導出
         qubit_count = int(len(ndarray.shape) / 2)
 
         # 初期化
+        self.eigen_values = eigen_values
+        self.eigen_states = eigen_states
         self.ndarray = ndarray
         self.matrix = matrix
         self.qubit_count = qubit_count
+        del eigen_values
+        del eigen_states
         del ndarray
         del matrix
         del qubit_count
@@ -90,6 +99,19 @@ class Qubits:
         Qubitsのndarray表現を出力
         """
         print(self.ndarray)
+
+    def is_pure(self) -> bool:
+        """
+        Qubitsが純粋状態であるか判定する
+
+        Returns:
+            bool: 判定結果
+        """
+        for eigen_value in self.eigen_values:
+            if allclose(eigen_value, 1.0 + 0j):
+                return True
+
+        return False
 
 
 def is_qubits_dim(array: numpy.array) -> bool:
@@ -176,6 +198,40 @@ def resolve_arrays(array: numpy.array) -> Tuple[numpy.array, numpy.array]:
     return (matrix, ndarray)
 
 
+def resolve_eigen(matrix: numpy.array) -> Tuple[List[complex], List[PureQubits]]:
+    """
+    行列形式のnp.arrayを仮定し、その固有値・固有状態を導出する
+
+    Args:
+        matrix (np.array): 計算対象のnp.array
+
+    Returns:
+        Tuple[List[complex], List[PureQubits]]: 導かれた固有値および固有状態のリストの組
+    """
+
+    # 固有値・固有状態の導出
+    tmp_eigen_values, tmp_eigen_states = np.linalg.eigh(matrix)
+
+    # 実際に呼び出し元に渡すオブジェクトの整理
+    eigen_values = []  # type: List[complex]
+    eigen_states = []  # type: List[PureQubits]
+    for index in range(len(tmp_eigen_values)):
+
+        # 固有値は0または1に近い値は丸める
+        rounded_value = around(tmp_eigen_values[index])
+        if rounded_value == 1.0 + 0j:
+            eigen_values.append(1.0 + 0j)
+        elif rounded_value == 0.0 + 0j:
+            eigen_values.append(0.0 + 0j)
+        else:
+            eigen_values.append(complex(tmp_eigen_values[index]))
+
+        # 固有ベクトルはPureQubits化
+        eigen_states.append(PureQubits(tmp_eigen_states[:, index]))
+
+    return (eigen_values, eigen_states)
+
+
 def generalize(pure_qubits: PureQubits) -> Qubits:
     """
     与えられたPureQubitsオブジェクトに対応するQubitsオブジェクトを返す
@@ -201,18 +257,16 @@ def specialize(qubits: Qubits) -> PureQubits:
         PureQubits: 特殊化後の純粋状態
     """
     # Qubitsが純粋状態かチェックし、対応するインデックスを取り出す
-    eigen_values, eigen_vectors = numpy.linalg.eigh(qubits.matrix)
-
     pure_index = -1
-    for index in range(np.size(eigen_values)):
-        if isclose(eigen_values[index], 1.0 + 0j):
+    for index in range(len(qubits.eigen_values)):
+        if allclose(qubits.eigen_values[index], 1.0 + 0j):
             pure_index = index
 
     if pure_index == -1:
         message = "[ERROR]: 対象のQubitsは純粋状態ではありません"
         raise NotPureError(message)
 
-    return PureQubits(eigen_vectors[:, pure_index])
+    return qubits.eigen_states[pure_index]
 
 
 def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) -> Qubits:
@@ -228,7 +282,7 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
     """
 
     # 確率リストが確率分布であるかチェック
-    if not is_probabilities(np.array(probabilities)):
+    if not is_probabilities(probabilities):
         message = "[ERROR]: 与えられた確率リストは確率分布ではありません"
         raise InvalidProbabilitiesError(message)
 
@@ -269,8 +323,6 @@ def create_from_ons(probabilities: List[float], ons: OrthogonalSystem) -> Qubits
     ]
 
     qubits = convex_combination(probabilities, generalized_pure_qubits_list)
-
-    del generalized_pure_qubits_list
     return qubits
 
 
@@ -321,19 +373,30 @@ def combine(qubits_0: Qubits, qubits_1: Qubits) -> Qubits:
     Returns:
         Qubits: 結合結果としてのQubits
     """
+    eigen_values_0 = qubits_0.eigen_values
+    eigen_states_0 = qubits_0.eigen_states
+    eigen_values_1 = qubits_1.eigen_values
+    eigen_states_1 = qubits_1.eigen_states
+
+    # 確率分布の結合
+    probabilities = [
+        value_0 * value_1 for value_0 in eigen_values_0 for value_1 in eigen_values_1
+    ]
+
+    # 固有状態の結合
+    generalized_eigen_states = [
+        generalize(pure_qubits.combine(state_0, state_1))
+        for state_0 in eigen_states_0
+        for state_1 in eigen_states_1
+    ]
+
     # 新しい状態の生成
-    qubits_0_matrix = list(qubits_0.matrix)
-    new_matrix = np.vstack(
-        tuple(
-            [
-                np.hstack(
-                    tuple([element * qubits_1.matrix for element in qubits_0_row])
-                )
-                for qubits_0_row in qubits_0_matrix
-            ]
-        )
-    )
-    return Qubits(new_matrix)
+    new_qubits = convex_combination(probabilities, generalized_eigen_states)
+
+    del qubits_0
+    del qubits_1
+    del generalized_eigen_states
+    return new_qubits
 
 
 def multiple_combine(qubits_list: List[Qubits]) -> Qubits:

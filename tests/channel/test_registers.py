@@ -25,7 +25,7 @@ class TestRegisters:
             if index == dict_for_test["insert_index"]:
                 assert registers.values[index] == dict_for_test["value"]
             else:
-                assert registers.values[index] == 0.0
+                assert registers.values[index] is None
 
     def test_for_registers_get(self, dict_for_test_success_registers_get):
         """getメソッドの正常系テスト"""

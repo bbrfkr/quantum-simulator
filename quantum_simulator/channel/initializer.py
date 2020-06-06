@@ -6,7 +6,7 @@ import random
 
 from quantum_simulator.base import qubits, time_evolution
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.utils import count_bits, isclose
+from quantum_simulator.base.utils import allclose, count_bits
 from quantum_simulator.channel.registers import Registers
 from quantum_simulator.channel.state import State
 from quantum_simulator.channel.transformer import TimeEvolveTransformer
@@ -134,13 +134,13 @@ class Initializer:
         registers = mid_state.registers
 
         init_evolution = None
-        if isclose((input & 0b1), registers.get(0)):
+        if allclose((input & 0b1), registers.get(0)):
             init_evolution = IDENT_EVOLUTION
         else:
             init_evolution = NOT_GATE
 
         for index in range(qubit_count - 1):
-            if isclose(((input >> index + 1) & 0b1), registers.get(index + 1)):
+            if allclose(((input >> index + 1) & 0b1), registers.get(index + 1)):
                 init_evolution = time_evolution.combine(IDENT_EVOLUTION, init_evolution)
             else:
                 init_evolution = time_evolution.combine(NOT_GATE, init_evolution)

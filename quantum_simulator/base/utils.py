@@ -2,7 +2,6 @@
 baseパッケージ内で利用するユーティリティメソッド群
 """
 
-import math
 from typing import List
 
 import numpy
@@ -30,24 +29,6 @@ def allclose(a: numpy.array, b: numpy.array) -> bool:
         bool: 比較結果
     """
     return np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
-
-
-def isclose(a: complex, b: complex) -> bool:
-    """
-    math.iscloseの本モジュール用ラッパー。２つの複素数を近似的に比較し、一致していたらTrueを返す。
-
-    Args:
-        a (complex): 比較対象1つ目
-        b (complex): 比較対象2つ目
-
-    Return:
-        bool: 比較結果
-    """
-    return math.isclose(
-        a.imag, b.imag, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE
-    ) and math.isclose(
-        a.real, b.real, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE
-    )
 
 
 def around(a: numpy.array) -> numpy.array:
@@ -116,12 +97,15 @@ def is_probabilities(target_list: List[float]) -> bool:
     Return:
         bool: 判定結果
     """
-    target_array = np.array(target_list)
-    if np.any(around(target_array) < 0):
-        return False
+    total = 0.0
+    for element in target_list:
+        if element < 0.0:
+            return False
+        total += element
+        if np.around(total, AROUNDED_DECIMALS) > 1.0:
+            return False
 
-    total = float(np.sum(target_array))
-    if not isclose(total, 1.0):
+    if np.around(total, AROUNDED_DECIMALS) < 1.0:
         return False
 
     return True
