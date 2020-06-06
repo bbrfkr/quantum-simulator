@@ -19,10 +19,6 @@ from quantum_simulator.base.time_evolution import TimeEvolution
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
             ],
-            "ndarray": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-            ],
         },
         {
             "target": [
@@ -36,16 +32,6 @@ from quantum_simulator.base.time_evolution import TimeEvolution
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
                 [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-            ],
-            "ndarray": [
-                [
-                    [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-                    [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-                ],
-                [
-                    [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-                    [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]],
-                ],
             ],
         },
     ]
@@ -134,10 +120,6 @@ def test_for_success_operate(request):
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
             ],
-            "ndarray": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-            ],
         },
         {
             "onb_0": OrthogonalSystem(
@@ -150,10 +132,6 @@ def test_for_success_operate(request):
                 ]
             ),
             "matrix": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-            ],
-            "ndarray": [
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
@@ -177,16 +155,6 @@ def dict_for_test_create_from_onb(request):
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
                 [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-            ],
-            "ndarray": [
-                [
-                    [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-                    [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-                ],
-                [
-                    [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-                    [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]],
-                ],
             ],
         },
     ]
@@ -219,52 +187,6 @@ def dict_for_test_unitary_combine(request):
                 [0j, 0j, 0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j],
                 [0j, 0j, 0j, 0j, sqrt(0.5) + 0j, -sqrt(0.5) + 0j, 0j, 0j],
             ],
-            "ndarray": [
-                [
-                    [
-                        [
-                            [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-                            [[0j, 0j], [0j, 0j]],
-                        ],
-                        [
-                            [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]],
-                            [[0j, 0j], [0j, 0j]],
-                        ],
-                    ],
-                    [
-                        [
-                            [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-                            [[0j, 0j], [0j, 0j]],
-                        ],
-                        [
-                            [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-                            [[0j, 0j], [0j, 0j]],
-                        ],
-                    ],
-                ],
-                [
-                    [
-                        [
-                            [[0j, 0j], [0j, 0j]],
-                            [[0j, 0j], [sqrt(0.5) + 0j, sqrt(0.5) + 0j]],
-                        ],
-                        [
-                            [[0j, 0j], [0j, 0j]],
-                            [[0j, 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]],
-                        ],
-                    ],
-                    [
-                        [
-                            [[0j, 0j], [0j, 0j]],
-                            [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [0j, 0j]],
-                        ],
-                        [
-                            [[0j, 0j], [0j, 0j]],
-                            [[sqrt(0.5) + 0j, -sqrt(0.5) + 0j], [0j, 0j]],
-                        ],
-                    ],
-                ],
-            ],
         },
     ]
 )
@@ -281,10 +203,6 @@ def dict_for_test_unitary_multiple_combine(request):
                 [[sqrt(0.5) + 0j, sqrt(0.5) + 0j], [sqrt(0.5) + 0j, -sqrt(0.5) + 0j]]
             ),
             "matrix": [
-                [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-                [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-            ],
-            "ndarray": [
                 [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, sqrt(0.5) + 0j],
             ],
@@ -310,10 +228,6 @@ def dict_for_test_unitary_compose(request):
                 ),
             ],
             "matrix": [
-                [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-                [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-            ],
-            "ndarray": [
                 [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
                 [-sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
             ],
