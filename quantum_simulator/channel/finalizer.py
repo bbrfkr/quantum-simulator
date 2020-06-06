@@ -49,7 +49,7 @@ class Finalizer:
         observable = Observable(np.diag(diagonal_values))
 
         # 計算結果の観測とターゲットビット抽出
-        raw_outcome = around(observe(observable, state.qubits)[0]).astype(int)
+        raw_outcome = np.real(around(observe(observable, state.qubits)[0])).astype(int)
 
         outcome = 0
         loop_index = 0
