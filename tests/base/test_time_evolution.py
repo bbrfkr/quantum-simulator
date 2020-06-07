@@ -12,8 +12,6 @@ from quantum_simulator.base.time_evolution import (
 )
 from quantum_simulator.base.utils import allclose
 
-np = numpy
-
 
 class TestTimeEvolution:
     """TimeEvolutionクラスと付随するメソッドのテスト"""
