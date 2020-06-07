@@ -151,21 +151,17 @@
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choices</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="k">as</span> <span class="nn">pure_qubits</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">InitializeError</span><span class="p">,</span>
     <span class="n">NotMatchCountError</span><span class="p">,</span>
     <span class="n">NotMatchDimensionError</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">PureQubits</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Qubits</span><span class="p">,</span>
-    <span class="n">is_qubits_dim</span><span class="p">,</span>
-    <span class="n">resolve_arrays</span><span class="p">,</span>
-    <span class="n">resolve_eigen</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="n">Qubits</span><span class="p">,</span> <span class="n">is_qubits_dim</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.switch_cupy</span> <span class="kn">import</span> <span class="n">xp_factory</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">is_real</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">count_bits</span><span class="p">,</span> <span class="n">is_real_close</span>
 
 <span class="n">np</span> <span class="o">=</span> <span class="n">xp_factory</span><span class="p">()</span>  <span class="c1"># typing: numpy</span>
 
@@ -175,45 +171,28 @@
 <span class="sd">    観測量のクラス</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        eigen_values (List[float]): 観測量の固有値のリスト</span>
-<span class="sd">        eigen_states (List[PureQubits]): 観測量の固有状態のリスト</span>
-<span class="sd">        ndarray (np.array): ndarray形式の観測量</span>
 <span class="sd">        matrix (np.array): 行列形式の観測量</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hermite_array</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hermite_matrix</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            hermite_array (list): 観測量の候補となるリスト。行列形式とndarray形式を許容する</span>
+<span class="sd">            hermite_matrix (list): 観測量の候補となるリスト。行列形式とndarray形式を許容する</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">tmp_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hermite_array</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hermite_matrix</span><span class="p">)</span>
 
         <span class="c1"># 次元のチェック</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_qubits_dim</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_qubits_dim</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはQubit系上の作用素ではありません&quot;</span>
-
-        <span class="c1"># 行列表現とndarray表現を導出</span>
-        <span class="n">matrix</span><span class="p">,</span> <span class="n">ndarray</span> <span class="o">=</span> <span class="n">resolve_arrays</span><span class="p">(</span><span class="n">tmp_array</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">tmp_array</span>
-
-        <span class="c1"># 固有値、固有状態の導出</span>
-        <span class="n">tmp_eigen_values</span><span class="p">,</span> <span class="n">eigen_states</span> <span class="o">=</span> <span class="n">resolve_eigen</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-
-        <span class="c1"># 固有値の虚部の有無をチェックし、floatに変換</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_real</span><span class="p">(</span><span class="n">tmp_eigen_values</span><span class="p">):</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストには虚数の固有値が存在します&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="n">eigen_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">tmp_eigen_values</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">tmp_eigen_values</span>
+        <span class="c1"># エルミート性のチェック</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)):</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはエルミート行列ではありません&quot;</span>
+            <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="c1"># 初期化</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">eigen_values</span> <span class="o">=</span> <span class="n">eigen_values</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">eigen_states</span> <span class="o">=</span> <span class="n">eigen_states</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span>
-        <span class="k">del</span> <span class="n">eigen_states</span><span class="p">,</span> <span class="n">eigen_values</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">matrix</span>
 
 <div class="viewcode-block" id="Observable.__str__"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -223,12 +202,6 @@
 <span class="sd">            str: 観測量の行列表現の文字列</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Observable.print_ndarray"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable.print_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">print_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        観測量のndarray表現を出力する</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Observable.expected_value"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.Observable.expected_value">[docs]</a>    <span class="k">def</span> <span class="nf">expected_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -242,26 +215,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># 観測量の対象空間内にQubitが存在するかチェック</span>
-        <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigen_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubit_count</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">!=</span> <span class="p">(</span><span class="n">count_bits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 観測量の対象空間にQubit群が存在しません&quot;</span>
             <span class="k">raise</span> <span class="n">NotMatchDimensionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="c1"># 期待値の導出</span>
-        <span class="n">expected_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">matrix</span><span class="p">))</span>
+        <span class="c1"># 期待値の導出 trAρ</span>
+        <span class="n">expected_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ij,ji&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
 
         <span class="k">del</span> <span class="n">target</span>
         <span class="k">return</span> <span class="n">expected_value</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_resolve_observed_results</span><span class="p">(</span>
-    <span class="n">eigen_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">eigen_states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">]</span>
+    <span class="n">eigen_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">eigen_states</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Observable</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられた固有値リストと固有状態リストから、取りうる観測結果 (固有値と射影の組) を返す</span>
+<span class="sd">    与えられた固有値リストと固有ベクトルリストから、取りうる観測結果 (固有値と射影の組) を返す</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        eigen_values (List[float]): 固有値リスト</span>
-<span class="sd">        eigen_states: (List[PureQubits]): 固有状態のリスト</span>
+<span class="sd">        eigen_states: (List[np.array]): 固有ベクトルのリスト</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[List[float], List[Observable]]: 固有値と射影観測量の組</span>
@@ -278,7 +251,9 @@
             <span class="n">degrated_indice</span> <span class="o">=</span> <span class="p">[</span><span class="n">index_0</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">index_1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">)</span> <span class="o">-</span> <span class="n">index_0</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">allclose</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">],</span> <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">is_real_close</span><span class="p">(</span>
+                    <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">],</span> <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="p">):</span>
                     <span class="c1"># 固有値が近似的に等しいときは、全ての固有値を一致させ、インデックスに登録</span>
                     <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">]</span>
                     <span class="n">degrated_indice</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index_0</span> <span class="o">+</span> <span class="n">index_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -293,8 +268,8 @@
         <span class="c1"># まず固有値が一致しているインデックスリストから</span>
         <span class="c1"># 最後のインデックスを取得し、対応する1次元射影行列を取り出す</span>
         <span class="n">last_index</span> <span class="o">=</span> <span class="n">degrated_indice_list</span><span class="p">[</span><span class="n">index_0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
-            <span class="n">eigen_states</span><span class="p">[</span><span class="n">last_index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">eigen_states</span><span class="p">[</span><span class="n">last_index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+            <span class="s2">&quot;i,j&quot;</span><span class="p">,</span> <span class="n">eigen_states</span><span class="p">[:,</span> <span class="n">last_index</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">eigen_states</span><span class="p">[:,</span> <span class="n">last_index</span><span class="p">])</span>
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">index_1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">degrated_indice_list</span><span class="p">[</span><span class="n">index_0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
@@ -303,9 +278,10 @@
             <span class="n">target_index</span> <span class="o">=</span> <span class="n">degrated_indice_list</span><span class="p">[</span><span class="n">index_0</span><span class="p">][</span><span class="n">index_1</span><span class="p">]</span>
             <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
                 <span class="n">projection</span><span class="p">,</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
-                    <span class="n">eigen_states</span><span class="p">[</span><span class="n">target_index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">eigen_states</span><span class="p">[</span><span class="n">target_index</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+                    <span class="s2">&quot;i,j&quot;</span><span class="p">,</span>
+                    <span class="n">eigen_states</span><span class="p">[:,</span> <span class="n">target_index</span><span class="p">],</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">eigen_states</span><span class="p">[:,</span> <span class="n">target_index</span><span class="p">]),</span>
                 <span class="p">),</span>
             <span class="p">)</span>
 
@@ -362,9 +338,8 @@
 
     <span class="c1"># 観測の取りうる結果のリストを作る</span>
     <span class="c1"># まず近似的に一意な固有値リストと射影行列のリストを導出</span>
-    <span class="n">observed_results_tuple</span> <span class="o">=</span> <span class="n">_resolve_observed_results</span><span class="p">(</span>
-        <span class="n">observable</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">,</span> <span class="n">observable</span><span class="o">.</span><span class="n">eigen_states</span>
-    <span class="p">)</span>
+    <span class="n">eigen_values</span><span class="p">,</span> <span class="n">eigen_states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">observable</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+    <span class="n">observed_results_tuple</span> <span class="o">=</span> <span class="n">_resolve_observed_results</span><span class="p">(</span><span class="n">eigen_values</span><span class="p">,</span> <span class="n">eigen_states</span><span class="p">)</span>
     <span class="n">observed_results</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="n">observed_results_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">],</span> <span class="n">observed_results_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">index</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observed_results_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -377,7 +352,11 @@
     <span class="p">]</span>
 
     <span class="c1"># 観測結果のランダムサンプリング</span>
-    <span class="n">observed_result</span> <span class="o">=</span> <span class="n">choices</span><span class="p">(</span><span class="n">observed_results</span><span class="p">,</span> <span class="n">observed_probabilities</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">observed_index</span> <span class="o">=</span> <span class="n">choices</span><span class="p">(</span>
+        <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observed_probabilities</span><span class="p">)),</span> <span class="n">observed_probabilities</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">observed_probability</span> <span class="o">=</span> <span class="n">observed_probabilities</span><span class="p">[</span><span class="n">observed_index</span><span class="p">]</span>
+    <span class="n">observed_result</span> <span class="o">=</span> <span class="n">observed_results</span><span class="p">[</span><span class="n">observed_index</span><span class="p">]</span>
     <span class="k">del</span> <span class="n">observed_results_tuple</span><span class="p">,</span> <span class="n">observed_results</span><span class="p">,</span> <span class="n">observed_probabilities</span>
 
     <span class="c1"># 観測によるQubitの収束 - 射影の適用と規格化</span>
@@ -385,12 +364,8 @@
     <span class="n">target_matrix</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">matrix</span>
 
     <span class="c1"># 射影行列を両側から挟み、かつトレース値で割って規格化する</span>
-    <span class="n">post_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">projection_matrix</span><span class="p">,</span> <span class="n">target_matrix</span><span class="p">),</span> <span class="n">projection_matrix</span>
-    <span class="p">)</span>
-    <span class="n">observed_probability</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">post_matrix</span><span class="p">)</span>
+    <span class="n">post_matrix</span> <span class="o">=</span> <span class="n">projection_matrix</span> <span class="o">@</span> <span class="n">target_matrix</span> <span class="o">@</span> <span class="n">projection_matrix</span>
     <span class="n">normalized_post_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">observed_probability</span><span class="p">)</span> <span class="o">*</span> <span class="n">post_matrix</span>
-
     <span class="k">del</span> <span class="n">projection_matrix</span><span class="p">,</span> <span class="n">target_matrix</span><span class="p">,</span> <span class="n">post_matrix</span><span class="p">,</span> <span class="n">observed_probability</span>
 
     <span class="c1"># 観測値の返却</span>
@@ -409,33 +384,21 @@
 <span class="sd">        Observable: 結合後の観測量</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># 固有値および固有状態を結合したリストを作成</span>
-    <span class="n">new_elements</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">index_0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observable_0</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">)):</span>
-        <span class="k">for</span> <span class="n">index_1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">observable_1</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">)):</span>
-            <span class="n">combined_pure_qubits</span> <span class="o">=</span> <span class="n">pure_qubits</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span>
-                <span class="n">observable_0</span><span class="o">.</span><span class="n">eigen_states</span><span class="p">[</span><span class="n">index_0</span><span class="p">],</span> <span class="n">observable_1</span><span class="o">.</span><span class="n">eigen_states</span><span class="p">[</span><span class="n">index_1</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="n">combined_projection_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
-                <span class="n">combined_pure_qubits</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">combined_pure_qubits</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
-            <span class="p">)</span>
-
-            <span class="n">new_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="n">observable_0</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_0</span><span class="p">]</span>
-                    <span class="o">*</span> <span class="n">observable_1</span><span class="o">.</span><span class="n">eigen_values</span><span class="p">[</span><span class="n">index_1</span><span class="p">]</span>
+    <span class="c1"># 新しい観測量の生成</span>
+    <span class="n">observable_0_matrix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">observable_0</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
+    <span class="n">new_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+        <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                    <span class="nb">tuple</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">element</span> <span class="o">*</span> <span class="n">observable_1</span><span class="o">.</span><span class="n">matrix</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">observable_0_row</span><span class="p">]</span>
+                    <span class="p">)</span>
                 <span class="p">)</span>
-                <span class="o">*</span> <span class="n">combined_projection_matrix</span>
-            <span class="p">)</span>
-
-    <span class="n">new_hermite_array</span> <span class="o">=</span> <span class="n">new_elements</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_elements</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">new_hermite_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_hermite_array</span><span class="p">,</span> <span class="n">new_elements</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
-
-    <span class="n">new_observable</span> <span class="o">=</span> <span class="n">Observable</span><span class="p">(</span><span class="n">new_hermite_array</span><span class="p">)</span>
-
-    <span class="k">del</span> <span class="n">new_elements</span><span class="p">,</span> <span class="n">new_hermite_array</span>
-    <span class="k">return</span> <span class="n">new_observable</span></div>
+                <span class="k">for</span> <span class="n">observable_0_row</span> <span class="ow">in</span> <span class="n">observable_0_matrix</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Observable</span><span class="p">(</span><span class="n">new_matrix</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="multiple_combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.observable.multiple_combine">[docs]</a><span class="k">def</span> <span class="nf">multiple_combine</span><span class="p">(</span><span class="n">observables</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Observable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Observable</span><span class="p">:</span>
