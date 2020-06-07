@@ -3,7 +3,7 @@
 """
 
 from math import ceil
-from typing import List, Tuple
+from typing import List
 
 import numpy
 
@@ -13,7 +13,7 @@ from quantum_simulator.base.error import (
     QubitCountNotMatchError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose, is_pow2
+from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose
 
 np = xp_factory()  # typing: numpy
 
@@ -23,7 +23,6 @@ class PureQubits:
     純粋状態で一般的に複数粒子のQubit系クラス
 
     Attributes:
-        ndarray (np.array): ndarray形式のPureQubits
         vector (np.array): ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
     """
@@ -35,23 +34,17 @@ class PureQubits:
         """
 
         # Qubit系であるかチェック
-        tmp_array = np.array(amplitudes, dtype=complex)
-        if not _is_pure_qubits(tmp_array):
+        vector = np.array(amplitudes)
+        if not _is_pure_qubits(vector):
             message = "[ERROR]: 与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
 
-        # 各Qubit表現形式の導出
-        vector, ndarray = _resolve_arrays(tmp_array)
-        del tmp_array
-
         # 内包するQubit数を計算
-        qubit_count = _count_qubits(ndarray)
+        qubit_count = count_bits(vector.size) - 1
 
         # 初期化
-        self.ndarray = ndarray
         self.vector = vector
         self.qubit_count = qubit_count
-        del ndarray
         del vector
         del qubit_count
 
@@ -63,12 +56,6 @@ class PureQubits:
             str: PureQubitsのベクトル表現
         """
         return str(self.vector)
-
-    def print_ndarray(self):
-        """
-        PureQubitsのndarray表現を出力
-        """
-        print(self.ndarray)
 
     def dirac_notation(self):
         """
@@ -137,64 +124,12 @@ def _is_pure_qubits(array: numpy.array) -> bool:
     if not is_pow2(size):
         return False
 
-    # ndarray形式の場合は、shapeの構成要素が全て2であるか
-    # つまり、次元がQubitのテンソル積空間の次元かをチェック
-    if len(array.shape) > 1:
-        for sub_dim in array.shape:
-            if sub_dim != 2:
-                return False
-
     # 長さが1、つまり確率が1になるかをチェック
     norm = np.sqrt(np.sum(np.abs(array) ** 2))
     if not allclose(norm, 1.0):
         return False
 
     return True
-
-
-def _count_qubits(pure_qubits: numpy.array) -> int:
-    """
-    与えられたnp.arrayがQubit系であることを仮定し、内包するQubit数を返す。
-
-    Args:
-        pure_qubits (np.array): PureQubitsの候補となるnp.array
-
-    Returns:
-        int: 内包するQubit数
-    """
-    size = pure_qubits.size
-    count = 0
-    while True:
-        size /= 2
-        count += 1
-        if size % 2 == 1:
-            break
-    return count
-
-
-def _resolve_arrays(pure_qubits: numpy.array) -> Tuple[numpy.array, numpy.array]:
-    """
-    与えられたnp.arrayがQubit系であることを仮定し、そのベクトル表現とndarray表現の組を返す。
-
-    Args:
-        pure_qubits (np.array): PureQubitsの候補となるnp.array
-
-    Returns:
-        Tuple[np.array, np.array]: pure_qubitsに対応する、ベクトル表現とndarray表現
-    """
-    vector = None
-    ndarray = None
-
-    if len(pure_qubits.shape) == 1:
-        vector = pure_qubits
-        qubit_count = _count_qubits(pure_qubits)
-        ndarray_shape = tuple([2 for i in range(qubit_count)])
-        ndarray = pure_qubits.reshape(ndarray_shape)
-    else:
-        ndarray = pure_qubits
-        vector = pure_qubits.reshape(pure_qubits.size)
-
-    return (vector, ndarray)
 
 
 def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
@@ -208,10 +143,13 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     Returns:
         PureQubits: 結合後のPureQubits。qubits_0 ⊗ qubits_1
     """
-    new_ndarray = np.tensordot(qubits_0.ndarray, qubits_1.ndarray, 0)
-    new_qubits = PureQubits(new_ndarray)
+    qubits_0_vector = list(qubits_0.vector)
+    new_vector = np.hstack(
+        tuple([element * qubits_1.vector for element in qubits_0_vector])
+    )
+    new_qubits = PureQubits(new_vector)
 
-    del new_ndarray
+    del new_vector, qubits_0_vector, qubits_0, qubits_1
     return new_qubits
 
 
@@ -233,7 +171,7 @@ def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalS
     ]
     new_ons = OrthogonalSystem(new_qubits)
 
-    del new_qubits
+    del new_qubits, ons_0, ons_1
     return new_ons
 
 
@@ -287,7 +225,7 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
         message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
         raise QubitCountNotMatchError(message)
 
-    return np.inner(np.conj(qubits_0.vector), qubits_1.vector)
+    return np.vdot(qubits_0.vector, qubits_1.vector)
 
 
 def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
@@ -301,7 +239,7 @@ def is_orthogonal(qubits_0: PureQubits, qubits_1: PureQubits) -> bool:
     Returns:
         bool: qubits_0とqubits_1の内積が0か否か
     """
-    return allclose(inner(qubits_0, qubits_1), 0.0)
+    return isclose(inner(qubits_0, qubits_1), 0.0 + 0j)
 
 
 def all_orthogonal(qubits_list: List[PureQubits]) -> bool:

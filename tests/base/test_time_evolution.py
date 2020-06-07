@@ -12,8 +12,6 @@ from quantum_simulator.base.time_evolution import (
 )
 from quantum_simulator.base.utils import allclose
 
-np = numpy
-
 
 class TestTimeEvolution:
     """TimeEvolutionクラスと付随するメソッドのテスト"""
@@ -26,15 +24,10 @@ class TestTimeEvolution:
         unitary = TimeEvolution(target)
 
         matrix = unitary.matrix
-        ndarray = unitary.ndarray
-
         expected_matrix = numpy.array(dict_for_test_unitary_constructor["matrix"])
-        expected_ndarray = numpy.array(dict_for_test_unitary_constructor["ndarray"])
 
         assert allclose(matrix, expected_matrix)
-        assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
-        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert matrix.shape == expected_matrix.shape
 
     def test_invalid_unitary(self, dict_for_test_invalid_unitary):
         """異なるQubit数の粒子系に対する観測基底をもつユニタリ変換のテスト"""
@@ -63,15 +56,11 @@ class TestTimeEvolution:
         unitary = create_from_onb(onb_0, onb_1)
 
         matrix = unitary.matrix
-        ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_create_from_onb["matrix"])
-        expected_ndarray = numpy.array(dict_for_test_create_from_onb["ndarray"])
 
         assert allclose(matrix, expected_matrix)
-        assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
-        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert matrix.shape == expected_matrix.shape
 
     def test_for_combine(self, dict_for_test_unitary_combine):
         """
@@ -82,15 +71,11 @@ class TestTimeEvolution:
         unitary = combine(unitary_0, unitary_1)
 
         matrix = unitary.matrix
-        ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_combine["matrix"])
-        expected_ndarray = numpy.array(dict_for_test_unitary_combine["ndarray"])
 
         assert allclose(matrix, expected_matrix)
-        assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
-        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert matrix.shape == expected_matrix.shape
 
     def test_for_multiple_combine(self, dict_for_test_unitary_multiple_combine):
         """
@@ -100,17 +85,11 @@ class TestTimeEvolution:
         unitary = multiple_combine(unitary_list)
 
         matrix = unitary.matrix
-        ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_multiple_combine["matrix"])
-        expected_ndarray = numpy.array(
-            dict_for_test_unitary_multiple_combine["ndarray"]
-        )
 
         assert allclose(matrix, expected_matrix)
-        assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
-        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert matrix.shape == expected_matrix.shape
 
     def test_for_compose(self, dict_for_test_unitary_compose):
         """
@@ -121,15 +100,11 @@ class TestTimeEvolution:
         unitary = compose(unitary_0, unitary_1)
 
         matrix = unitary.matrix
-        ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_compose["matrix"])
-        expected_ndarray = numpy.array(dict_for_test_unitary_compose["ndarray"])
 
         assert allclose(matrix, expected_matrix)
-        assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
-        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert matrix.shape == expected_matrix.shape
 
     def test_for_multiple_compose(self, dict_for_test_unitary_multiple_compose):
         """
@@ -139,14 +114,8 @@ class TestTimeEvolution:
         unitary = multiple_compose(unitary_list)
 
         matrix = unitary.matrix
-        ndarray = unitary.ndarray
 
         expected_matrix = numpy.array(dict_for_test_unitary_multiple_compose["matrix"])
-        expected_ndarray = numpy.array(
-            dict_for_test_unitary_multiple_compose["ndarray"]
-        )
 
         assert allclose(matrix, expected_matrix)
-        assert allclose(ndarray, expected_ndarray)
-        assert allclose(matrix.shape, expected_matrix.shape)
-        assert allclose(ndarray.shape, expected_ndarray.shape)
+        assert matrix.shape == expected_matrix.shape

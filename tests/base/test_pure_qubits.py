@@ -11,9 +11,7 @@ from quantum_simulator.base.error import (
 from quantum_simulator.base.pure_qubits import (
     OrthogonalSystem,
     PureQubits,
-    _count_qubits,
     _is_pure_qubits,
-    _resolve_arrays,
     all_orthogonal,
     combine,
     combine_ons,
@@ -22,10 +20,7 @@ from quantum_simulator.base.pure_qubits import (
     multiple_combine,
     multiple_combine_ons,
 )
-from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose
-
-np = xp_factory()  # typing: numpy
 
 
 class TestPureQubits:
@@ -40,36 +35,14 @@ class TestPureQubits:
     def test_for_success__is_pure_qubits(self, valid_pure_qubits_amp):
         """_is_pure_qubitsメソッドの正常系テスト"""
 
-        array = np.array(valid_pure_qubits_amp)
+        array = numpy.array(valid_pure_qubits_amp)
         assert _is_pure_qubits(array)
 
     def test_for_failure__is_pure_qubits(self, invalid_pure_qubits_amp):
         """_is_pure_qubitsメソッドの異常系テスト"""
 
-        array = np.array(invalid_pure_qubits_amp)
+        array = numpy.array(invalid_pure_qubits_amp)
         assert not _is_pure_qubits(array)
-
-    def test_for_success__count_qubits(self, dict_for_test__count_qubits):
-        """_count_qubitsメソッドの正常系テスト"""
-
-        array = np.array(dict_for_test__count_qubits["array"])
-        assert _count_qubits(array) == dict_for_test__count_qubits["count"]
-
-    def test_for_success__resolve_arrays(
-        self, dict_for_test_pure_qubits__resolve_arrays
-    ):
-        """_resolve_arraysメソッドの正常系テスト"""
-
-        target = np.array(dict_for_test_pure_qubits__resolve_arrays["target"])
-        vector, ndarray = _resolve_arrays(target)
-        expected_vector = np.array(dict_for_test_pure_qubits__resolve_arrays["vector"])
-        expected_ndarray = np.array(
-            dict_for_test_pure_qubits__resolve_arrays["ndarray"]
-        )
-        assert numpy.all(vector == expected_vector)
-        assert vector.shape == expected_vector.shape
-        assert numpy.all(ndarray == expected_ndarray)
-        assert ndarray.shape == expected_ndarray.shape
 
     def test_for_success_constructor(self, dict_for_test_pure_qubits_constructor):
         """
@@ -98,7 +71,6 @@ class TestPureQubits:
         result = combine(target_0, target_1)
 
         expected_result = PureQubits(dict_for_test_pure_qubits_combine["result"])
-        assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count
 
@@ -114,7 +86,6 @@ class TestPureQubits:
         expected_result = PureQubits(
             dict_for_test_pure_qubits_multiple_combine["result"]
         )
-        assert allclose(result.ndarray, expected_result.ndarray)
         assert allclose(result.vector, expected_result.vector)
         assert result.qubit_count == expected_result.qubit_count
 

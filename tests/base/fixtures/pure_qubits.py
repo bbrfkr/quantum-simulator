@@ -67,110 +67,6 @@ def invalid_pure_qubits_amp(request):
 @pytest.fixture(
     params=[
         # 単一Qubit
-        {"array": [1 + 0j, 0j], "count": 1},
-        # 複数Qubitsかつベクトル形式
-        {"array": [0j, 0j, 1 + 0j, 0j], "count": 2},
-        {
-            "array": [
-                sqrt(0.125) + 0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.125) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-            ],
-            "count": 3,
-        },
-        # 複数Qubitsかつndarray形式
-        {"array": [[0j, 1 + 0j], [0j, 0j]], "count": 2},
-        {
-            "array": [
-                [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-                [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
-            ],
-            "count": 3,
-        },
-    ]
-)
-def dict_for_test__count_qubits(request):
-    """_count_qubitsメソッドテスト用のfixture"""
-    return request.param
-
-
-@pytest.fixture(
-    params=[
-        # 単一Qubit
-        {"target": [1 + 0j, 0j], "vector": [1 + 0j, 0j], "ndarray": [1 + 0j, 0j]},
-        # 複数Qubitsかつベクトル形式
-        {
-            "target": [0j, 0j, 1 + 0j, 0j],
-            "vector": [0j, 0j, 1 + 0j, 0j],
-            "ndarray": [[0j, 0j], [1 + 0j, 0j]],
-        },
-        {
-            "target": [
-                sqrt(0.125) + 0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.125) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-            ],
-            "vector": [
-                sqrt(0.125) + 0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.125) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-            ],
-            "ndarray": [
-                [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-                [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
-            ],
-        },
-        # 複数Qubitsかつndarray形式
-        {
-            "target": [[0j, 1 + 0j], [0j, 0j]],
-            "vector": [0j, 1 + 0j, 0j, 0j],
-            "ndarray": [[0j, 1 + 0j], [0j, 0j]],
-        },
-        {
-            "target": [
-                [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-                [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
-            ],
-            "vector": [
-                sqrt(0.125) + 0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-                0j,
-                sqrt(0.125) + 0j,
-                0j,
-                sqrt(0.25) + 0j,
-            ],
-            "ndarray": [
-                [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-                [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
-            ],
-        },
-    ]
-)
-def dict_for_test_pure_qubits__resolve_arrays(request):
-    """_resolve_arraysメソッドテスト用のfixture"""
-    return request.param
-
-
-@pytest.fixture(
-    params=[
-        # 単一Qubit
         {"target": [1 + 0j, 0j], "dirac_notation": "(1+0j)|0> +\n0j|1>\n"},
         # 2粒子Qubit系
         {
@@ -201,7 +97,7 @@ def dict_for_test_pure_qubits__resolve_arrays(request):
     ]
 )
 def dict_for_test_pure_qubits_constructor(request):
-    """_resolve_arraysメソッドテスト用のfixture"""
+    """PureQubitsコンストラクタテスト用のfixture"""
     return request.param
 
 

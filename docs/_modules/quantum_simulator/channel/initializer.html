@@ -152,7 +152,7 @@
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base</span> <span class="kn">import</span> <span class="n">qubits</span><span class="p">,</span> <span class="n">time_evolution</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="n">InitializeError</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">count_bits</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">count_bits</span><span class="p">,</span> <span class="n">is_real_close</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.registers</span> <span class="kn">import</span> <span class="n">Registers</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.state</span> <span class="kn">import</span> <span class="n">State</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.transformer</span> <span class="kn">import</span> <span class="n">TimeEvolveTransformer</span>
@@ -267,7 +267,7 @@
             <span class="c1"># 時間発展の対象Qubit数とAllocatorの保持しているQubit数が</span>
             <span class="c1"># 一致しなかったら、エラー</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span>  <span class="c1"># type: TimeEvolution</span>
-            <span class="n">target_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">target_count</span> <span class="o">=</span> <span class="n">count_bits</span><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="n">qubit_count</span> <span class="o">!=</span> <span class="n">target_count</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません&quot;</span>
                 <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -280,13 +280,13 @@
         <span class="n">registers</span> <span class="o">=</span> <span class="n">mid_state</span><span class="o">.</span><span class="n">registers</span>
 
         <span class="n">init_evolution</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">allclose</span><span class="p">((</span><span class="nb">input</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">is_real_close</span><span class="p">((</span><span class="nb">input</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
             <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">IDENT_EVOLUTION</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">NOT_GATE</span>
 
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qubit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">allclose</span><span class="p">(((</span><span class="nb">input</span> <span class="o">&gt;&gt;</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">is_real_close</span><span class="p">(((</span><span class="nb">input</span> <span class="o">&gt;&gt;</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b1</span><span class="p">),</span> <span class="n">registers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
                 <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">IDENT_EVOLUTION</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">init_evolution</span> <span class="o">=</span> <span class="n">time_evolution</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">NOT_GATE</span><span class="p">,</span> <span class="n">init_evolution</span><span class="p">)</span>
