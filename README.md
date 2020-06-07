@@ -14,9 +14,10 @@ pip uninstall quantum-simulator
 ```
 
 ## cupyインテグレーション
-本コードはnumpy互換のGPU操作ライブラリであるcupyに対応しています。実行をnumpyではなく、cupyで行いたい場合はプログラム実行前に環境変数を以下のようにセットします。
+本コードはnumpy互換のGPU操作ライブラリであるcupyに対応しています。実行をnumpyではなく、cupyで行いたい場合はプログラム実行前に以下のようにします。
 
 ```
+pip install cupy-cuda<cupy version>
 export USE_CUPY=True
 ```
 
