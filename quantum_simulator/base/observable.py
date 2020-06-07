@@ -4,21 +4,18 @@
 
 from random import choices
 from typing import List, Tuple
-import math
+
 import numpy
-import quantum_simulator.base.pure_qubits as pure_qubits
+
 from quantum_simulator.base.error import (
     InitializeError,
     NotMatchCountError,
     NotMatchDimensionError,
 )
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
-from quantum_simulator.base.qubits import (
-    Qubits,
-    is_qubits_dim
-)
+from quantum_simulator.base.pure_qubits import OrthogonalSystem
+from quantum_simulator.base.qubits import Qubits, is_qubits_dim
 from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose, is_real, count_bits, isclose
+from quantum_simulator.base.utils import allclose, count_bits, is_real_close
 
 np = xp_factory()  # typing: numpy
 
@@ -77,14 +74,14 @@ class Observable:  # pylint: disable=too-few-public-methods
             raise NotMatchDimensionError(message)
 
         # 期待値の導出 trAρ
-        expected_value = np.einsum('ij,ji', self.matrix, target.matrix)
+        expected_value = np.einsum("ij,ji", self.matrix, target.matrix)
 
         del target
         return expected_value
 
 
 def _resolve_observed_results(
-    eigen_values: List[float], eigen_states: List[numpy.array]
+    eigen_values: List[float], eigen_states: numpy.array
 ) -> Tuple[List[float], List[Observable]]:
     """
     与えられた固有値リストと固有ベクトルリストから、取りうる観測結果 (固有値と射影の組) を返す
@@ -108,7 +105,9 @@ def _resolve_observed_results(
             degrated_indice = [index_0]
 
             for index_1 in range(len(eigen_values) - index_0 - 1):
-                if math.isclose(eigen_values[index_0], eigen_values[index_0 + index_1 + 1]):
+                if is_real_close(
+                    eigen_values[index_0], eigen_values[index_0 + index_1 + 1]
+                ):
                     # 固有値が近似的に等しいときは、全ての固有値を一致させ、インデックスに登録
                     eigen_values[index_0 + index_1 + 1] = eigen_values[index_0]
                     degrated_indice.append(index_0 + index_1 + 1)
@@ -123,8 +122,8 @@ def _resolve_observed_results(
         # まず固有値が一致しているインデックスリストから
         # 最後のインデックスを取得し、対応する1次元射影行列を取り出す
         last_index = degrated_indice_list[index_0][-1]
-        projection = np.einsum('i,j', 
-            eigen_states[:, last_index], np.conj(eigen_states[:, last_index])
+        projection = np.einsum(
+            "i,j", eigen_states[:, last_index], np.conj(eigen_states[:, last_index])
         )
 
         for index_1 in range(len(degrated_indice_list[index_0]) - 1):
@@ -133,7 +132,8 @@ def _resolve_observed_results(
             target_index = degrated_indice_list[index_0][index_1]
             projection = np.add(
                 projection,
-                np.einsum('i,j',
+                np.einsum(
+                    "i,j",
                     eigen_states[:, target_index],
                     np.conj(eigen_states[:, target_index]),
                 ),
@@ -206,7 +206,9 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
     ]
 
     # 観測結果のランダムサンプリング
-    observed_index = choices(range(len(observed_probabilities)), observed_probabilities)[0]
+    observed_index = choices(
+        range(len(observed_probabilities)), observed_probabilities
+    )[0]
     observed_probability = observed_probabilities[observed_index]
     observed_result = observed_results[observed_index]
     del observed_results_tuple, observed_results, observed_probabilities
@@ -242,7 +244,9 @@ def combine(observable_0: Observable, observable_1: Observable) -> Observable:
         tuple(
             [
                 np.hstack(
-                    tuple([element * observable_1.matrix for element in observable_0_row])
+                    tuple(
+                        [element * observable_1.matrix for element in observable_0_row]
+                    )
                 )
                 for observable_0_row in observable_0_matrix
             ]

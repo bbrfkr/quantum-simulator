@@ -3,10 +3,10 @@
 """
 
 import random
-import math
+
 from quantum_simulator.base import qubits, time_evolution
 from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.utils import allclose, count_bits
+from quantum_simulator.base.utils import count_bits, is_real_close
 from quantum_simulator.channel.registers import Registers
 from quantum_simulator.channel.state import State
 from quantum_simulator.channel.transformer import TimeEvolveTransformer
@@ -121,7 +121,7 @@ class Initializer:
             # 時間発展の対象Qubit数とAllocatorの保持しているQubit数が
             # 一致しなかったら、エラー
             noise = self.noise  # type: TimeEvolution
-            target_count = len(noise.ndarray.shape) // 2
+            target_count = count_bits(noise.matrix.shape[0]) - 1
             if qubit_count != target_count:
                 message = "[ERROR]: 時間発展の対象Qubit系と用意されたQubit系は対応しません"
                 raise InitializeError(message)
@@ -134,13 +134,13 @@ class Initializer:
         registers = mid_state.registers
 
         init_evolution = None
-        if math.isclose((input & 0b1), registers.get(0)):
+        if is_real_close((input & 0b1), registers.get(0)):
             init_evolution = IDENT_EVOLUTION
         else:
             init_evolution = NOT_GATE
 
         for index in range(qubit_count - 1):
-            if math.isclose(((input >> index + 1) & 0b1), registers.get(index + 1)):
+            if is_real_close(((input >> index + 1) & 0b1), registers.get(index + 1)):
                 init_evolution = time_evolution.combine(IDENT_EVOLUTION, init_evolution)
             else:
                 init_evolution = time_evolution.combine(NOT_GATE, init_evolution)

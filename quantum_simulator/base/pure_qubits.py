@@ -3,7 +3,7 @@
 """
 
 from math import ceil
-from typing import List, Tuple
+from typing import List
 
 import numpy
 
@@ -13,7 +13,8 @@ from quantum_simulator.base.error import (
     QubitCountNotMatchError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose, is_pow2, count_bits, isclose
+from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose
+
 np = xp_factory()  # typing: numpy
 
 

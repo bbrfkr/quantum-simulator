@@ -2,10 +2,10 @@
 baseパッケージ内で利用するユーティリティメソッド群
 """
 
+import math
 from typing import List
 
 import numpy
-import math
 
 from quantum_simulator.base.error import NegativeValueError
 from quantum_simulator.base.switch_cupy import xp_factory
@@ -30,8 +30,8 @@ def allclose(a: numpy.array, b: numpy.array) -> bool:
         bool: 比較結果
     """
     return np.all(around(a - b) == 0.0 + 0j)
-    
-    #np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
+
+    # np.allclose(a, b, RELATIVE_TOLERANCE, ABSOLUTE_TOLERANCE)
 
 
 def isclose(a: complex, b: complex) -> bool:
@@ -45,7 +45,25 @@ def isclose(a: complex, b: complex) -> bool:
     Return:
         bool: 比較結果
     """
-    return math.isclose(a.real, b.real, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE) and math.isclose(a.imag, b.imag, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE)
+    return math.isclose(
+        a.real, b.real, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE
+    ) and math.isclose(
+        a.imag, b.imag, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE
+    )
+
+
+def is_real_close(a: float, b: float) -> bool:
+    """
+    2つの複素数を近似的に比較し、一致していたらTrueを返す。
+
+    Args:
+        a (complex): 比較対象1つ目
+        b (complex): 比較対象2つ目
+
+    Return:
+        bool: 比較結果
+    """
+    return math.isclose(a, b, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE)
 
 
 def around(a: numpy.array) -> numpy.array:

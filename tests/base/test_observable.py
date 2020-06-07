@@ -11,7 +11,6 @@ from quantum_simulator.base.observable import (
     observe,
 )
 from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose
 
 

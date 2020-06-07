@@ -2,12 +2,10 @@
 一般的に混合状態のQubit系に関するクラス群
 """
 
-from typing import List, Tuple
+from typing import List
 
 import numpy
-import math
 
-from quantum_simulator.base import pure_qubits
 from quantum_simulator.base.error import (
     InitializeError,
     InvalidProbabilitiesError,
@@ -18,12 +16,10 @@ from quantum_simulator.base.error import (
 from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import (
-    allclose,
-    around,
+    count_bits,
     is_pow2,
     is_probabilities,
-    is_real,
-    count_bits
+    is_real_close,
 )
 
 np = xp_factory()  # typing: numpy
@@ -135,7 +131,7 @@ def specialize(qubits: Qubits) -> PureQubits:
     pure_index = -1
     eigen_values, eigen_states = np.linalg.eigh(qubits.matrix)
     for index in range(len(eigen_values)):
-        if math.isclose(eigen_values[index], 1.0):
+        if is_real_close(eigen_values[index], 1.0):
             pure_index = index
 
     if pure_index == -1:

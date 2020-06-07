@@ -9,7 +9,7 @@ from quantum_simulator.base.error import (
     InitializeError,
     NotCompleteError,
 )
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits, combine_ons
+from quantum_simulator.base.pure_qubits import OrthogonalSystem
 from quantum_simulator.base.qubits import Qubits, is_qubits_dim
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose
@@ -116,7 +116,9 @@ def create_from_onb(
     return TimeEvolution(matrix)
 
 
-def combine(time_evolution_0: TimeEvolution, time_evolution_1: TimeEvolution) -> TimeEvolution:
+def combine(
+    time_evolution_0: TimeEvolution, time_evolution_1: TimeEvolution
+) -> TimeEvolution:
     """
     2つの時間発展を結合して合成系の時間発展を作る
 
@@ -133,7 +135,12 @@ def combine(time_evolution_0: TimeEvolution, time_evolution_1: TimeEvolution) ->
         tuple(
             [
                 np.hstack(
-                    tuple([element * time_evolution_1.matrix for element in time_evolution_0_row])
+                    tuple(
+                        [
+                            element * time_evolution_1.matrix
+                            for element in time_evolution_0_row
+                        ]
+                    )
                 )
                 for time_evolution_0_row in time_evolution_0_matrix
             ]
