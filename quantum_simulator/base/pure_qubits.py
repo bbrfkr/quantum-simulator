@@ -11,9 +11,11 @@ from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
+    CombineError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose
+from typing import Optional
 
 np = xp_factory()  # typing: numpy
 
@@ -131,7 +133,9 @@ def _is_pure_qubits(array: numpy.array) -> bool:
     return True
 
 
-def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
+def combine(
+    qubits_0: Optional[PureQubits], qubits_1: Optional[PureQubits]
+) -> PureQubits:
     """
     二つのPureQubitsを結合し、その結果を返す。
 
@@ -140,15 +144,26 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
         qubits_1 (PureQubits): 結合する側のPureQubits
 
     Returns:
-        PureQubits: 結合後のPureQubits。qubits_0 ⊗ qubits_1
+        PureQubits: 結合後のPureQubits。qubits_1 ⊗ qubits_0
     """
-    qubits_0_vector = list(qubits_0.vector)
+    # 引数のどちらにもNoneが与えられた場合はエラーを返す
+    if qubits_0 is None and qubits_1 is None:
+        message = "[ERROR]: 与えられた引数は全てNoneです"
+        raise CombineError(message)
+
+    # 片方がNoneだった場合は結合しないで返す
+    elif qubits_0 is None:
+        return qubits_1
+    elif qubits_1 is None:
+        return qubits_0
+
+    # 畳み込みによるPureQubits同士の合成
+    qubits_1_vector = list(qubits_1.vector)
     new_vector = np.hstack(
-        tuple([element * qubits_1.vector for element in qubits_0_vector])
+        tuple([element * qubits_0.vector for element in qubits_1_vector])
     )
     new_qubits = PureQubits(new_vector)
 
-    del new_vector, qubits_0_vector, qubits_0, qubits_1
     return new_qubits
 
 
@@ -182,11 +197,11 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
         qubits_list (List[PureQubits]): 結合対象のPureQubitsのリスト
 
     Returns:
-        PureQubits: 結合後のPureQubits。qubits_list[0] ⊗ ... ⊗ qubits_list[n]
+        PureQubits: 結合後のPureQubits。qubits_list[n] ⊗ ... ⊗ qubits_list[0]
     """
-    combined_qubits = qubits_list[0]
-    for index in range(len(qubits_list) - 1):
-        combined_qubits = combine(combined_qubits, qubits_list[index + 1])
+    combined_qubits = None
+    for qubits in qubits_list:
+        combined_qubits = combine(combined_qubits, qubits)
 
     return combined_qubits
 

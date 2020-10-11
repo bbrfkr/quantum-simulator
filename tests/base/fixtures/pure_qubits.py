@@ -9,6 +9,16 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
     params=[
         # ベクトル形式
         {
+            "amplitudes": [1 + 0j, 0j],
+            "qubits_count": 1,
+            "dirac_notation": ("(1+0j)|0> +\n0j|1>\n"),
+        },
+        {
+            "amplitudes": [0j, 0j, 1 + 0j, 0j],
+            "qubits_count": 2,
+            "dirac_notation": ("0j|00> +\n0j|01> +\n(1+0j)|10> +\n0j|11>\n"),
+        },
+        {
             "amplitudes": [1 + 0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
             "qubits_count": 3,
             "dirac_notation": (
@@ -53,7 +63,7 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
             "dirac_notation": "(0.5+0j)|000> +\n0j|001> +\n0j|010> +\n(0.5+0j)|011> +\n"
             "(0.5+0j)|100> +\n0j|101> +\n0j|110> +\n(0.5+0j)|111>\n",
         },
-        # ndarray形式
+        # 2qubits以上のndarray形式
         {
             "amplitudes": [[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
             "qubits_count": 3,
@@ -95,8 +105,8 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
         },
     ]
 )
-def pure_qubits(request):
-    """妥当なPureQubitsのfixture"""
+def valid_pure_qubits_amp(request):
+    """妥当なPureQubitsに対する確率振幅のfixture"""
     return request.param
 
 
@@ -131,62 +141,64 @@ def invalid_pure_qubits_amp(request):
 
 @pytest.fixture(
     params=[
-        # 単一Qubit同士の結合
+        {"qubits_0": None, "qubits_1": None, "combined_qubits": None},
         {
-            "target_0": [1 + 0j, 0j],
-            "target_1": [0j, 1 + 0j],
-            "result": [0j, 1 + 0j, 0j, 0j],
+            "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
+            "qubits_1": None,
+            "combined_qubits": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
         },
-        # 結果が3粒子Qubitになる結合
         {
-            "target_0": [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-            "target_1": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
-            "result": [0.5 + 0j, 0j, 0j, 0.5 + 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j],
+            "qubits_0": None,
+            "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
+            "combined_qubits": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
         },
-        # 結果が4粒子Qubitになる結合
         {
-            "target_0": [0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j],
-            "target_1": [sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j],
-            "result": [
-                0j,
-                0j,
-                0j,
-                0j,
-                0.5 + 0j,
-                0j,
-                0j,
-                0.5 + 0j,
-                0.5 + 0j,
-                0j,
-                0j,
-                0.5 + 0j,
-                0j,
-                0j,
-                0j,
-                0j,
-            ],
+            "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
+            "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
+            "combined_qubits": PureQubits(
+                [
+                    0.5 + 0j,
+                    0.5 + 0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0.5 + 0j,
+                    0.5 + 0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                ]
+            ),
         },
     ]
 )
-def dict_for_test_pure_qubits_combine(request):
-    """combineメソッドテスト用のfixture"""
+def pair_pure_qubits(request):
+    """純粋状態のペアのfixture"""
     return request.param
 
 
 @pytest.fixture(
     params=[
         {
-            "target_list": [
-                PureQubits([1.0 + 0j, 0j]),
+            "qubits_list": [
+                PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
                 PureQubits([0j, 1.0 + 0j]),
                 PureQubits([1.0 + 0j, 0j]),
             ],
-            "result": [0j, 0j, 1.0 + 0j, 0j, 0j, 0j, 0j, 0j],
+            "combined_qubits": PureQubits(
+                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j]
+            ),
         },
     ]
 )
-def dict_for_test_pure_qubits_multiple_combine(request):
-    """combineメソッドテスト用のfixture"""
+def list_pure_qubits(request):
+    """純粋状態のリストのfixture"""
     return request.param
 
 

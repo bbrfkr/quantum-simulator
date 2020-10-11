@@ -53,3 +53,7 @@ class NegativeValueError(BaseError):
 
 class OutOfRangeIndexError(BaseError):
     """不正なインデックスのエラー"""
+
+
+class CombineError(BaseError):
+    """Qubits合成時エラー"""
