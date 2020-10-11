@@ -55,5 +55,5 @@ class OutOfRangeIndexError(BaseError):
     """不正なインデックスのエラー"""
 
 
-class CombineError(BaseError):
-    """Qubits合成時エラー"""
+class EmptyArgsError(BaseError):
+    """空の引数時のエラー"""

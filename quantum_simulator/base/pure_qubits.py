@@ -11,7 +11,7 @@ from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
-    CombineError,
+    EmptyArgsError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose
@@ -140,22 +140,23 @@ def combine(
     二つのPureQubitsを結合し、その結果を返す。
 
     Args:
-        qubits_0 (PureQubits): 結合される側のPureQubits
-        qubits_1 (PureQubits): 結合する側のPureQubits
+        qubits_0 (Optional[PureQubits]): 結合される側のPureQubits
+        qubits_1 (Optional[PureQubits]): 結合する側のPureQubits
 
     Returns:
         PureQubits: 結合後のPureQubits。qubits_1 ⊗ qubits_0
     """
     # 引数のどちらにもNoneが与えられた場合はエラーを返す
-    if qubits_0 is None and qubits_1 is None:
-        message = "[ERROR]: 与えられた引数は全てNoneです"
-        raise CombineError(message)
-
     # 片方がNoneだった場合は結合しないで返す
-    elif qubits_0 is None:
-        return qubits_1
-    elif qubits_1 is None:
-        return qubits_0
+    if qubits_0 is None:
+        if qubits_1 is None:
+            message = "[ERROR]: 与えられた引数は全てNoneです"
+            raise EmptyArgsError(message)
+        else:
+            return qubits_1
+    else:
+        if qubits_1 is None:
+            return qubits_0
 
     # 畳み込みによるPureQubits同士の合成
     qubits_1_vector = list(qubits_1.vector)
@@ -199,9 +200,17 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
     Returns:
         PureQubits: 結合後のPureQubits。qubits_list[n] ⊗ ... ⊗ qubits_list[0]
     """
-    combined_qubits = None
-    for qubits in qubits_list:
-        combined_qubits = combine(combined_qubits, qubits)
+    # 空のリストの場合はエラーを返す
+    if len(qubits_list) == 0:
+        message = "[ERROR]: 与えられた引数は空のリストです"
+        raise EmptyArgsError(message)
+
+    else:
+        for index, qubits in enumerate(qubits_list):
+            if index == 0:
+                combined_qubits = combine(None, qubits)
+            else:
+                combined_qubits = combine(combined_qubits, qubits)
 
     return combined_qubits
 

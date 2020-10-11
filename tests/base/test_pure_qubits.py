@@ -7,7 +7,7 @@ from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
-    CombineError,
+    EmptyArgsError,
 )
 from quantum_simulator.base.pure_qubits import (
     OrthogonalSystem,
@@ -73,7 +73,7 @@ class TestPureQubits:
         qubits_0 = pair_pure_qubits["qubits_0"]
         qubits_1 = pair_pure_qubits["qubits_1"]
         if qubits_0 is None and qubits_1 is None:
-            with pytest.raises(CombineError):
+            with pytest.raises(EmptyArgsError):
                 combine(qubits_0, qubits_1)
         else:
             combined_qubits = combine(qubits_0, qubits_1)
@@ -85,6 +85,9 @@ class TestPureQubits:
         multiple_combineメソッドのテスト
         """
         qubits_list = list_pure_qubits["qubits_list"]
+        if qubits_list == []:
+            with pytest.raises(EmptyArgsError):
+                multiple_combine(qubits_list)
         combined_qubits = multiple_combine(qubits_list)
         expected_combined_qubits = list_pure_qubits["combined_qubits"]
         assert allclose(combined_qubits.vector, expected_combined_qubits.vector)
