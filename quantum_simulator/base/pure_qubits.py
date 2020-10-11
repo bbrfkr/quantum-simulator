@@ -39,14 +39,12 @@ class PureQubits:
             message = "[ERROR]: 与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
 
-        # 内包するQubit数を計算
-        qubit_count = count_bits(vector.size) - 1
+        # Qubit数をnとすると、vector.size=2^nかつ、表現可能な値の最大値は2^n-1。
+        qubit_count = count_bits(vector.size - 1)
 
         # 初期化
         self.vector = vector
         self.qubit_count = qubit_count
-        del vector
-        del qubit_count
 
     def __str__(self):
         """
