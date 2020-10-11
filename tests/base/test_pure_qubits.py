@@ -32,10 +32,10 @@ class TestPureQubits:
             * 既存オブジェクトを出力するだけのロジック
     """
 
-    def test_for_success__is_pure_qubits(self, valid_pure_qubits_amp):
+    def test_for_success__is_pure_qubits(self, pure_qubits):
         """_is_pure_qubitsメソッドの正常系テスト"""
 
-        array = numpy.array(valid_pure_qubits_amp)
+        array = numpy.array(pure_qubits["amplitudes"])
         assert _is_pure_qubits(array)
 
     def test_for_failure__is_pure_qubits(self, invalid_pure_qubits_amp):

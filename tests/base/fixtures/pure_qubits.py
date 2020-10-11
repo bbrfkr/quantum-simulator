@@ -7,37 +7,54 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
 
 @pytest.fixture(
     params=[
-        # 単一Qubit
-        [1 + 0j, 0j],
-        [0j, 1 + 0j],
-        [sqrt(0.5) + 0j, sqrt(0.5) + 0j],
-        [sqrt(0.5) + 0j, -sqrt(0.5) + 0j],
-        # 複数Qubitsかつベクトル形式
-        [0j, 0j, 1 + 0j, 0j],
-        [sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j],
-        [sqrt(0.25) + 0j, sqrt(0.25) + 0j, sqrt(0.5) + 0j, 0j],
-        [
-            sqrt(0.125) + 0j,
-            sqrt(0.25) + 0j,
-            0j,
-            sqrt(0.25) + 0j,
-            0j,
-            sqrt(0.125) + 0j,
-            0j,
-            sqrt(0.25) + 0j,
-        ],
-        # 複数Qubitsかつndarray形式
-        [[0j, 1 + 0j], [0j, 0j]],
-        [[sqrt(0.5) + 0j, 0j], [sqrt(0.5) + 0j, 0j]],
-        [[sqrt(0.25) + 0j, sqrt(0.25) + 0j], [sqrt(0.5) + 0j, 0j]],
-        [
-            [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-            [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
-        ],
+        # ベクトル形式
+        {
+            "amplitudes": [1 + 0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j],
+            "qubits_count": 3,
+            "dirac_notation": (
+                "(1+0j)|000> +\n0j|001> +\n0j|010> +\n0j|011> +\n"
+                "0j|100> +\n0j|101> +\n0j|110> +\n0j|111>\n"
+            )
+        },
+        {
+            "amplitudes": [0j, 0j, 0j, 0j, 0j, 0j, 0j, 1j],
+            "qubits_count": 3,
+            "dirac_notation": (
+                "0j|000> +\n0j|001> +\n0j|010> +\n0j|011> +\n"
+                "0j|100> +\n0j|101> +\n0j|110> +\n1j|111>\n"
+            )
+        },
+        {
+            "amplitudes": [sqrt(2/16) * 1j, sqrt(1/16) + 0j, sqrt(3/16) * 1j, sqrt(1/16) + 0j, sqrt(1/16) * 1j, sqrt(5/16) + 0j, sqrt(1/16) * 1j, sqrt(2/16) + 0j], 
+            "qubits_count": 3,
+            "dirac_notation": None
+        },
+        # ndarray形式
+        {
+            "amplitudes": [[[1 + 0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 0j]]],
+            "qubits_count": 3,
+            "dirac_notation": (
+                "(1+0j)|000> +\n0j|001> +\n0j|010> +\n0j|011> +\n"
+                "0j|100> +\n0j|101> +\n0j|110> +\n0j|111>\n"
+            )
+        },
+        {
+            "amplitudes": [[[0j, 0j], [0j, 0j]], [[0j, 0j], [0j, 1j]]],
+            "qubits_count": 3,
+            "dirac_notation": (
+                "0j|000> +\n0j|001> +\n0j|010> +\n0j|011> +\n"
+                "0j|100> +\n0j|101> +\n0j|110> +\n1j|111>\n"
+            )
+        },
+        {
+            "amplitudes": [[[sqrt(2/16) * 1j, sqrt(1/16) + 0j], [sqrt(3/16) * 1j, sqrt(1/16) + 0j]], [[sqrt(1/16) * 1j, sqrt(5/16) + 0j], [sqrt(1/16) * 1j, sqrt(2/16) + 0j]]],
+            "qubits_count": 3,
+            "dirac_notation": None
+        },
     ]
 )
-def valid_pure_qubits_amp(request):
-    """妥当なPureQubitsに対する確率振幅のfixture"""
+def pure_qubits(request):
+    """妥当なPureQubitsのfixture"""
     return request.param
 
 
@@ -45,22 +62,18 @@ def valid_pure_qubits_amp(request):
     params=[
         # 空
         [],
-        # 奇数個の要素を持つベクトル
-        [1 + 0j],
+        # 空間が(C^2)^nとならない、ベクトル
         [0j, 1 + 0j, 0j],
-        # 対称でない、ndarray
-        [
-            [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-            [[0j, sqrt(0.125) + 0j], [0j, sqrt(0.25) + 0j]],
-            [[sqrt(0.125) + 0j, sqrt(0.25) + 0j], [0j, sqrt(0.25) + 0j]],
-        ],
+        [0j, 0j, 0j, 0j, 0j, 1 + 0j, 0j],
+        # 空間が(C^2)^nとならない、ndarray
+        [[[sqrt(2/16) * 1j, sqrt(1/16) + 0j], [sqrt(3/16) * 1j, sqrt(1/16) + 0j]], [[sqrt(1/16) * 1j, sqrt(5/16) + 0j], [sqrt(1/16) * 1j, sqrt(2/16) + 0j]], [[0j, 0j], [0j, 0j]]], 
         # 長さが1ではない
-        [sqrt(0.3) + 0j, sqrt(0.6) + 0j],
-        [[sqrt(0.5) + 0j, 0j], [sqrt(0.5) + 0j, sqrt(0.1) + 0j]],
+        [sqrt(0.3) * 1j, sqrt(0.6) + 0j],
+        [[sqrt(0.5) + 0j, 0j], [sqrt(0.5) * 1j, sqrt(0.1) + 0j]],
     ]
 )
 def invalid_pure_qubits_amp(request):
-    """妥当なPureQubitsに対する確率振幅のfixture"""
+    """妥当でないPureQubitsに対する確率振幅のfixture"""
     return request.param
 
 
