@@ -44,16 +44,17 @@ class TestPureQubits:
         array = numpy.array(invalid_pure_qubits_amp)
         assert not _is_pure_qubits(array)
 
-    def test_for_success_constructor(self, dict_for_test_pure_qubits_constructor):
+    def test_for_success_dirac_notation(self, pure_qubits):
         """
-        __init__メソッドの正常系テスト
+        dirac_notationメソッドの正常系テスト
         """
-        qubits = PureQubits(dict_for_test_pure_qubits_constructor["target"])
-        with captured_stdout() as stdout:
-            qubits.dirac_notation()
-        assert (
-            stdout.getvalue() == dict_for_test_pure_qubits_constructor["dirac_notation"]
-        )
+        dirac_notation = pure_qubits["dirac_notation"]
+        # 期待するdirac notationが記載されているpure_qubitsのみテストする
+        if dirac_notation is not None:
+            qubits_object = PureQubits(pure_qubits["amplitudes"])
+            with captured_stdout() as stdout:
+                qubits_object.dirac_notation()
+            assert stdout.getvalue() == dirac_notation
 
     def test_for_failure_constructor(self, invalid_pure_qubits_amp):
         """

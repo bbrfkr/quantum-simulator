@@ -40,13 +40,12 @@ class PureQubits:
             raise InitializeError(message)
 
         # 内包するQubit数を計算
-        qubit_count = count_bits(vector.size) - 1
+        qubit_count = count_bits(vector.size - 1)
 
         # 初期化
-        self.vector = vector
+        # np.arrayは一次元ベクトルに揃え、テンソルにはしない
+        self.vector = vector.reshape(2 ** qubit_count)
         self.qubit_count = qubit_count
-        del vector
-        del qubit_count
 
     def __str__(self):
         """
