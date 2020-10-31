@@ -25,28 +25,28 @@ class PureQubits:
     純粋状態で一般的に複数粒子のQubit系クラス
 
     Attributes:
-        vector (np.array): ベクトル形式のPureQubits
+        vector (np.array): 1次元ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
     """
 
     def __init__(self, amplitudes: list):
         """
         Args:
-            amplitudes (list): 一般的に複素数の確率振幅のリスト。ベクトル形式とndarray形式を許容。
+            amplitudes (list): 一般的に複素数の確率振幅のリスト。1次元ベクトル形式のみを許容
         """
+        # TODO: np.arrayを生成するとき、格納するデータタイプをオプションで指定(要テスト)
+        array = np.array(amplitudes)
 
-        # Qubit系であるかチェック
-        vector = np.array(amplitudes)
-        if not _is_pure_qubits(vector):
-            message = "[ERROR]: 与えられたリストはQubit系に対応しません"
+        # 1次元ベクトルかつQubit系であるかチェック
+        if _is_not_pure_qubits(array):
+            message = "[ERROR]: 与えられたリストは、純粋状態を表す1次元ベクトルではありません"
             raise InitializeError(message)
 
         # 内包するQubit数を計算
-        qubit_count = count_bits(vector.size - 1)
+        qubit_count = count_bits(array.size - 1)
 
         # 初期化
-        # np.arrayは一次元ベクトルに揃え、テンソルにはしない
-        self.vector = vector.reshape(2 ** qubit_count)
+        self.vector = array
         self.qubit_count = qubit_count
 
     def __str__(self):
@@ -109,28 +109,34 @@ class OrthogonalSystem:
         return True
 
 
-def _is_pure_qubits(array: numpy.array) -> bool:
+# TODO: numpy.array -> np.arrayを検討
+def _is_not_pure_qubits(array: numpy.array) -> bool:
     """
-    与えられたnp.arrayがQubit系を表現しているか判定する。
+    与えられたnp.arrayがQubit系を表現している1次元ベクトルでないかを判定する
 
     Args:
         array (np.array): 判定対象のnp.array
 
     Returns:
-        bool: 判定結果
+        bool: 判定結果。Qubit系を表現している1次元ベクトルでないときTrue
     """
+    # 1次元ベクトルでなければPureQubitsではない
+    if len(array.shape) != 1:
+        return True
 
-    # 要素数が2の累乗個であるかチェック
-    size = array.size
-    if not is_pow2(size):
-        return False
+    # TODO: is_not_pow2メソッドの作成を検討
+    # 要素数が2の累乗個でなければPureQubitsではない
+    if not is_pow2(array.size):
+        return True
 
-    # 長さが1、つまり確率が1になるかをチェック
+    # TODO: 1次元ベクトルを制約としたため、linarg.normの利用を検討
+    # TODO: allcloseが定数比較に対して適切かを検討
+    # 長さが1でなければPureQubitsではない
     norm = np.sqrt(np.sum(np.abs(array) ** 2))
     if not allclose(norm, 1.0):
-        return False
+        return True
 
-    return True
+    return False
 
 
 def combine(
