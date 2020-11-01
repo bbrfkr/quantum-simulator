@@ -66,51 +66,83 @@ class TestPureQubits:
         with pytest.raises(InitializeError):
             PureQubits(invalid_pure_qubits_amp)
 
-#     def test_for_combine(self, pair_pure_qubits):
-#         """
-#         combineメソッドのテスト
-#         """
-#         qubits_0 = pair_pure_qubits["qubits_0"]
-#         qubits_1 = pair_pure_qubits["qubits_1"]
-#         if qubits_0 is None and qubits_1 is None:
-#             with pytest.raises(EmptyArgsError):
-#                 combine(qubits_0, qubits_1)
-#         else:
-#             combined_qubits = combine(qubits_0, qubits_1)
-#             expected_combined_qubits = pair_pure_qubits["combined_qubits"]
-#             assert allclose(combined_qubits.vector, expected_combined_qubits.vector)
+    def compare_expected_result_and_result_of_combine_method(self, fixture: dict):
+        """
+        combineメソッドの結果と期待値との比較を行う
+        """
+        qubits_0 = fixture["qubits_0"]
+        qubits_1 = fixture["qubits_1"]
+        combined_qubits = combine(qubits_0, qubits_1)
+        expected_combined_qubits = fixture["combined_qubits"]
+        assert allclose(combined_qubits.vector, expected_combined_qubits.vector)
 
-#     def test_for_multiple_combine(self, list_pure_qubits):
-#         """
-#         multiple_combineメソッドのテスト
-#         """
-#         qubits_list = list_pure_qubits["qubits_list"]
-#         if qubits_list == []:
-#             with pytest.raises(EmptyArgsError):
-#                 multiple_combine(qubits_list)
-#         combined_qubits = multiple_combine(qubits_list)
-#         expected_combined_qubits = list_pure_qubits["combined_qubits"]
-#         assert allclose(combined_qubits.vector, expected_combined_qubits.vector)
+    def test_for_combine_for_qubits_in_same_sphere(
+        self, pair_pure_qubits_in_same_sphere
+    ):
+        """
+        同一空間内のPureQubits同士に対するcombineメソッドのテスト
+        """
+        self.compare_expected_result_and_result_of_combine_method(
+            pair_pure_qubits_in_same_sphere
+        )
 
-#     def test_for_success_inner(self, dict_for_test_valid_inner_input):
-#         """
-#         innerメソッドの正常系テスト
-#         """
-#         target_0 = dict_for_test_valid_inner_input["target_0"]
-#         target_1 = dict_for_test_valid_inner_input["target_1"]
-#         result = inner(target_0, target_1)
+    def test_for_combine_for_qubits_in_different_sphere(
+        self, pair_pure_qubits_in_different_sphere
+    ):
+        """
+        異空間内のPureQubits同士に対するcombineメソッドのテスト
+        """
+        self.compare_expected_result_and_result_of_combine_method(
+            pair_pure_qubits_in_different_sphere
+        )
 
-#         expected_result = dict_for_test_valid_inner_input["result"]
-#         assert allclose(result, expected_result)
+    def test_for_combine_for_qubits_include_none(self, pair_pure_qubits_include_none):
+        """
+        Noneを含むPureQubits同士に対するcombineメソッドのテスト
+        """
+        qubits_0 = pair_pure_qubits_include_none["qubits_0"]
+        qubits_1 = pair_pure_qubits_include_none["qubits_1"]
+        if qubits_0 is None and qubits_1 is None:
+            with pytest.raises(EmptyArgsError):
+                combine(qubits_0, qubits_1)
+        else:
+            self.compare_expected_result_and_result_of_combine_method(
+                pair_pure_qubits_include_none
+            )
 
-#     def test_for_failure_inner(self, dict_for_test_invalid_inner_input):
-#         """
-#         innerメソッドの異常系テスト
-#         """
-#         with pytest.raises(QubitCountNotMatchError):
-#             target_0 = dict_for_test_invalid_inner_input["target_0"]
-#             target_1 = dict_for_test_invalid_inner_input["target_1"]
-#             inner(target_0, target_1)
+    def test_for_multiple_combine(self, list_pure_qubits):
+        """
+        multiple_combineメソッドのテスト
+        """
+        qubits_list = list_pure_qubits["qubits_list"]
+        if len(qubits_list) == 0:
+            with pytest.raises(EmptyArgsError):
+                multiple_combine(qubits_list)
+        else:
+            combined_qubits = multiple_combine(qubits_list)
+            expected_combined_qubits = list_pure_qubits["combined_qubits"]
+            assert allclose(combined_qubits.vector, expected_combined_qubits.vector)
+
+    def test_for_success_inner(self, pair_pure_qubits_in_same_sphere):
+        """
+        innerメソッドの正常系テスト
+        """
+        qubits_0 = pair_pure_qubits_in_same_sphere["qubits_0"]
+        qubits_1 = pair_pure_qubits_in_same_sphere["qubits_1"]
+        result = inner(qubits_0, qubits_1)
+
+        expected_result = pair_pure_qubits_in_same_sphere["inner_product"]
+        assert allclose(result, expected_result)
+
+
+    def test_for_failure_inner(self, pair_pure_qubits_in_different_sphere):
+        """
+        innerメソッドの異常系テスト
+        """
+        with pytest.raises(QubitCountNotMatchError):
+            qubits_0 = pair_pure_qubits_in_different_sphere["qubits_0"]
+            qubits_1 = pair_pure_qubits_in_different_sphere["qubits_1"]
+            inner(qubits_0, qubits_1)
 
 #     def test_for_success_is_orthogonal(self, dict_for_test_is_orthogonal):
 #         """

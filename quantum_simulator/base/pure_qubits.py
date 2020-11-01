@@ -75,40 +75,6 @@ class PureQubits:
         print(notation)
 
 
-class OrthogonalSystem:
-    """
-    互いに直交する複数のPureQubits。正規直交系。
-
-    Attributes:
-        qubits_list (List[PureQubits]): 正規直交系を構成するPureQubitsのリスト
-    """
-
-    def __init__(self, qubits_list: List[PureQubits]):
-        """
-        Args:
-            qubits_list (List[PureQubits]): 正規直交系を構成するPureQubitsのリスト
-        """
-        # 直交性の確認(相互にQubit数の確認も兼ねる)
-        if not all_orthogonal(qubits_list):
-            message = "[ERROR]: 与えられたQubit群のリストは互いに直交しません"
-            raise InitializeError(message)
-
-        self.qubits_list = qubits_list
-
-    def is_onb(self):
-        """
-        正規直交系が正規直交基底であるか判定する。
-
-        Returns:
-            bool: 判定結果
-        """
-        # 基底を構成するQubit群の個数の確認
-        if len(self.qubits_list) != self.qubits_list[0].vector.size:
-            return False
-
-        return True
-
-
 # TODO: numpy.array -> np.arrayを検討
 def _is_not_pure_qubits(array: numpy.array) -> bool:
     """
@@ -143,7 +109,7 @@ def combine(
     qubits_0: Optional[PureQubits], qubits_1: Optional[PureQubits]
 ) -> PureQubits:
     """
-    二つのPureQubitsを結合し、その結果を返す。
+    二つのPureQubitsを結合し、合成系のPureQubitsを返す。
 
     Args:
         qubits_0 (Optional[PureQubits]): 結合される側のPureQubits
@@ -164,6 +130,7 @@ def combine(
         if qubits_1 is None:
             return qubits_0
 
+    # TODO: ベクトルに対する定数倍が a * vで適切か検討
     # 畳み込みによるPureQubits同士の合成
     qubits_1_vector = list(qubits_1.vector)
     new_vector = np.hstack(
@@ -172,28 +139,6 @@ def combine(
     new_qubits = PureQubits(new_vector)
 
     return new_qubits
-
-
-def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalSystem:
-    """
-    二つのOrthogonalSystemを要素順にを結合し、その結果を返す。
-
-    Args:
-        ons_0 (OrthogonalSystem): 結合される側のOrthogonalSystem
-        ons_1 (OrthogonalSystem): 結合する側のOrthogonalSystem
-
-    Returns:
-        OrthogonalSystem: 結合後のOrthogonalSystem
-    """
-    new_qubits = [
-        combine(qubits_0, qubits_1)
-        for qubits_0 in ons_0.qubits_list
-        for qubits_1 in ons_1.qubits_list
-    ]
-    new_ons = OrthogonalSystem(new_qubits)
-
-    del new_qubits, ons_0, ons_1
-    return new_ons
 
 
 def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
@@ -219,23 +164,6 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
                 combined_qubits = combine(combined_qubits, qubits)
 
     return combined_qubits
-
-
-def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
-    """
-    与えられたOrthogonalSystemのリストを前方から順にを結合し、その結果を返す。
-
-    Args:
-        ons_lit (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト
-
-    Returns:
-        OrthogonalSystem: 結合後のOrthogonalSystem
-    """
-    combined_ons = ons_list[0]
-    for index in range(len(ons_list) - 1):
-        combined_ons = combine_ons(combined_ons, ons_list[index + 1])
-
-    return combined_ons
 
 
 def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
@@ -302,3 +230,76 @@ def all_orthogonal(qubits_list: List[PureQubits]) -> bool:
                 return False
 
     return True
+
+
+class OrthogonalSystem:
+    """
+    互いに直交する複数のPureQubits。正規直交系。
+
+    Attributes:
+        qubits_list (List[PureQubits]): 正規直交系を構成するPureQubitsのリスト
+    """
+
+    def __init__(self, qubits_list: List[PureQubits]):
+        """
+        Args:
+            qubits_list (List[PureQubits]): 正規直交系を構成するPureQubitsのリスト
+        """
+        # 直交性の確認(相互にQubit数の確認も兼ねる)
+        if not all_orthogonal(qubits_list):
+            message = "[ERROR]: 与えられたQubit群のリストは互いに直交しません"
+            raise InitializeError(message)
+
+        self.qubits_list = qubits_list
+
+    def is_onb(self):
+        """
+        正規直交系が正規直交基底であるか判定する。
+
+        Returns:
+            bool: 判定結果
+        """
+        # 基底を構成するQubit群の個数の確認
+        if len(self.qubits_list) != self.qubits_list[0].vector.size:
+            return False
+
+        return True
+
+
+def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalSystem:
+    """
+    二つのOrthogonalSystemを要素順にを結合し、その結果を返す。
+
+    Args:
+        ons_0 (OrthogonalSystem): 結合される側のOrthogonalSystem
+        ons_1 (OrthogonalSystem): 結合する側のOrthogonalSystem
+
+    Returns:
+        OrthogonalSystem: 結合後のOrthogonalSystem
+    """
+    new_qubits = [
+        combine(qubits_0, qubits_1)
+        for qubits_0 in ons_0.qubits_list
+        for qubits_1 in ons_1.qubits_list
+    ]
+    new_ons = OrthogonalSystem(new_qubits)
+
+    del new_qubits, ons_0, ons_1
+    return new_ons
+
+
+def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
+    """
+    与えられたOrthogonalSystemのリストを前方から順にを結合し、その結果を返す。
+
+    Args:
+        ons_lit (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト
+
+    Returns:
+        OrthogonalSystem: 結合後のOrthogonalSystem
+    """
+    combined_ons = ons_list[0]
+    for index in range(len(ons_list) - 1):
+        combined_ons = combine_ons(combined_ons, ons_list[index + 1])
+
+    return combined_ons

@@ -23,10 +23,7 @@ from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
         },
         # 重ね合わせのベクトル
         {
-            "amplitudes": [
-                sqrt(16/25) + 0j,
-                sqrt(9/25) * 1j,
-            ],
+            "amplitudes": [sqrt(16 / 25) + 0j, sqrt(9 / 25) * 1j,],
             "qubits_count": 1,
             "dirac_notation": "(0.8+0j)|0> +\n0.6j|1>\n",
         },
@@ -72,105 +69,119 @@ def invalid_pure_qubits_amp(request):
     return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         {"qubits_0": None, "qubits_1": None, "combined_qubits": None},
-#         {
-#             "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
-#             "qubits_1": None,
-#             "combined_qubits": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
-#         },
-#         {
-#             "qubits_0": None,
-#             "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
-#             "combined_qubits": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
-#         },
-#         {
-#             "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
-#             "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
-#             "combined_qubits": PureQubits(
-#                 [
-#                     0.5 + 0j,
-#                     0.5 + 0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0.5 + 0j,
-#                     0.5 + 0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                 ]
-#             ),
-#         },
-#     ]
-# )
-# def pair_pure_qubits(request):
-#     """純粋状態のペアのfixture"""
-#     return request.param
+@pytest.fixture(
+    params=[
+        {
+            "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
+            "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
+            "combined_qubits": PureQubits(
+                [
+                    0.5 + 0j,
+                    0.5 + 0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0.5 + 0j,
+                    0.5 + 0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                ]
+            ),
+            "inner_product": 0.5 + 0j
+        },
+        {
+            "qubits_0": PureQubits([sqrt(0.5) * 1j, sqrt(0.5) + 0j, 0j, 0j]),
+            "qubits_1": PureQubits([sqrt(0.5) * 1j, sqrt(0.25) + 0j, sqrt(0.25) + 0j, 0j]),
+            "combined_qubits": PureQubits(
+                [
+                    -0.5 + 0j,
+                    0.5j,
+                    0j,
+                    0j,
+                    sqrt(0.125) * 1j,
+                    sqrt(0.125) + 0j,
+                    0j,
+                    0j,
+                    sqrt(0.125) * 1j,
+                    sqrt(0.125) + 0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                    0j,
+                ]
+            ),
+            "inner_product": (0.5 + sqrt(0.125))  + 0j
+        },
+    ]
+)
+def pair_pure_qubits_in_same_sphere(request):
+    """同一空間内の純粋状態のペアのfixture"""
+    return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         {
-#             "qubits_list": [
-#                 PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
-#                 PureQubits([0j, 1.0 + 0j]),
-#                 PureQubits([1.0 + 0j, 0j]),
-#             ],
-#             "combined_qubits": PureQubits(
-#                 [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j]
-#             ),
-#         },
-#     ]
-# )
-# def list_pure_qubits(request):
-#     """純粋状態のリストのfixture"""
-#     return request.param
+@pytest.fixture(
+    params=[
+        {
+            "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+            "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
+            "combined_qubits": PureQubits(
+                [0.5 + 0j, 0.5 + 0j, 0j, 0j, 0.5 + 0j, 0.5 + 0j, 0j, 0j,]
+            ),
+        },
+    ]
+)
+def pair_pure_qubits_in_different_sphere(request):
+    """異空間同士の純粋状態のペアのfixture"""
+    return request.param
 
 
-# @pytest.fixture(
-#     params=[
-#         # 1 : 2 Qubits同士
-#         {
-#             "target_0": PureQubits([1 + 0j, 0j]),
-#             "target_1": PureQubits([0j, 1 + 0j, 0j, 0j]),
-#         },
-#         # 4 : 2 Qubits同士
-#         {
-#             "target_0": PureQubits(
-#                 [
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0.5 + 0j,
-#                     0j,
-#                     0j,
-#                     0.5 + 0j,
-#                     0.5 + 0j,
-#                     0j,
-#                     0j,
-#                     0.5 + 0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                     0j,
-#                 ]
-#             ),
-#             "target_1": PureQubits([sqrt(0.5) + 0j, 0j, 0j, sqrt(0.5) + 0j]),
-#         },
-#     ]
-# )
-# def invalid_inner_input_qubits(request):
-#     """innerメソッドテスト用の不正なインプットのfixture"""
-#     return request.param
+@pytest.fixture(
+    params=[
+        {"qubits_0": None, "qubits_1": None, "combined_qubits": None},
+        {
+            "qubits_0": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
+            "qubits_1": None,
+            "combined_qubits": PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j]),
+        },
+        {
+            "qubits_0": None,
+            "qubits_1": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
+            "combined_qubits": PureQubits([sqrt(0.5) + 0j, 0j, sqrt(0.5) + 0j, 0j]),
+        },
+    ]
+)
+def pair_pure_qubits_include_none(request):
+    """Noneをいずれかに含む純粋状態のペアのfixture"""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        {"qubits_list": [], "combined_qubits": None},
+        {
+            "qubits_list": [
+                PureQubits([sqrt(0.5) + 0j, sqrt(0.5) + 0j]),
+                PureQubits([0j, 1.0 + 0j]),
+                PureQubits([1.0 + 0j, 0j]),
+            ],
+            "combined_qubits": PureQubits(
+                [0j, 0j, sqrt(0.5) + 0j, sqrt(0.5) + 0j, 0j, 0j, 0j, 0j]
+            ),
+        },
+    ]
+)
+def list_pure_qubits(request):
+    """純粋状態のリストのfixture"""
+    return request.param
 
 
 # @pytest.fixture(
