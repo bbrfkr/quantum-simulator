@@ -24,7 +24,6 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -148,7 +147,6 @@
 <span class="sd">量子チャネルを表現するクラス群</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.time_evolution</span> <span class="kn">import</span> <span class="n">TimeEvolution</span>
@@ -158,7 +156,7 @@
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.transformer</span> <span class="kn">import</span> <span class="n">Transformer</span>
 
 
-<div class="viewcode-block" id="Channel"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.channel.Channel">[docs]</a><span class="k">class</span> <span class="nc">Channel</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="Channel"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.channel.Channel">[docs]</a><span class="k">class</span> <span class="nc">Channel</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    量子チャネルの抽象クラス</span>
 
@@ -217,22 +215,7 @@
 <span class="sd">            int: 最終的な計算結果</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">finalizer</span> <span class="o">=</span> <span class="n">Finalizer</span><span class="p">(</span><span class="n">output_indices</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">finalizer</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
-
-<div class="viewcode-block" id="Channel.apply"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.channel.Channel.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">output_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        CPUから見たQPUによる計算の適用</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="n">output_indices</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Channel.calculate"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.channel.Channel.calculate">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ユーザ実装の量子チャネルの計算部</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div></div>
+        <span class="k">return</span> <span class="n">finalizer</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div></div>
 </pre></div>
 
            </div>
