@@ -2,7 +2,6 @@
 量子チャネルを表現するクラス群
 """
 
-from abc import ABC, abstractmethod
 from typing import List, Optional
 
 from quantum_simulator.base.time_evolution import TimeEvolution
@@ -12,7 +11,7 @@ from quantum_simulator.channel.state import State
 from quantum_simulator.channel.transformer import Transformer
 
 
-class Channel(ABC):
+class Channel:
     """
     量子チャネルの抽象クラス
 
@@ -72,18 +71,3 @@ class Channel(ABC):
         """
         finalizer = Finalizer(output_indices)
         return finalizer.finalize(self.states[-1])
-
-    def apply(self, input: int, output_indices: List[int]) -> int:
-        """
-        CPUから見たQPUによる計算の適用
-        """
-        self.initialize(input)
-        self.calculate()
-        return self.finalize(output_indices)
-
-    @abstractmethod
-    def calculate(self):
-        """
-        ユーザ実装の量子チャネルの計算部
-        """
-        pass

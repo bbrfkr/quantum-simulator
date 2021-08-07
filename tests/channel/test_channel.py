@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 from quantum_simulator.base.utils import allclose
 from quantum_simulator.channel.channel import Channel
 
@@ -13,7 +11,6 @@ class TestChannel:
             * 既存オブジェクトを出力するだけのロジック
     """
 
-    @patch.multiple(Channel, __abstractmethods__=set())
     def test_for_success_channel_initialize(
         self, dict_for_test_success_channel_initialize
     ):
@@ -32,7 +29,6 @@ class TestChannel:
         print(expected_state.qubits.matrix)
         assert allclose(state.qubits.matrix, expected_state.qubits.matrix)
 
-    @patch.multiple(Channel, __abstractmethods__=set())
     def test_for_success_channel_finalize(self, dict_for_test_success_channel_finalize):
         """finalizeメソッドの正常系テスト"""
         dict_for_test = dict_for_test_success_channel_finalize
@@ -47,7 +43,6 @@ class TestChannel:
         expected_outcome = dict_for_test["outcome"]
         assert outcome == expected_outcome
 
-    @patch.multiple(Channel, __abstractmethods__=set())
     def test_for_success_channel_transform(
         self, dict_for_test_success_channel_transform
     ):
