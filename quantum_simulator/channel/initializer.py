@@ -21,35 +21,24 @@ from quantum_simulator.major.time_evolution import (
 class Allocator:
     """
     必要なだけ量子ビットと古典レジスタを用意するクラス
+    確保したビットはすべて|0>もしくは0となる
 
     Attributes:
-        input (int): 入力値(非負値)
         qubit_count (int): 確保するQubit数
         register_count (int): 確保する古典レジスタ数
     """
 
     # 値のバリデーション
-    def __init__(self, input: int, qubit_count: int, register_count: int):
+    def __init__(self, qubit_count: int, register_count: int):
         """
         Args:
-            input (int): 入力値(非負値)
             qubit_count (int): 確保するQubit数
             register_count (int): 確保する古典レジスタ数
         """
-        if input < 0:
-            message = "[ERROR]: 入力値として負の値が与えられました"
+        if register_count < 0 or qubit_count < 0:
+            message = "[ERROR]: レジスタ数またはQubit数として、負の値が与えられました"
             raise InitializeError(message)
 
-        bit_count = count_bits(input)
-        if register_count < bit_count:
-            message = "[ERROR]: レジスタ数が入力値を表現可能な最小ビット数を満たしません"
-            raise InitializeError(message)
-
-        if bit_count > qubit_count:
-            message = "[ERROR]: 確保するQubit数が入力値を表現するには不足しています"
-            raise InitializeError(message)
-
-        self.input = input
         self.qubit_count = qubit_count
         self.register_count = register_count
 
@@ -60,30 +49,16 @@ class Allocator:
         Returns:
             State: 量子ビットと古典レジスタを用意した直後の状態
         """
-        # 初期Qubitの用意
-        init_qubits = None
-        registers = Registers(self.register_count)
-        candidates_list = [0, 1]
-        selected = random.choice(candidates_list)
-        if selected == 0:
-            init_qubits = ZERO
-            registers.put(0, 0.0)
-
-        else:
-            init_qubits = ONE
-            registers.put(0, 1.0)
+        init_qubits = ZERO
 
         # 二番目以降のQubitの結合
         for index in range(self.qubit_count - 1):
-            selected = random.choice(candidates_list)
-            if selected == 0:
-                init_qubits = qubits.combine(ZERO, init_qubits)
-                registers.put(index + 1, 0.0)
-            else:
-                init_qubits = qubits.combine(ONE, init_qubits)
-                registers.put(index + 1, 1.0)
+            init_qubits = qubits.combine(ZERO, init_qubits)
 
-        # インスタンスの初期値の代入
+        registers = Registers(self.register_count)
+        for index in range(self.register_count):
+            registers.put(index, 0.0)
+
         return State(init_qubits, registers)
 
 
@@ -93,21 +68,21 @@ class Initializer:
 
     Attributes:
         allocator (Allocator): Allocatorインスタンス
-        noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展
+        initializer (List[Transformer]): 初期化の際に利用するTransformerの列
     """
 
-    def __init__(self, allocator: Allocator, noise=None):
+    def __init__(self, allocator: Allocator, initializer=[]):
         """
         Args:
             allocator (Allocator): Allocatorインスタンス
-            noise (Optional[TimeEvolution]): ノイズとして作用する任意の時間発展
+            initializer (List[Transformer]): 初期化の際に利用するTransformerの列
         """
         self.allocator = allocator
-        self.noise = noise
+        self.initializer = initializer
 
     def initialize(self) -> State:
         """
-        量子ビットと古典レジスタ確保後、ノイズをかけたのち、状態初期化の時間発展を適用する
+        量子ビットと古典レジスタ確保後、Transformer群による変換をかけて、量子ビットを初期化する
         最終的に初期化された状態(QubitsとRegistersの組)を返す
 
         Returns:
