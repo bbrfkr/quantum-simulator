@@ -1,6 +1,5 @@
-import random
-
 from quantum_simulator.base.time_evolution import TimeEvolution
+from quantum_simulator.channel.transformer import TimeEvolveTransformer
 from quantum_simulator.base.utils import allclose
 from quantum_simulator.channel.initializer import Allocator, Initializer
 from quantum_simulator.channel.registers import Registers
@@ -20,9 +19,7 @@ class TestAllocator:
     ):
         """allocateメソッドの正常系テスト"""
         dict_for_test = dict_for_test_success_allocator_allocate
-        random.seed(dict_for_test["random_seed"])
 
-        input = dict_for_test["input"]
         qubit_count = dict_for_test["qubit_count"]
         register_count = dict_for_test["register_count"]
         qubits = dict_for_test["qubits"]
@@ -31,7 +28,7 @@ class TestAllocator:
             if dict_for_test["registers"][index] is not None:
                 registers.put(index, dict_for_test["registers"][index])
 
-        state = Allocator(input, qubit_count, register_count).allocate()
+        state = Allocator(qubit_count, register_count).allocate()
         assert allclose(qubits.matrix, state.qubits.matrix)
         for index in range(register_count):
             assert state.registers.get(index) == registers.get(index)
@@ -51,9 +48,7 @@ class TestInitializer:
     ):
         """initializeメソッドの正常系テスト"""
         dict_for_test = dict_for_test_success_initializer_initialize
-        random.seed(dict_for_test["random_seed"])
 
-        input = dict_for_test["input"]
         qubit_count = dict_for_test["qubit_count"]
         register_count = dict_for_test["register_count"]
         qubits = dict_for_test["qubits"]
@@ -61,10 +56,12 @@ class TestInitializer:
         for index in range(len(dict_for_test["registers"])):
             if dict_for_test["registers"][index] is not None:
                 registers.put(index, dict_for_test["registers"][index])
-        time_evolution = TimeEvolution(dict_for_test["unitary"])
+        time_evolutions = [
+            TimeEvolveTransformer(TimeEvolution(dict_for_test["unitary"]))
+        ]
 
-        allocator = Allocator(input, qubit_count, register_count)
-        initializer = Initializer(allocator, time_evolution)
+        allocator = Allocator(qubit_count, register_count)
+        initializer = Initializer(allocator, time_evolutions)
         state = initializer.initialize()
         assert allclose(qubits.matrix, state.qubits.matrix)
         for index in range(register_count):

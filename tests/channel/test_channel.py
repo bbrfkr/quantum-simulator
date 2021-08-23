@@ -18,9 +18,8 @@ class TestChannel:
         dict_for_test = dict_for_test_success_channel_initialize
         qubit_count = dict_for_test["qubit_count"]
         register_count = dict_for_test["register_count"]
-        noise = dict_for_test["noise"]
-        input = dict_for_test["input"]
-        channel = Channel(qubit_count, register_count, noise)
+        initializers = dict_for_test["initializers"]
+        channel = Channel(qubit_count, register_count, initializers)
         channel.initialize(input)
 
         state = channel.states[0]
@@ -34,9 +33,8 @@ class TestChannel:
         dict_for_test = dict_for_test_success_channel_finalize
         qubit_count = dict_for_test["qubit_count"]
         register_count = dict_for_test["register_count"]
-        noise = dict_for_test["noise"]
-        input = dict_for_test["input"]
-        channel = Channel(qubit_count, register_count, noise)
+        initializers = dict_for_test["initializers"]
+        channel = Channel(qubit_count, register_count, initializers)
         channel.initialize(input)
 
         outcome = channel.finalize(dict_for_test["output_indices"])
@@ -50,9 +48,8 @@ class TestChannel:
         dict_for_test = dict_for_test_success_channel_transform
         qubit_count = dict_for_test["qubit_count"]
         register_count = dict_for_test["register_count"]
-        noise = dict_for_test["noise"]
-        input = dict_for_test["input"]
-        channel = Channel(qubit_count, register_count, noise)
+        initializers = dict_for_test["initializers"]
+        channel = Channel(qubit_count, register_count, initializers)
         channel.initialize(input)
 
         channel.transform(dict_for_test["transformer"], dict_for_test["index"])
