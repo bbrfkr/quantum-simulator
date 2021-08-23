@@ -32,7 +32,7 @@ class Finalizer:
         最終状態を観測し、計算結果を出力する
 
         Args:
-            state (State): 観測対象の状態¥
+            state (State): 観測対象の状態
 
         Returns:
             int: 最終的な計算結果

@@ -2,9 +2,8 @@
 量子チャネルを表現するクラス群
 """
 
-from typing import List, Optional
+from typing import List
 
-from quantum_simulator.base.time_evolution import TimeEvolution
 from quantum_simulator.channel.finalizer import Finalizer
 from quantum_simulator.channel.initializer import Allocator, Initializer
 from quantum_simulator.channel.state import State
@@ -18,21 +17,21 @@ class Channel:
     Attributes:
         qubit_count (int): チャネル内のqubit数
         register_count (int): チャネル内の古典レジスタ数
-        noise (Optional[TImeEvolution]): 初期化時に発生し得るノイズとしての時間発展
-        transformers (List[Transformer]): 変換の列
+        initializers (List[Transformer]): 初期状態を作成する変換の列
+        transformers (List[Transformer]): シミュレーション目的の変換の列
         states (List(State)): QPU状態の列
     """
 
-    def __init__(self, qubit_count: int, register_count: int, noise=None):
+    def __init__(self, qubit_count: int, register_count: int, initializers=[]):
         """
         Args:
             qubit_count (int): チャネル内のqubit数
             register_count (int): チャネル内の古典レジスタ数
-            noise (Optional[TImeEvolution]): 初期化時に発生し得るノイズとしての時間発展
+            initializers (List[Transformer]): 初期状態を作成する変換の列
         """
         self.qubit_count = qubit_count
         self.register_count = register_count
-        self.noise = noise  # type: Optional[TimeEvolution]
+        self.initializers = initializers  # type: List[Transformer]
         self.transformers = []  # type: List[Transformer]
         self.states = []  # type: List[State]
 
@@ -43,8 +42,8 @@ class Channel:
         Args:
             input (int): 入力情報
         """
-        allocator = Allocator(input, self.qubit_count, self.register_count)
-        initializer = Initializer(allocator, self.noise)
+        allocator = Allocator(self.qubit_count, self.register_count)
+        initializer = Initializer(allocator, self.initializers)
         self.transformers = []
         self.states = [initializer.initialize()]
 
