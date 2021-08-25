@@ -53,7 +53,7 @@ b_polarity_bits = convert_to_bits(b_polarity_bits_int, BITS_COUNT)
 print(f"### aliceが適用する偏光状態のビット列: {a_polarity_bits}")
 print(f"### bobが適用する偏光状態のビット列: {b_polarity_bits}")
 
-# 2. initializerを作成して初期量子ビットを作り出す
+# 3. initializerを作成して初期量子ビットを作り出す
 # ビット列の位の列と、文字列としての添え字の列が逆なので、そろえてからループを回す
 # 観測量を結合する際、下位ビットに対する観測量が先に結合されるため、先に下位ビットを処理する
 classical_unitaries = [
@@ -77,12 +77,12 @@ bb84_channel.initialize()
 print("### 初期量子ビットは以下の通り")
 specialize(bb84_channel.states[0].qubits).dirac_notation()
 
-# 3. eve(攻撃者)は、適当なビット列を一本作る
+# 4. eve(攻撃者)は、適当なビット列を一本作る
 e_polarity_bits_int = random.randint(0, 2 ** BITS_COUNT - 1)
 e_polarity_bits = convert_to_bits(e_polarity_bits_int, BITS_COUNT)
 print(f"### eveが適用する偏光状態のビット列: {e_polarity_bits}")
 
-# 4. eveは、aliceが送信した量子ビットに対して観測を行う
+# 5. eveは、aliceが送信した量子ビットに対して観測を行う
 # まずは観測量を作る
 e_observable_matrices = []
 
