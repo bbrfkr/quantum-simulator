@@ -5,14 +5,10 @@ BB84プロトコルのシミュレーションコード
 
 import random
 
-import numpy as np
-
 from quantum_simulator.base import observable, time_evolution
 from quantum_simulator.base.observable import Observable
 from quantum_simulator.base.qubits import specialize
-from quantum_simulator.base.time_evolution import TimeEvolution
 from quantum_simulator.channel.channel import Channel
-from quantum_simulator.channel.initializer import Allocator, Initializer
 from quantum_simulator.channel.transformer import (
     ObserveTransformer,
     TimeEvolveTransformer,
@@ -26,7 +22,7 @@ from quantum_simulator.major.time_evolution import (
 )
 
 # 設定
-BITS_COUNT = 3
+BITS_COUNT = 4
 
 
 def convert_to_bits(target: int, bit_count: int) -> str:
@@ -58,16 +54,17 @@ print(f"### aliceが適用する偏光状態のビット列: {a_polarity_bits}")
 print(f"### bobが適用する偏光状態のビット列: {b_polarity_bits}")
 
 # 2. initializerを作成して初期量子ビットを作り出す
-
+# ビット列の位の列と、文字列としての添え字の列が逆なので、そろえてからループを回す
+# 観測量を結合する際、下位ビットに対する観測量が先に結合されるため、先に下位ビットを処理する
 classical_unitaries = [
-    NOT_GATE if int(bit) else IDENT_EVOLUTION for bit in candidate_bits
+    NOT_GATE if int(bit) else IDENT_EVOLUTION for bit in reversed(candidate_bits)
 ]
 classical_transformer = TimeEvolveTransformer(
     time_evolution.multiple_combine(classical_unitaries)
 )
 
 polarity_unitaries = [
-    HADAMARD_GATE if int(bit) else IDENT_EVOLUTION for bit in a_polarity_bits
+    HADAMARD_GATE if int(bit) else IDENT_EVOLUTION for bit in reversed(a_polarity_bits)
 ]
 polarity_transformer = TimeEvolveTransformer(
     time_evolution.multiple_combine(polarity_unitaries)
@@ -86,36 +83,29 @@ e_polarity_bits = convert_to_bits(e_polarity_bits_int, BITS_COUNT)
 print(f"### eveが適用する偏光状態のビット列: {e_polarity_bits}")
 
 # 4. eveは、aliceが送信した量子ビットに対して観測を行う
+# まずは観測量を作る
 e_observable_matrices = []
-for index, bit in enumerate(e_polarity_bits):
-    if index == (BITS_COUNT - 1):
-        if bit == "0":
-            element = Observable(ONE.matrix * (2 ** (index)))
-        else:
-            element = Observable(MINUS.matrix * (2 ** index))
-    else:
-        element = IDENT_OBSERVABLE
 
-    for j in range(BITS_COUNT - 1).__reversed__():
-        if index == j:
+# ビット列の位の列と、文字列としての添え字の列が逆なので、そろえてからループを回す
+# 観測量を結合する際、下位ビットに対する観測量が先に結合されるため、先に下位ビットを処理する
+for i, bit in enumerate(reversed(e_polarity_bits)):
+    whole_observable = None
+    for j in range(BITS_COUNT):
+        if i == j:
             if bit == "0":
-                o = Observable(ONE.matrix * (2 ** (index)))
+                sub_observable = Observable(ONE.matrix * (2 ** i))
             else:
-                o = Observable(MINUS.matrix * (2 ** index))
+                sub_observable = Observable(MINUS.matrix * (2 ** i))
         else:
-            o = IDENT_OBSERVABLE
-        element = observable.combine(element, o)
-
-    e_observable_matrices.append(element.matrix)
+            sub_observable = IDENT_OBSERVABLE
+        whole_observable = observable.combine(whole_observable, sub_observable)
+    e_observable_matrices.append(whole_observable.matrix)
 
 e_observable = Observable(sum(e_observable_matrices))
 e_transformer = ObserveTransformer(e_observable)
 
-print(f"!!! eveの観測 start !!!")
+print("!!! eveの観測 start !!!")
 bb84_channel.transform(e_transformer, index=0)
-print(f"!!! eveの観測 end !!!")
-
-print(round(bb84_channel.states[1].registers.get(0)))
-print(bb84_channel.states[1].registers.get(0))
+print("!!! eveの観測 end !!!")
 e_got_bits = convert_to_bits(round(bb84_channel.states[1].registers.get(0)), BITS_COUNT)
-print(f"### eveが観測したビット: {e_got_bits}")
+print(f"### eveが観測したビット列: {e_got_bits}")
