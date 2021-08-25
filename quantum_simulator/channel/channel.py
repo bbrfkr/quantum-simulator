@@ -17,25 +17,25 @@ class Channel:
     Attributes:
         qubit_count (int): チャネル内のqubit数
         register_count (int): チャネル内の古典レジスタ数
-        initializers (List[Transformer]): 初期状態を作成する変換の列
+        init_transformers (List[Transformer]): 初期状態を作成する変換の列
         transformers (List[Transformer]): シミュレーション目的の変換の列
         states (List(State)): QPU状態の列
     """
 
-    def __init__(self, qubit_count: int, register_count: int, initializers=[]):
+    def __init__(self, qubit_count: int, register_count: int, init_transformers=[]):
         """
         Args:
             qubit_count (int): チャネル内のqubit数
             register_count (int): チャネル内の古典レジスタ数
-            initializers (List[Transformer]): 初期状態を作成する変換の列
+            init_transformers (List[Transformer]): 初期状態を作成する変換の列
         """
         self.qubit_count = qubit_count
         self.register_count = register_count
-        self.initializers = initializers  # type: List[Transformer]
+        self.init_transformers = init_transformers  # type: List[Transformer]
         self.transformers = []  # type: List[Transformer]
         self.states = []  # type: List[State]
 
-    def initialize(self, input: int):
+    def initialize(self):
         """
         Transformer配列とState配列を初期化する
 
@@ -43,7 +43,7 @@ class Channel:
             input (int): 入力情報
         """
         allocator = Allocator(self.qubit_count, self.register_count)
-        initializer = Initializer(allocator, self.initializers)
+        initializer = Initializer(allocator, self.init_transformers)
         self.transformers = []
         self.states = [initializer.initialize()]
 

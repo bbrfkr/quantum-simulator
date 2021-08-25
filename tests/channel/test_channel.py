@@ -20,7 +20,7 @@ class TestChannel:
         register_count = dict_for_test["register_count"]
         initializers = dict_for_test["initializers"]
         channel = Channel(qubit_count, register_count, initializers)
-        channel.initialize(input)
+        channel.initialize()
 
         state = channel.states[0]
         expected_state = dict_for_test["state"]
@@ -35,7 +35,7 @@ class TestChannel:
         register_count = dict_for_test["register_count"]
         initializers = dict_for_test["initializers"]
         channel = Channel(qubit_count, register_count, initializers)
-        channel.initialize(input)
+        channel.initialize()
 
         outcome = channel.finalize(dict_for_test["output_indices"])
         expected_outcome = dict_for_test["outcome"]
@@ -50,7 +50,7 @@ class TestChannel:
         register_count = dict_for_test["register_count"]
         initializers = dict_for_test["initializers"]
         channel = Channel(qubit_count, register_count, initializers)
-        channel.initialize(input)
+        channel.initialize()
 
         channel.transform(dict_for_test["transformer"], dict_for_test["index"])
         outcome = channel.finalize(dict_for_test["output_indices"])

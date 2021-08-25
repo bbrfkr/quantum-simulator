@@ -3,7 +3,7 @@
 """
 
 from math import ceil
-from typing import List
+from typing import List, Optional
 
 import numpy
 
@@ -132,17 +132,20 @@ def _is_pure_qubits(array: numpy.array) -> bool:
     return True
 
 
-def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
+def combine(qubits_0: Optional[PureQubits], qubits_1: PureQubits) -> PureQubits:
     """
     二つのPureQubitsを結合し、その結果を返す。
 
     Args:
-        qubits_0 (PureQubits): 結合される側のPureQubits
+        qubits_0 (Optional[PureQubits]): 結合される側のPureQubits
         qubits_1 (PureQubits): 結合する側のPureQubits
 
     Returns:
         PureQubits: 結合後のPureQubits。qubits_0 ⊗ qubits_1
     """
+    if qubits_0 is None:
+        return qubits_1
+
     qubits_0_vector = list(qubits_0.vector)
     new_vector = np.hstack(
         tuple([element * qubits_1.vector for element in qubits_0_vector])
@@ -153,17 +156,22 @@ def combine(qubits_0: PureQubits, qubits_1: PureQubits) -> PureQubits:
     return new_qubits
 
 
-def combine_ons(ons_0: OrthogonalSystem, ons_1: OrthogonalSystem) -> OrthogonalSystem:
+def combine_ons(
+    ons_0: Optional[OrthogonalSystem], ons_1: OrthogonalSystem
+) -> OrthogonalSystem:
     """
     二つのOrthogonalSystemを要素順にを結合し、その結果を返す。
 
     Args:
-        ons_0 (OrthogonalSystem): 結合される側のOrthogonalSystem
+        ons_0 (Optional[OrthogonalSystem]): 結合される側のOrthogonalSystem
         ons_1 (OrthogonalSystem): 結合する側のOrthogonalSystem
 
     Returns:
         OrthogonalSystem: 結合後のOrthogonalSystem
     """
+    if ons_0 is None:
+        return ons_1
+
     new_qubits = [
         combine(qubits_0, qubits_1)
         for qubits_0 in ons_0.qubits_list
@@ -185,9 +193,9 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
     Returns:
         PureQubits: 結合後のPureQubits。qubits_list[0] ⊗ ... ⊗ qubits_list[n]
     """
-    combined_qubits = qubits_list[0]
-    for index in range(len(qubits_list) - 1):
-        combined_qubits = combine(combined_qubits, qubits_list[index + 1])
+    combined_qubits = None
+    for index in range(len(qubits_list)):
+        combined_qubits = combine(combined_qubits, qubits_list[index])
 
     return combined_qubits
 
@@ -202,9 +210,9 @@ def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
     Returns:
         OrthogonalSystem: 結合後のOrthogonalSystem
     """
-    combined_ons = ons_list[0]
-    for index in range(len(ons_list) - 1):
-        combined_ons = combine_ons(combined_ons, ons_list[index + 1])
+    combined_ons = None
+    for index in range(len(ons_list)):
+        combined_ons = combine_ons(combined_ons, ons_list[index])
 
     return combined_ons
 

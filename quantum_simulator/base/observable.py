@@ -3,7 +3,7 @@
 """
 
 from random import choices
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import numpy
 
@@ -226,17 +226,19 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
     return (observed_result[0], Qubits(normalized_post_matrix))
 
 
-def combine(observable_0: Observable, observable_1: Observable) -> Observable:
+def combine(observable_0: Optional[Observable], observable_1: Observable) -> Observable:
     """
     2つの観測量を結合して合成系の観測量を作る
 
     Args:
-        observable_0 (Observable): 結合される側の観測量
+        observable_0 (Optional[Observable]): 結合される側の観測量
         observable_1 (Observable): 結合する側の観測量
 
     Returns:
         Observable: 結合後の観測量
     """
+    if observable_0 is None:
+        return observable_1
 
     # 新しい観測量の生成
     observable_0_matrix = list(observable_0.matrix)
@@ -265,9 +267,9 @@ def multiple_combine(observables: List[Observable]) -> Observable:
     Returns:
         Observable: 結合後の観測量
     """
-    combined_observable = observables[0]
+    combined_observable = None
 
-    for index in range(len(observables) - 1):
-        combined_observable = combine(combined_observable, observables[index + 1])
+    for index in range(len(observables)):
+        combined_observable = combine(combined_observable, observables[index])
 
     return combined_observable
