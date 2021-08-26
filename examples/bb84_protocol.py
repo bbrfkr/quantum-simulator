@@ -22,7 +22,7 @@ from quantum_simulator.major.time_evolution import (
 )
 
 # 設定
-BITS_COUNT = 8
+BITS_COUNT = 2
 
 
 def convert_to_bits(target: int, bit_count: int) -> str:
@@ -42,7 +42,7 @@ def convert_to_bits(target: int, bit_count: int) -> str:
 candidate_bits_int = random.randint(0, 2 ** BITS_COUNT - 1)
 candidate_bits = convert_to_bits(candidate_bits_int, BITS_COUNT)
 a_bits_int = candidate_bits_int
-print(f"共有したいビット候補: {candidate_bits}")
+print(f"### 共有したいビット候補: {candidate_bits}")
 
 # 2. aliceは、補助ビット列として、適当なビット列を1本作る
 a_polarity_bits_int = random.randint(0, 2 ** BITS_COUNT - 1)
