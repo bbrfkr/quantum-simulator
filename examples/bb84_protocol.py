@@ -179,4 +179,4 @@ if shared_bits_count:
     else:
         print("### eveが盗聴していることにaliceとbobは気づくことができません。。。")
 else:
-    print("### aliceとbobは1ビットも共有できませんでした!")
+    print("### aliceとbobは1ビットも共有できませんでした。。。")
