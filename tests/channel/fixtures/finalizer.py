@@ -9,7 +9,9 @@ from quantum_simulator.channel.state import State
 @pytest.fixture(
     params=[
         {
-            "finalizer": Finalizer([0, 1],),
+            "finalizer": Finalizer(
+                [0, 1],
+            ),
             "state": State(
                 Qubits(
                     [
@@ -25,7 +27,9 @@ from quantum_simulator.channel.state import State
             "random_seed": 0,
         },
         {
-            "finalizer": Finalizer([0, 1],),
+            "finalizer": Finalizer(
+                [0, 1],
+            ),
             "state": State(
                 Qubits(
                     [
@@ -41,7 +45,9 @@ from quantum_simulator.channel.state import State
             "random_seed": 0,
         },
         {
-            "finalizer": Finalizer([1],),
+            "finalizer": Finalizer(
+                [1],
+            ),
             "state": State(
                 Qubits(
                     [
@@ -57,7 +63,9 @@ from quantum_simulator.channel.state import State
             "random_seed": 0,
         },
         {
-            "finalizer": Finalizer([1],),
+            "finalizer": Finalizer(
+                [1],
+            ),
             "state": State(
                 Qubits(
                     [
@@ -73,7 +81,9 @@ from quantum_simulator.channel.state import State
             "random_seed": 0,
         },
         {
-            "finalizer": Finalizer([2, 0],),
+            "finalizer": Finalizer(
+                [2, 0],
+            ),
             "state": State(
                 Qubits(
                     [
@@ -93,7 +103,9 @@ from quantum_simulator.channel.state import State
             "random_seed": 0,
         },
         {
-            "finalizer": Finalizer([2, 0],),
+            "finalizer": Finalizer(
+                [2, 0],
+            ),
             "state": State(
                 Qubits(
                     [

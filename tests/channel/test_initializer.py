@@ -1,8 +1,8 @@
 from quantum_simulator.base.time_evolution import TimeEvolution
-from quantum_simulator.channel.transformer import TimeEvolveTransformer
 from quantum_simulator.base.utils import allclose
 from quantum_simulator.channel.initializer import Allocator, Initializer
 from quantum_simulator.channel.registers import Registers
+from quantum_simulator.channel.transformer import TimeEvolveTransformer
 
 
 class TestAllocator:

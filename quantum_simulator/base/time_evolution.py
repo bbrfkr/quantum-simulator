@@ -2,7 +2,7 @@
 時間発展を記述するクラス群
 """
 
-from typing import List, Optional,cast
+from typing import List, Optional, cast
 
 from quantum_simulator.base.error import (
     IncompatibleDimensionError,

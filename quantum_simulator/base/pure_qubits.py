@@ -10,8 +10,8 @@ import numpy
 from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
-    QubitCountNotMatchError,
     NotMatchCountError,
+    QubitCountNotMatchError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose

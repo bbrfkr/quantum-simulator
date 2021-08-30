@@ -9,10 +9,7 @@ from quantum_simulator.channel.transformer import (
     ObserveTransformer,
     TimeEvolveTransformer,
 )
-from quantum_simulator.major.observable import (
-    IDENT_OBSERVABLE,
-    ZERO_PROJECTION,
-)
+from quantum_simulator.major.observable import IDENT_OBSERVABLE, ZERO_PROJECTION
 from quantum_simulator.major.time_evolution import IDENT_EVOLUTION, NOT_GATE
 
 

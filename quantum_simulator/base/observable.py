@@ -3,7 +3,7 @@
 """
 
 from random import choices
-from typing import List, Tuple, Optional, cast
+from typing import List, Optional, Tuple, cast
 
 import numpy
 
