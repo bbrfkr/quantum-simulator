@@ -3,7 +3,7 @@
 """
 
 from random import choices
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, cast
 
 import numpy
 
@@ -25,7 +25,7 @@ class Observable:  # pylint: disable=too-few-public-methods
     観測量のクラス
 
     Attributes:
-        matrix (np.array): 行列形式の観測量
+        matrix (np.ndarray): 行列形式の観測量
     """
 
     def __init__(self, hermite_matrix: list):
@@ -33,7 +33,7 @@ class Observable:  # pylint: disable=too-few-public-methods
         Args:
             hermite_matrix (list): 観測量の候補となるリスト。行列形式とndarray形式を許容する
         """
-        matrix = np.array(hermite_matrix)
+        matrix = np.ndarray(hermite_matrix)
 
         # 次元のチェック
         if not is_qubits_dim(matrix):
@@ -81,14 +81,14 @@ class Observable:  # pylint: disable=too-few-public-methods
 
 
 def _resolve_observed_results(
-    eigen_values: List[float], eigen_states: numpy.array
+    eigen_values: List[float], eigen_states: numpy.ndarray
 ) -> Tuple[List[float], List[Observable]]:
     """
     与えられた固有値リストと固有ベクトルリストから、取りうる観測結果 (固有値と射影の組) を返す
 
     Args:
         eigen_values (List[float]): 固有値リスト
-        eigen_states: (List[np.array]): 固有ベクトルのリスト
+        eigen_states: (List[np.ndarray]): 固有ベクトルのリスト
 
     Returns:
         Tuple[List[float], List[Observable]]: 固有値と射影観測量の組
@@ -267,9 +267,14 @@ def multiple_combine(observables: List[Observable]) -> Observable:
     Returns:
         Observable: 結合後の観測量
     """
+    if not observables:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
+
     combined_observable = None
+    for observable in observables:
+        combined_observable = combine(combined_observable, observable)
 
-    for index in range(len(observables)):
-        combined_observable = combine(combined_observable, observables[index])
-
-    return combined_observable
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_observable = cast(Observable, combined_observable)
+    return casted_observable

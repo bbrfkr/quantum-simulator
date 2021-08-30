@@ -2,12 +2,13 @@
 時間発展を記述するクラス群
 """
 
-from typing import List, Optional
+from typing import List, Optional,cast
 
 from quantum_simulator.base.error import (
     IncompatibleDimensionError,
     InitializeError,
     NotCompleteError,
+    NotMatchCountError,
 )
 from quantum_simulator.base.pure_qubits import OrthogonalSystem
 from quantum_simulator.base.qubits import Qubits, is_qubits_dim
@@ -31,7 +32,7 @@ class TimeEvolution:
         Args:
             unitary_array: ユニタリ変換の候補となるリスト。行列形式とndarray形式を許容する
         """
-        matrix = np.array(unitary_matrix)
+        matrix = np.ndarray(unitary_matrix)
 
         # 次元のチェック
         if not is_qubits_dim(matrix):
@@ -162,12 +163,17 @@ def multiple_combine(evolutions: List[TimeEvolution]) -> TimeEvolution:
     Returns:
         TimeEvolution: 結合後の時間発展
     """
+    if not evolutions:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
+
     combined_evolution = None
+    for evolution in evolutions:
+        combined_evolution = combine(combined_evolution, evolution)
 
-    for index in range(len(evolutions)):
-        combined_evolution = combine(combined_evolution, evolutions[index])
-
-    return combined_evolution
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_evolution = cast(TimeEvolution, combined_evolution)
+    return casted_evolution
 
 
 def compose(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolution:

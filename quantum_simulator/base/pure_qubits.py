@@ -3,7 +3,7 @@
 """
 
 from math import ceil
-from typing import List, Optional
+from typing import List, Optional, cast
 
 import numpy
 
@@ -11,6 +11,7 @@ from quantum_simulator.base.error import (
     InitializeError,
     NoQubitsInputError,
     QubitCountNotMatchError,
+    NotMatchCountError,
 )
 from quantum_simulator.base.switch_cupy import xp_factory
 from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose
@@ -23,7 +24,7 @@ class PureQubits:
     純粋状態で一般的に複数粒子のQubit系クラス
 
     Attributes:
-        vector (np.array): ベクトル形式のPureQubits
+        vector (np.ndarray): ベクトル形式のPureQubits
         qubit_count (int): PureQubitsに内包されているQubitの数
     """
 
@@ -34,7 +35,7 @@ class PureQubits:
         """
 
         # Qubit系であるかチェック
-        vector = np.array(amplitudes)
+        vector = np.ndarray(amplitudes)
         if not _is_pure_qubits(vector):
             message = "[ERROR]: 与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
@@ -108,12 +109,12 @@ class OrthogonalSystem:
         return True
 
 
-def _is_pure_qubits(array: numpy.array) -> bool:
+def _is_pure_qubits(array: numpy.ndarray) -> bool:
     """
-    与えられたnp.arrayがQubit系を表現しているか判定する。
+    与えられたnp.ndarrayがQubit系を表現しているか判定する。
 
     Args:
-        array (np.array): 判定対象のnp.array
+        array (np.ndarray): 判定対象のnp.ndarray
 
     Returns:
         bool: 判定結果
@@ -126,7 +127,7 @@ def _is_pure_qubits(array: numpy.array) -> bool:
 
     # 長さが1、つまり確率が1になるかをチェック
     norm = np.sqrt(np.sum(np.abs(array) ** 2))
-    if not allclose(norm, 1.0):
+    if not allclose(norm, np.ndarray(1.0)):
         return False
 
     return True
@@ -193,11 +194,17 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
     Returns:
         PureQubits: 結合後のPureQubits。qubits_list[0] ⊗ ... ⊗ qubits_list[n]
     """
-    combined_qubits = None
-    for index in range(len(qubits_list)):
-        combined_qubits = combine(combined_qubits, qubits_list[index])
+    if not qubits_list:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
 
-    return combined_qubits
+    combined_qubits = None
+    for qubits in qubits_list:
+        combined_qubits = combine(combined_qubits, qubits)
+
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_qubits = cast(PureQubits, combined_qubits)
+    return casted_qubits
 
 
 def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
@@ -205,16 +212,22 @@ def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
     与えられたOrthogonalSystemのリストを前方から順にを結合し、その結果を返す。
 
     Args:
-        ons_lit (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト
+        ons_list (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト
 
     Returns:
         OrthogonalSystem: 結合後のOrthogonalSystem
     """
-    combined_ons = None
-    for index in range(len(ons_list)):
-        combined_ons = combine_ons(combined_ons, ons_list[index])
+    if not ons_list:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
 
-    return combined_ons
+    combined_ons = None
+    for ons in ons_list:
+        combined_ons = combine_ons(combined_ons, ons)
+
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_ons = cast(OrthogonalSystem, combined_ons)
+    return casted_ons
 
 
 def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:

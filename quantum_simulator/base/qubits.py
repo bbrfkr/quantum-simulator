@@ -2,7 +2,7 @@
 一般的に混合状態のQubit系に関するクラス群
 """
 
-from typing import List, Optional
+from typing import List, Optional, cast
 
 import numpy
 
@@ -30,7 +30,7 @@ class Qubits:
     一般的に混合状態で複数粒子のQubit系クラス
 
     Attributes:
-        matrix (np.array): 行列形式のQubits
+        matrix (np.ndarray): 行列形式のQubits
         qubit_count (int): Qubitsに内包されているQubitの数
     """
 
@@ -40,7 +40,7 @@ class Qubits:
             density_matrix (list): 密度行列の候補となるリスト
         """
         # arrayの次元をチェック
-        matrix = np.array(density_matrix)
+        matrix = np.ndarray(density_matrix)
         if not is_qubits_dim(matrix):
             message = "[ERROR]: 与えられたリストは形がQubit系に対応しません"
             raise InitializeError(message)
@@ -72,12 +72,12 @@ class Qubits:
         return str(self.matrix)
 
 
-def is_qubits_dim(array: numpy.array) -> bool:
+def is_qubits_dim(array: numpy.ndarray) -> bool:
     """
-    与えられたnp.arrayの次元がQubit系を表現する空間の次元たりえるかを判定する
+    与えられたnp.ndarrayの次元がQubit系を表現する空間の次元たりえるかを判定する
 
     Args:
-        array (np.array): 判定対象のnp.array
+        array (np.ndarray): 判定対象のnp.ndarray
 
     Returns:
         bool: 判定結果
@@ -167,7 +167,7 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
         raise NotMatchCountError(message)
 
     # 密度行列から再度密度行列を導出する
-    density_matrix = probabilities[-1] * qubits_list[-1].matrix  # type: numpy.array
+    density_matrix = probabilities[-1] * qubits_list[-1].matrix  # type: list
 
     for index in range(len_qubits_list - 1):
         added_matrix = probabilities[index] * qubits_list[index].matrix
@@ -276,12 +276,17 @@ def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
     Returns:
         Qubits: 結合結果としてのQubits
     """
+    if not qubits_list:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
+
     combined_qubits = None
+    for qubits in qubits_list:
+        combined_qubits = combine(combined_qubits, qubits)
 
-    for index in range(len(qubits_list)):
-        combined_qubits = combine(combined_qubits, qubits_list[index])
-
-    return combined_qubits
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_qubits = cast(Qubits, combined_qubits)
+    return casted_qubits
 
 
 def multiple_reduction(qubits: Qubits, target_particles: List[int]) -> Qubits:
