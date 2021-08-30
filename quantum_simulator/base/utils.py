@@ -132,7 +132,7 @@ def is_probabilities(target_list: List[float]) -> bool:
     Return:
         bool: 判定結果
     """
-    target_array = np.ndarray(target_list)
+    target_array = np.array(target_list)
 
     if np.any(around(target_array) < 0.0):
         return False

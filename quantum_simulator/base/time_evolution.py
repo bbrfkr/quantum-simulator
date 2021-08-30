@@ -32,7 +32,7 @@ class TimeEvolution:
         Args:
             unitary_array: ユニタリ変換の候補となるリスト。行列形式とndarray形式を許容する
         """
-        matrix = np.ndarray(unitary_matrix)
+        matrix = np.array(unitary_matrix)
 
         # 次元のチェック
         if not is_qubits_dim(matrix):

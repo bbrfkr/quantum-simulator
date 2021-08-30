@@ -33,7 +33,7 @@ class Observable:  # pylint: disable=too-few-public-methods
         Args:
             hermite_matrix (list): 観測量の候補となるリスト。行列形式とndarray形式を許容する
         """
-        matrix = np.ndarray(hermite_matrix)
+        matrix = np.array(hermite_matrix)
 
         # 次元のチェック
         if not is_qubits_dim(matrix):

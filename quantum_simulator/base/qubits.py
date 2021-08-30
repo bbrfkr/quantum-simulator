@@ -40,7 +40,7 @@ class Qubits:
             density_matrix (list): 密度行列の候補となるリスト
         """
         # arrayの次元をチェック
-        matrix = np.ndarray(density_matrix)
+        matrix = np.array(density_matrix)
         if not is_qubits_dim(matrix):
             message = "[ERROR]: 与えられたリストは形がQubit系に対応しません"
             raise InitializeError(message)

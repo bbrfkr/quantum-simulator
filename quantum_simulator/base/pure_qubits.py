@@ -35,7 +35,7 @@ class PureQubits:
         """
 
         # Qubit系であるかチェック
-        vector = np.ndarray(amplitudes)
+        vector = np.array(amplitudes)
         if not _is_pure_qubits(vector):
             message = "[ERROR]: 与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
@@ -127,7 +127,7 @@ def _is_pure_qubits(array: numpy.ndarray) -> bool:
 
     # 長さが1、つまり確率が1になるかをチェック
     norm = np.sqrt(np.sum(np.abs(array) ** 2))
-    if not allclose(norm, np.ndarray(1.0)):
+    if not allclose(norm, np.array(1.0)):
         return False
 
     return True
