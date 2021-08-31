@@ -18,13 +18,13 @@ AROUNDED_DECIMALS = 5
 np = xp_factory()  # typing: numpy
 
 
-def allclose(a: numpy.array, b: numpy.array) -> bool:
+def allclose(a: numpy.ndarray, b: numpy.ndarray) -> bool:
     """
-    numpy.allcloseの本モジュール用ラッパー。２つのnp.arrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
+    numpy.allcloseの本モジュール用ラッパー。２つのnp.ndarrayの各要素を近似的に比較し、全て一致していたらTrueを返す。
 
     Args:
-        a (np.array): 比較対象1つ目
-        b (np.array): 比較対象2つ目
+        a (np.ndarray): 比較対象1つ目
+        b (np.ndarray): 比較対象2つ目
 
     Return:
         bool: 比較結果
@@ -66,15 +66,15 @@ def is_real_close(a: float, b: float) -> bool:
     return math.isclose(a, b, rel_tol=RELATIVE_TOLERANCE, abs_tol=ABSOLUTE_TOLERANCE)
 
 
-def around(a: numpy.array) -> numpy.array:
+def around(a: numpy.ndarray) -> numpy.ndarray:
     """
-    numpy.aroundの本モジュール用ラッパー。np.arrayの各要素をモジュール指定の桁数で丸める
+    numpy.aroundの本モジュール用ラッパー。np.ndarrayの各要素をモジュール指定の桁数で丸める
 
     Args:
-        a (np.array): 比較対象1つ目
+        a (np.ndarray): 比較対象1つ目
 
     Return:
-        np.array: aを丸めた結果
+        np.ndarray: aを丸めた結果
     """
     return np.around(a, AROUNDED_DECIMALS)
 
@@ -143,12 +143,12 @@ def is_probabilities(target_list: List[float]) -> bool:
     return True
 
 
-def is_real(array: numpy.array) -> bool:
+def is_real(array: numpy.ndarray) -> bool:
     """
-    与えられたnp.arrayのデータ型が近似的に実数であるか判定する
+    与えられたnp.ndarrayのデータ型が近似的に実数であるか判定する
 
     Args:
-        array (np.array): 判定対象のnp.array
+        array (np.ndarray): 判定対象のnp.ndarray
 
     Return:
         bool: 判定結果

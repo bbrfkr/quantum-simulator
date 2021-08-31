@@ -3,7 +3,7 @@
 """
 
 from random import choices
-from typing import List, Tuple
+from typing import List, Optional, Tuple, cast
 
 import numpy
 
@@ -25,7 +25,7 @@ class Observable:  # pylint: disable=too-few-public-methods
     観測量のクラス
 
     Attributes:
-        matrix (np.array): 行列形式の観測量
+        matrix (np.ndarray): 行列形式の観測量
     """
 
     def __init__(self, hermite_matrix: list):
@@ -81,14 +81,14 @@ class Observable:  # pylint: disable=too-few-public-methods
 
 
 def _resolve_observed_results(
-    eigen_values: List[float], eigen_states: numpy.array
+    eigen_values: List[float], eigen_states: numpy.ndarray
 ) -> Tuple[List[float], List[Observable]]:
     """
     与えられた固有値リストと固有ベクトルリストから、取りうる観測結果 (固有値と射影の組) を返す
 
     Args:
         eigen_values (List[float]): 固有値リスト
-        eigen_states: (List[np.array]): 固有ベクトルのリスト
+        eigen_states: (List[np.ndarray]): 固有ベクトルのリスト
 
     Returns:
         Tuple[List[float], List[Observable]]: 固有値と射影観測量の組
@@ -226,17 +226,19 @@ def observe(observable: Observable, target: Qubits) -> Tuple[float, Qubits]:
     return (observed_result[0], Qubits(normalized_post_matrix))
 
 
-def combine(observable_0: Observable, observable_1: Observable) -> Observable:
+def combine(observable_0: Optional[Observable], observable_1: Observable) -> Observable:
     """
     2つの観測量を結合して合成系の観測量を作る
 
     Args:
-        observable_0 (Observable): 結合される側の観測量
+        observable_0 (Optional[Observable]): 結合される側の観測量
         observable_1 (Observable): 結合する側の観測量
 
     Returns:
         Observable: 結合後の観測量
     """
+    if observable_0 is None:
+        return observable_1
 
     # 新しい観測量の生成
     observable_0_matrix = list(observable_0.matrix)
@@ -265,9 +267,14 @@ def multiple_combine(observables: List[Observable]) -> Observable:
     Returns:
         Observable: 結合後の観測量
     """
-    combined_observable = observables[0]
+    if not observables:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
 
-    for index in range(len(observables) - 1):
-        combined_observable = combine(combined_observable, observables[index + 1])
+    combined_observable = None
+    for observable in observables:
+        combined_observable = combine(combined_observable, observable)
 
-    return combined_observable
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_observable = cast(Observable, combined_observable)
+    return casted_observable

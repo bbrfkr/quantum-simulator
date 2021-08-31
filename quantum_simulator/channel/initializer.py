@@ -60,17 +60,17 @@ class Initializer:
 
     Attributes:
         allocator (Allocator): Allocatorインスタンス
-        initializers (List[Transformer]): 初期化の際に利用するTransformerの列
+        transformers (List[Transformer]): 初期化の際に利用するTransformerの列
     """
 
-    def __init__(self, allocator: Allocator, initializers=[]):
+    def __init__(self, allocator: Allocator, transformers=[]):
         """
         Args:
             allocator (Allocator): Allocatorインスタンス
             initializer (List[Transformer]): 初期化の際に利用するTransformerの列
         """
         self.allocator = allocator
-        self.initializers = initializers
+        self.transformers = transformers
 
     def initialize(self) -> State:
         """
@@ -83,11 +83,11 @@ class Initializer:
 
         init_state = self.allocator.allocate()
 
-        for initializer in self.initializers:
-            if not isinstance(initializer, Transformer):
+        for transformer in self.transformers:
+            if not isinstance(transformer, Transformer):
                 message = "[ERROR]: 与えられた要素はTransformerではありません"
                 raise InitializeError(message)
 
-            init_state = initializer.transform(init_state)
+            init_state = transformer.transform(init_state)
 
         return init_state

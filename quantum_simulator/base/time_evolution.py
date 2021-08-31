@@ -2,12 +2,13 @@
 時間発展を記述するクラス群
 """
 
-from typing import List
+from typing import List, Optional, cast
 
 from quantum_simulator.base.error import (
     IncompatibleDimensionError,
     InitializeError,
     NotCompleteError,
+    NotMatchCountError,
 )
 from quantum_simulator.base.pure_qubits import OrthogonalSystem
 from quantum_simulator.base.qubits import Qubits, is_qubits_dim
@@ -117,18 +118,21 @@ def create_from_onb(
 
 
 def combine(
-    time_evolution_0: TimeEvolution, time_evolution_1: TimeEvolution
+    time_evolution_0: Optional[TimeEvolution], time_evolution_1: TimeEvolution
 ) -> TimeEvolution:
     """
     2つの時間発展を結合して合成系の時間発展を作る
 
     Args:
-        time_evolution_0 (TimeEvolution): 結合される側の時間発展
+        time_evolution_0 (Optional[TimeEvolution]): 結合される側の時間発展
         time_evolution_1 (TimeEvolution): 結合する側の時間発展
 
     Returns:
         TimeEvolution: 結合後の時間発展
     """
+    if time_evolution_0 is None:
+        return time_evolution_1
+
     # 新しい時間発展の生成
     time_evolution_0_matrix = list(time_evolution_0.matrix)
     new_matrix = np.vstack(
@@ -159,12 +163,17 @@ def multiple_combine(evolutions: List[TimeEvolution]) -> TimeEvolution:
     Returns:
         TimeEvolution: 結合後の時間発展
     """
-    combined_evolution = evolutions[0]
+    if not evolutions:
+        message = "[ERROR]: 空のリストが与えられました"
+        raise NotMatchCountError(message)
 
-    for index in range(len(evolutions) - 1):
-        combined_evolution = combine(combined_evolution, evolutions[index + 1])
+    combined_evolution = None
+    for evolution in evolutions:
+        combined_evolution = combine(combined_evolution, evolution)
 
-    return combined_evolution
+    # リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする
+    casted_evolution = cast(TimeEvolution, combined_evolution)
+    return casted_evolution
 
 
 def compose(evolution_0: TimeEvolution, evolution_1: TimeEvolution) -> TimeEvolution:
