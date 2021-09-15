@@ -34,6 +34,7 @@ class Channel:
         self.init_transformers = init_transformers  # type: List[Transformer]
         self.transformers = []  # type: List[Transformer]
         self.states = []  # type: List[State]
+        self.is_finalized = False
 
     def initialize(self):
         """
@@ -69,4 +70,6 @@ class Channel:
             int: 最終的な計算結果
         """
         finalizer = Finalizer(output_indices)
-        return finalizer.finalize(self.states[-1])
+        outcome = finalizer.finalize(self.states[-1])
+        self.is_finalized = True
+        return outcome
