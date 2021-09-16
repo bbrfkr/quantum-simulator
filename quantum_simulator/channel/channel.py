@@ -2,8 +2,9 @@
 量子チャネルを表現するクラス群
 """
 
-from typing import List
+from typing import List, Optional
 
+from quantum_simulator.channel.error import FinalizeError
 from quantum_simulator.channel.finalizer import Finalizer
 from quantum_simulator.channel.initializer import Allocator, Initializer
 from quantum_simulator.channel.state import State
@@ -19,7 +20,8 @@ class Channel:
         register_count (int): チャネル内の古典レジスタ数
         init_transformers (List[Transformer]): 初期状態を作成する変換の列
         transformers (List[Transformer]): シミュレーション目的の変換の列
-        states (List(State)): QPU状態の列
+        states (List[State]): QPU状態の列
+        outcome (Optional[float]): 最終出力値
     """
 
     def __init__(self, qubit_count: int, register_count: int, init_transformers=[]):
@@ -34,7 +36,7 @@ class Channel:
         self.init_transformers = init_transformers  # type: List[Transformer]
         self.transformers = []  # type: List[Transformer]
         self.states = []  # type: List[State]
-        self.is_finalized = False
+        self.outcome = None  # type: Optional[int]
 
     def initialize(self):
         """
@@ -70,6 +72,8 @@ class Channel:
             int: 最終的な計算結果
         """
         finalizer = Finalizer(output_indices)
-        outcome = finalizer.finalize(self.states[-1])
-        self.is_finalized = True
-        return outcome
+        if not self.outcome:
+            message = "[ERROR]: このchannelは既にfinalize済みです"
+            raise FinalizeError(message)
+        self.outcome = finalizer.finalize(self.states[-1])
+        return self.outcome
