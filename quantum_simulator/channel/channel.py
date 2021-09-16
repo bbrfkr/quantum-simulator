@@ -72,7 +72,7 @@ class Channel:
             int: 最終的な計算結果
         """
         finalizer = Finalizer(output_indices)
-        if not self.outcome:
+        if self.outcome:
             message = "[ERROR]: このchannelは既にfinalize済みです"
             raise FinalizeError(message)
         self.outcome = finalizer.finalize(self.states[-1])
