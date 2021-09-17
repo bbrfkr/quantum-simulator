@@ -28,7 +28,7 @@ class Allocator:
             register_count (int): 確保する古典レジスタ数
         """
         if register_count < 0 or qubit_count < 0:
-            message = "[ERROR]: レジスタ数またはQubit数として、負の値が与えられました"
+            message = "レジスタ数またはQubit数として、負の値が与えられました"
             raise InitializeError(message)
 
         self.qubit_count = qubit_count
@@ -85,7 +85,7 @@ class Initializer:
 
         for transformer in self.transformers:
             if not isinstance(transformer, Transformer):
-                message = "[ERROR]: 与えられた要素はTransformerではありません"
+                message = "与えられた要素はTransformerではありません"
                 raise InitializeError(message)
 
             init_state = transformer.transform(init_state)

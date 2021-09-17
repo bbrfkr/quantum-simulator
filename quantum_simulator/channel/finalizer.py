@@ -41,7 +41,7 @@ class Finalizer:
         qubit_count = state.qubits.qubit_count
         for index in self.output_indices:
             if index > qubit_count - 1 or index < 0:
-                message = "[ERROR]: 観測対象のQubit番号に不正な値が含まれています"
+                message = "観測対象のQubit番号に不正な値が含まれています"
                 raise OutOfRangeIndexError(message)
 
         # 全系観測量の生成

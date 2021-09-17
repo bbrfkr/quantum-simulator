@@ -42,7 +42,7 @@ class Qubits:
         # arrayの次元をチェック
         matrix = np.array(density_matrix)
         if not is_qubits_dim(matrix):
-            message = "[ERROR]: 与えられたリストは形がQubit系に対応しません"
+            message = "与えられたリストは形がQubit系に対応しません"
             raise InitializeError(message)
 
         # 固有値と固有ベクトルを導出
@@ -50,7 +50,7 @@ class Qubits:
 
         # 固有値全体が確率分布に対応できるかチェック
         if not is_probabilities(list(eigen_values)):
-            message = "[ERROR]: リストから導出された固有値群は確率分布に対応しません"
+            message = "リストから導出された固有値群は確率分布に対応しません"
             raise InitializeError(message)
 
         # Qubitの個数を導出
@@ -135,7 +135,7 @@ def specialize(qubits: Qubits) -> PureQubits:
             pure_index = index
 
     if pure_index == -1:
-        message = "[ERROR]: 対象のQubitsは純粋状態ではありません"
+        message = "対象のQubitsは純粋状態ではありません"
         raise NotPureError(message)
 
     del qubits
@@ -156,14 +156,14 @@ def convex_combination(probabilities: List[float], qubits_list: List[Qubits]) ->
 
     # 確率リストが確率分布であるかチェック
     if not is_probabilities(probabilities):
-        message = "[ERROR]: 与えられた確率リストは確率分布ではありません"
+        message = "与えられた確率リストは確率分布ではありません"
         raise InvalidProbabilitiesError(message)
 
     len_qubits_list = len(qubits_list)
 
     # 確率リストとQubitsリストの要素数同士が一致するかチェック
     if len_qubits_list != len(probabilities):
-        message = "[ERROR]: 与えられた確率リストと純粋状態リストの要素数が一致しません"
+        message = "与えられた確率リストと純粋状態リストの要素数が一致しません"
         raise NotMatchCountError(message)
 
     # 密度行列から再度密度行列を導出する
@@ -215,12 +215,12 @@ def reduction(target_qubits: Qubits, target_particle: int) -> Qubits:
 
     # 縮約対象が指定された数縮約できるかチェック
     if qubit_count < 2:
-        message = "[ERROR]: このQubit系はこれ以上縮約できません"
+        message = "このQubit系はこれ以上縮約できません"
         raise ReductionError(message)
 
     # 縮約対象が指定されたQubit番号で縮約できるかチェック
     if target_particle >= qubit_count or target_particle < 0:
-        message = "[ERROR]: 指定された要素番号のQubitは存在しません"
+        message = "指定された要素番号のQubitは存在しません"
         raise ReductionError(message)
 
     # 縮約の実施
@@ -277,7 +277,7 @@ def multiple_combine(qubits_list: List[Qubits]) -> Qubits:
         Qubits: 結合結果としてのQubits
     """
     if not qubits_list:
-        message = "[ERROR]: 空のリストが与えられました"
+        message = "空のリストが与えられました"
         raise NotMatchCountError(message)
 
     combined_qubits = None

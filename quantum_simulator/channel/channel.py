@@ -4,7 +4,11 @@
 
 from typing import List, Optional
 
-from quantum_simulator.channel.error import FinalizeError
+from quantum_simulator.channel.error import (
+    AlreadyFinalizedError,
+    AlreadyInitializedError,
+    NotInitializedError,
+)
 from quantum_simulator.channel.finalizer import Finalizer
 from quantum_simulator.channel.initializer import Allocator, Initializer
 from quantum_simulator.channel.state import State
@@ -45,6 +49,10 @@ class Channel:
         Args:
             input (int): 入力情報
         """
+        if len(self.states) != 0:
+            message = "このchannelは既に初期化されています"
+            raise AlreadyInitializedError(message)
+
         allocator = Allocator(self.qubit_count, self.register_count)
         initializer = Initializer(allocator, self.init_transformers)
         self.transformers = []
@@ -58,6 +66,13 @@ class Channel:
             transformer (Transformer): 利用する状態変換
             index (Optionnal[int]): 古典情報が得られた場合に格納するレジスタ番号
         """
+        if len(self.states) == 0:
+            message = "このchannelはまだ初期化されていません"
+            raise NotInitializedError(message)
+        if self.outcome:
+            message = "このchannelは既にfinalizeされています"
+            raise AlreadyFinalizedError()(message)
+
         self.transformers.append(transformer)
         self.states.append(transformer.transform(self.states[-1], index))
 
@@ -71,9 +86,13 @@ class Channel:
         Returns:
             int: 最終的な計算結果
         """
-        finalizer = Finalizer(output_indices)
+        if len(self.states) == 0:
+            message = "このchannelはまだ初期化されていません"
+            raise NotInitializedError(message)
         if self.outcome:
-            message = "[ERROR]: このchannelは既にfinalize済みです"
-            raise FinalizeError(message)
+            message = "このchannelは既にfinalizeされています"
+            raise AlreadyFinalizedError()(message)
+
+        finalizer = Finalizer(output_indices)
         self.outcome = finalizer.finalize(self.states[-1])
         return self.outcome
