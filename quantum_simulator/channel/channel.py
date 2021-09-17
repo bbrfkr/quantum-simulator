@@ -71,7 +71,7 @@ class Channel:
             raise NotInitializedError(message)
         if self.outcome:
             message = "このchannelは既にfinalizeされています"
-            raise AlreadyFinalizedError()(message)
+            raise AlreadyFinalizedError(message)
 
         self.transformers.append(transformer)
         self.states.append(transformer.transform(self.states[-1], index))
@@ -91,7 +91,7 @@ class Channel:
             raise NotInitializedError(message)
         if self.outcome:
             message = "このchannelは既にfinalizeされています"
-            raise AlreadyFinalizedError()(message)
+            raise AlreadyFinalizedError(message)
 
         finalizer = Finalizer(output_indices)
         self.outcome = finalizer.finalize(self.states[-1])
