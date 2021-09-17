@@ -2,7 +2,7 @@
 終了処理を表現するクラス群
 """
 
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -27,7 +27,7 @@ class Finalizer:
         """
         self.output_indices = sorted(output_indices)
 
-    def finalize(self, state: State) -> int:
+    def finalize(self, state: State) -> Tuple[int, State]:
         """
         最終状態を観測し、計算結果を出力する
 
@@ -50,13 +50,13 @@ class Finalizer:
 
         # 計算結果の観測とターゲットビット抽出
         raw_outcome, converged_qubits = observe(observable, state.qubits)
-        raw_outcome = around(np.array(raw_outcome)).astype(int)
+        int_outcome = around(np.array(raw_outcome)).astype(int)
         post_state = State(converged_qubits, state.registers)
 
         outcome = 0
         loop_index = 0
         for output_index in self.output_indices:
-            target_bit = (raw_outcome >> output_index) & 0b1
+            target_bit = (int_outcome >> output_index) & 0b1
             outcome += target_bit * 2 ** loop_index
             loop_index += 1
 
