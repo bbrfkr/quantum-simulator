@@ -2,7 +2,7 @@
 終了処理を表現するクラス群
 """
 
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -27,7 +27,7 @@ class Finalizer:
         """
         self.output_indices = sorted(output_indices)
 
-    def finalize(self, state: State) -> int:
+    def finalize(self, state: State) -> Tuple[int, State]:
         """
         最終状態を観測し、計算結果を出力する
 
@@ -35,7 +35,7 @@ class Finalizer:
             state (State): 観測対象の状態
 
         Returns:
-            int: 最終的な計算結果
+            Tuple[int, State]: 最終的な計算結果と、収束後の状態
         """
         # Qubit番号のバリデーション
         qubit_count = state.qubits.qubit_count
@@ -49,13 +49,15 @@ class Finalizer:
         observable = Observable(np.diag(diagonal_values))
 
         # 計算結果の観測とターゲットビット抽出
-        raw_outcome = around(np.array(observe(observable, state.qubits)[0])).astype(int)
+        raw_outcome, converged_qubits = observe(observable, state.qubits)
+        int_outcome = around(np.array(raw_outcome)).astype(int)
+        post_state = State(converged_qubits, state.registers)
 
         outcome = 0
         loop_index = 0
         for output_index in self.output_indices:
-            target_bit = (raw_outcome >> output_index) & 0b1
+            target_bit = (int_outcome >> output_index) & 0b1
             outcome += target_bit * 2 ** loop_index
             loop_index += 1
 
-        return outcome
+        return (outcome, post_state)

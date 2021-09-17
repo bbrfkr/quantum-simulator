@@ -94,5 +94,6 @@ class Channel:
             raise AlreadyFinalizedError(message)
 
         finalizer = Finalizer(output_indices)
-        self.outcome = finalizer.finalize(self.states[-1])
+        self.outcome, final_state = finalizer.finalize(self.states[-1])
+        self.states.append(final_state)
         return self.outcome
