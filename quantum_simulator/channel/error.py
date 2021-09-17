@@ -7,5 +7,13 @@ class BaseError(Exception):
     """基底例外クラス"""
 
 
-class FinalizeError(BaseError):
-    """finalize時エラー"""
+class AlreadyInitializedError(BaseError):
+    """既にInitializeされていた時のエラー"""
+
+
+class NotInitializedError(BaseError):
+    """まだInitializeされていない時のエラー"""
+
+
+class AlreadyFinalizedError(BaseError):
+    """既にfinalizeされていた時のエラー"""

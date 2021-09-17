@@ -37,7 +37,7 @@ class PureQubits:
         # Qubit系であるかチェック
         vector = np.array(amplitudes)
         if not _is_pure_qubits(vector):
-            message = "[ERROR]: 与えられたリストはQubit系に対応しません"
+            message = "与えられたリストはQubit系に対応しません"
             raise InitializeError(message)
 
         # 内包するQubit数を計算
@@ -90,7 +90,7 @@ class OrthogonalSystem:
         """
         # 直交性の確認(相互にQubit数の確認も兼ねる)
         if not all_orthogonal(qubits_list):
-            message = "[ERROR]: 与えられたQubit群のリストは互いに直交しません"
+            message = "与えられたQubit群のリストは互いに直交しません"
             raise InitializeError(message)
 
         self.qubits_list = qubits_list
@@ -195,7 +195,7 @@ def multiple_combine(qubits_list: List[PureQubits]) -> PureQubits:
         PureQubits: 結合後のPureQubits。qubits_list[0] ⊗ ... ⊗ qubits_list[n]
     """
     if not qubits_list:
-        message = "[ERROR]: 空のリストが与えられました"
+        message = "空のリストが与えられました"
         raise NotMatchCountError(message)
 
     combined_qubits = None
@@ -218,7 +218,7 @@ def multiple_combine_ons(ons_list: List[OrthogonalSystem]) -> OrthogonalSystem:
         OrthogonalSystem: 結合後のOrthogonalSystem
     """
     if not ons_list:
-        message = "[ERROR]: 空のリストが与えられました"
+        message = "空のリストが与えられました"
         raise NotMatchCountError(message)
 
     combined_ons = None
@@ -243,7 +243,7 @@ def inner(qubits_0: PureQubits, qubits_1: PureQubits) -> complex:
     """
     # 内積をとるQubit群同士のQubit数が一致してなければエラー
     if qubits_0.qubit_count != qubits_1.qubit_count:
-        message = "[ERROR]: 対象PureQubits同士のQubit数が一致しません"
+        message = "対象PureQubits同士のQubit数が一致しません"
         raise QubitCountNotMatchError(message)
 
     return np.vdot(qubits_0.vector, qubits_1.vector)
@@ -278,7 +278,7 @@ def all_orthogonal(qubits_list: List[PureQubits]) -> bool:
 
     # PureQubitsが一つも入力されない時はエラー
     if len_qubits_list == 0:
-        message = "[ERROR]: 与えられたリストにPureQubitsが見つかりません"
+        message = "与えられたリストにPureQubitsが見つかりません"
         raise NoQubitsInputError(message)
 
     # PureQubitsが一つだけ与えられた時は明らかに互いに直交

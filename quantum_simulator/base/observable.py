@@ -37,12 +37,12 @@ class Observable:  # pylint: disable=too-few-public-methods
 
         # 次元のチェック
         if not is_qubits_dim(matrix):
-            message = "[ERROR]: 与えられたリストはQubit系上の作用素ではありません"
+            message = "与えられたリストはQubit系上の作用素ではありません"
             raise InitializeError(message)
 
         # エルミート性のチェック
         if not allclose(matrix, np.conj(matrix.T)):
-            message = "[ERROR]: 与えられたリストはエルミート行列ではありません"
+            message = "与えられたリストはエルミート行列ではありません"
             raise InitializeError(message)
 
         # 初期化
@@ -70,7 +70,7 @@ class Observable:  # pylint: disable=too-few-public-methods
 
         # 観測量の対象空間内にQubitが存在するかチェック
         if target.qubit_count != (count_bits(self.matrix.shape[0]) - 1):
-            message = "[ERROR]: 観測量の対象空間にQubit群が存在しません"
+            message = "観測量の対象空間にQubit群が存在しません"
             raise NotMatchDimensionError(message)
 
         # 期待値の導出 trAρ
@@ -160,7 +160,7 @@ def create_from_ons(observed_values: List[float], ons: OrthogonalSystem) -> Obse
 
     # 観測値リストとONS内のPureQubitsリストの要素数同士が一致するかチェック
     if len_qubits_list != len(observed_values):
-        message = "[ERROR]: 与えられた観測値リストと正規直交系を構成するQubitsリストの要素数が一致しません"
+        message = "与えられた観測値リストと正規直交系を構成するQubitsリストの要素数が一致しません"
         raise NotMatchCountError(message)
 
     qubits_list = ons.qubits_list
@@ -268,7 +268,7 @@ def multiple_combine(observables: List[Observable]) -> Observable:
         Observable: 結合後の観測量
     """
     if not observables:
-        message = "[ERROR]: 空のリストが与えられました"
+        message = "空のリストが与えられました"
         raise NotMatchCountError(message)
 
     combined_observable = None

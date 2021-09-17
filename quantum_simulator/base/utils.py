@@ -109,7 +109,7 @@ def count_bits(a: int) -> int:
     """
     # 負の整数が与えられた時はエラー
     if a < 0:
-        message = "[ERROR]: 負数が与えられました"
+        message = "負数が与えられました"
         raise NegativeValueError(message)
 
     bit_count = 0

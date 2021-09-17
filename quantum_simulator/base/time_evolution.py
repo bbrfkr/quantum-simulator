@@ -36,13 +36,13 @@ class TimeEvolution:
 
         # 次元のチェック
         if not is_qubits_dim(matrix):
-            message = "[ERROR]: 与えられたリストはQubit系上の作用素ではありません"
+            message = "与えられたリストはQubit系上の作用素ではありません"
             raise InitializeError(message)
 
         # ユニタリ性のチェック
         hermite_matrix = matrix @ np.conj(matrix.T)
         if not allclose(hermite_matrix, np.identity(matrix.shape[0])):
-            message = "[ERROR]: 与えられたリストはユニタリ変換ではありません"
+            message = "与えられたリストはユニタリ変換ではありません"
             raise InitializeError(message)
         del hermite_matrix
 
@@ -69,7 +69,7 @@ class TimeEvolution:
             Qubits: 変換後のQubits
         """
         if self.matrix.shape[0] != qubits.matrix.shape[0]:
-            message = "[ERROR]: 変換対象のQubit数が不正です"
+            message = "変換対象のQubit数が不正です"
             raise IncompatibleDimensionError(message)
 
         transformed_matrix = self.matrix @ qubits.matrix @ np.conj(self.matrix.T)
@@ -91,13 +91,13 @@ def create_from_onb(
     """
     # 指定されたONSが全てONBでなければエラー
     if not (pre_ons.is_onb() and post_ons.is_onb()):
-        message = "[ERROR]: 正規直交基底を指定してください"
+        message = "正規直交基底を指定してください"
         raise NotCompleteError(message)
 
     # 観測基底を構成するQubit群の個数同士が一致していなければエラー
     len_pre_ons = len(pre_ons.qubits_list)
     if len_pre_ons != len(post_ons.qubits_list):
-        message = "[ERROR]: 変換後のQubit数が変換前と異なります"
+        message = "変換後のQubit数が変換前と異なります"
         raise InitializeError(message)
 
     # 変換のndarrayの生成
@@ -164,7 +164,7 @@ def multiple_combine(evolutions: List[TimeEvolution]) -> TimeEvolution:
         TimeEvolution: 結合後の時間発展
     """
     if not evolutions:
-        message = "[ERROR]: 空のリストが与えられました"
+        message = "空のリストが与えられました"
         raise NotMatchCountError(message)
 
     combined_evolution = None
