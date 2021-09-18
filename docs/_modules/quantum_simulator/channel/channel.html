@@ -149,7 +149,11 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.time_evolution</span> <span class="kn">import</span> <span class="n">TimeEvolution</span>
+<span class="kn">from</span> <span class="nn">quantum_simulator.channel.error</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AlreadyFinalizedError</span><span class="p">,</span>
+    <span class="n">AlreadyInitializedError</span><span class="p">,</span>
+    <span class="n">NotInitializedError</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.finalizer</span> <span class="kn">import</span> <span class="n">Finalizer</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.initializer</span> <span class="kn">import</span> <span class="n">Allocator</span><span class="p">,</span> <span class="n">Initializer</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.channel.state</span> <span class="kn">import</span> <span class="n">State</span>
@@ -163,33 +167,39 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        qubit_count (int): チャネル内のqubit数</span>
 <span class="sd">        register_count (int): チャネル内の古典レジスタ数</span>
-<span class="sd">        noise (Optional[TImeEvolution]): 初期化時に発生し得るノイズとしての時間発展</span>
-<span class="sd">        transformers (List[Transformer]): 変換の列</span>
-<span class="sd">        states (List(State)): QPU状態の列</span>
+<span class="sd">        init_transformers (List[Transformer]): 初期状態を作成する変換の列</span>
+<span class="sd">        transformers (List[Transformer]): シミュレーション目的の変換の列</span>
+<span class="sd">        states (List[State]): QPU状態の列</span>
+<span class="sd">        outcome (Optional[float]): 最終出力値</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubit_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubit_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">init_transformers</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            qubit_count (int): チャネル内のqubit数</span>
 <span class="sd">            register_count (int): チャネル内の古典レジスタ数</span>
-<span class="sd">            noise (Optional[TImeEvolution]): 初期化時に発生し得るノイズとしての時間発展</span>
+<span class="sd">            init_transformers (List[Transformer]): 初期状態を作成する変換の列</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">=</span> <span class="n">qubit_count</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_count</span> <span class="o">=</span> <span class="n">register_count</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>  <span class="c1"># type: Optional[TimeEvolution]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_transformers</span> <span class="o">=</span> <span class="n">init_transformers</span>  <span class="c1"># type: List[Transformer]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transformers</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Transformer]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[State]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[int]</span>
 
-<div class="viewcode-block" id="Channel.initialize"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.channel.Channel.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="Channel.initialize"><a class="viewcode-back" href="../../../quantum_simulator.channel.html#quantum_simulator.channel.channel.Channel.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transformer配列とState配列を初期化する</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            input (int): 入力情報</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">allocator</span> <span class="o">=</span> <span class="n">Allocator</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_count</span><span class="p">)</span>
-        <span class="n">initializer</span> <span class="o">=</span> <span class="n">Initializer</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;このchannelは既に初期化されています&quot;</span>
+            <span class="k">raise</span> <span class="n">AlreadyInitializedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="n">allocator</span> <span class="o">=</span> <span class="n">Allocator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qubit_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_count</span><span class="p">)</span>
+        <span class="n">initializer</span> <span class="o">=</span> <span class="n">Initializer</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_transformers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transformers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">initializer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()]</span></div>
 
@@ -201,6 +211,13 @@
 <span class="sd">            transformer (Transformer): 利用する状態変換</span>
 <span class="sd">            index (Optionnal[int]): 古典情報が得られた場合に格納するレジスタ番号</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;このchannelはまだ初期化されていません&quot;</span>
+            <span class="k">raise</span> <span class="n">NotInitializedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;このchannelは既にfinalizeされています&quot;</span>
+            <span class="k">raise</span> <span class="n">AlreadyFinalizedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">transformers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transformer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">index</span><span class="p">))</span></div>
 
@@ -214,8 +231,17 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            int: 最終的な計算結果</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;このchannelはまだ初期化されていません&quot;</span>
+            <span class="k">raise</span> <span class="n">NotInitializedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;このchannelは既にfinalizeされています&quot;</span>
+            <span class="k">raise</span> <span class="n">AlreadyFinalizedError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
         <span class="n">finalizer</span> <span class="o">=</span> <span class="n">Finalizer</span><span class="p">(</span><span class="n">output_indices</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">finalizer</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span><span class="p">,</span> <span class="n">final_state</span> <span class="o">=</span> <span class="n">finalizer</span><span class="o">.</span><span class="n">finalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">final_state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span></div></div>
 </pre></div>
 
            </div>

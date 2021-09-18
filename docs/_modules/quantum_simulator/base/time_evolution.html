@@ -147,12 +147,13 @@
 <span class="sd">時間発展を記述するクラス群</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">IncompatibleDimensionError</span><span class="p">,</span>
     <span class="n">InitializeError</span><span class="p">,</span>
     <span class="n">NotCompleteError</span><span class="p">,</span>
+    <span class="n">NotMatchCountError</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="n">Qubits</span><span class="p">,</span> <span class="n">is_qubits_dim</span>
@@ -180,13 +181,13 @@
 
         <span class="c1"># 次元のチェック</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_qubits_dim</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはQubit系上の作用素ではありません&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;与えられたリストはQubit系上の作用素ではありません&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="c1"># ユニタリ性のチェック</span>
         <span class="n">hermite_matrix</span> <span class="o">=</span> <span class="n">matrix</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">hermite_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはユニタリ変換ではありません&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;与えられたリストはユニタリ変換ではありません&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">hermite_matrix</span>
 
@@ -213,7 +214,7 @@
 <span class="sd">            Qubits: 変換後のQubits</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 変換対象のQubit数が不正です&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;変換対象のQubit数が不正です&quot;</span>
             <span class="k">raise</span> <span class="n">IncompatibleDimensionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="n">transformed_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">@</span> <span class="n">qubits</span><span class="o">.</span><span class="n">matrix</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
@@ -235,13 +236,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># 指定されたONSが全てONBでなければエラー</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">is_onb</span><span class="p">()</span> <span class="ow">and</span> <span class="n">post_ons</span><span class="o">.</span><span class="n">is_onb</span><span class="p">()):</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 正規直交基底を指定してください&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;正規直交基底を指定してください&quot;</span>
         <span class="k">raise</span> <span class="n">NotCompleteError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="c1"># 観測基底を構成するQubit群の個数同士が一致していなければエラー</span>
     <span class="n">len_pre_ons</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">len_pre_ons</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">post_ons</span><span class="o">.</span><span class="n">qubits_list</span><span class="p">):</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 変換後のQubit数が変換前と異なります&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;変換後のQubit数が変換前と異なります&quot;</span>
         <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="c1"># 変換のndarrayの生成</span>
@@ -262,18 +263,21 @@
 
 
 <div class="viewcode-block" id="combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.time_evolution.combine">[docs]</a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span>
-    <span class="n">time_evolution_0</span><span class="p">:</span> <span class="n">TimeEvolution</span><span class="p">,</span> <span class="n">time_evolution_1</span><span class="p">:</span> <span class="n">TimeEvolution</span>
+    <span class="n">time_evolution_0</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TimeEvolution</span><span class="p">],</span> <span class="n">time_evolution_1</span><span class="p">:</span> <span class="n">TimeEvolution</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeEvolution</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    2つの時間発展を結合して合成系の時間発展を作る</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        time_evolution_0 (TimeEvolution): 結合される側の時間発展</span>
+<span class="sd">        time_evolution_0 (Optional[TimeEvolution]): 結合される側の時間発展</span>
 <span class="sd">        time_evolution_1 (TimeEvolution): 結合する側の時間発展</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        TimeEvolution: 結合後の時間発展</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">time_evolution_0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">time_evolution_1</span>
+
     <span class="c1"># 新しい時間発展の生成</span>
     <span class="n">time_evolution_0_matrix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">time_evolution_0</span><span class="o">.</span><span class="n">matrix</span><span class="p">)</span>
     <span class="n">new_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
@@ -304,12 +308,17 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        TimeEvolution: 結合後の時間発展</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">combined_evolution</span> <span class="o">=</span> <span class="n">evolutions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">evolutions</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;空のリストが与えられました&quot;</span>
+        <span class="k">raise</span> <span class="n">NotMatchCountError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">evolutions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">combined_evolution</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_evolution</span><span class="p">,</span> <span class="n">evolutions</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">combined_evolution</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">evolution</span> <span class="ow">in</span> <span class="n">evolutions</span><span class="p">:</span>
+        <span class="n">combined_evolution</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_evolution</span><span class="p">,</span> <span class="n">evolution</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">combined_evolution</span></div>
+    <span class="c1"># リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする</span>
+    <span class="n">casted_evolution</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">TimeEvolution</span><span class="p">,</span> <span class="n">combined_evolution</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">casted_evolution</span></div>
 
 
 <div class="viewcode-block" id="compose"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.time_evolution.compose">[docs]</a><span class="k">def</span> <span class="nf">compose</span><span class="p">(</span><span class="n">evolution_0</span><span class="p">:</span> <span class="n">TimeEvolution</span><span class="p">,</span> <span class="n">evolution_1</span><span class="p">:</span> <span class="n">TimeEvolution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeEvolution</span><span class="p">:</span>
