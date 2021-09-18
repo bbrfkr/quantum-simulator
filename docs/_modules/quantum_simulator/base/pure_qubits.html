@@ -148,13 +148,14 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">InitializeError</span><span class="p">,</span>
     <span class="n">NoQubitsInputError</span><span class="p">,</span>
+    <span class="n">NotMatchCountError</span><span class="p">,</span>
     <span class="n">QubitCountNotMatchError</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">quantum_simulator.base.switch_cupy</span> <span class="kn">import</span> <span class="n">xp_factory</span>
@@ -168,7 +169,7 @@
 <span class="sd">    純粋状態で一般的に複数粒子のQubit系クラス</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        vector (np.array): ベクトル形式のPureQubits</span>
+<span class="sd">        vector (np.ndarray): ベクトル形式のPureQubits</span>
 <span class="sd">        qubit_count (int): PureQubitsに内包されているQubitの数</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -181,7 +182,7 @@
         <span class="c1"># Qubit系であるかチェック</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">amplitudes</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_pure_qubits</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストはQubit系に対応しません&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;与えられたリストはQubit系に対応しません&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="c1"># 内包するQubit数を計算</span>
@@ -234,7 +235,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># 直交性の確認(相互にQubit数の確認も兼ねる)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_orthogonal</span><span class="p">(</span><span class="n">qubits_list</span><span class="p">):</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたQubit群のリストは互いに直交しません&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;与えられたQubit群のリストは互いに直交しません&quot;</span>
             <span class="k">raise</span> <span class="n">InitializeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">qubits_list</span> <span class="o">=</span> <span class="n">qubits_list</span>
@@ -253,12 +254,12 @@
         <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_is_pure_qubits</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_is_pure_qubits</span><span class="p">(</span><span class="n">array</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    与えられたnp.arrayがQubit系を表現しているか判定する。</span>
+<span class="sd">    与えられたnp.ndarrayがQubit系を表現しているか判定する。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        array (np.array): 判定対象のnp.array</span>
+<span class="sd">        array (np.ndarray): 判定対象のnp.ndarray</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: 判定結果</span>
@@ -271,23 +272,26 @@
 
     <span class="c1"># 長さが1、つまり確率が1になるかをチェック</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">allclose</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.combine">[docs]</a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">,</span> <span class="n">qubits_1</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PureQubits</span><span class="p">:</span>
+<div class="viewcode-block" id="combine"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.combine">[docs]</a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PureQubits</span><span class="p">],</span> <span class="n">qubits_1</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PureQubits</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    二つのPureQubitsを結合し、その結果を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        qubits_0 (PureQubits): 結合される側のPureQubits</span>
+<span class="sd">        qubits_0 (Optional[PureQubits]): 結合される側のPureQubits</span>
 <span class="sd">        qubits_1 (PureQubits): 結合する側のPureQubits</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        PureQubits: 結合後のPureQubits。qubits_0 ⊗ qubits_1</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">qubits_0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">qubits_1</span>
+
     <span class="n">qubits_0_vector</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">qubits_0</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
     <span class="n">new_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
         <span class="nb">tuple</span><span class="p">([</span><span class="n">element</span> <span class="o">*</span> <span class="n">qubits_1</span><span class="o">.</span><span class="n">vector</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">qubits_0_vector</span><span class="p">])</span>
@@ -298,17 +302,22 @@
     <span class="k">return</span> <span class="n">new_qubits</span></div>
 
 
-<div class="viewcode-block" id="combine_ons"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.combine_ons">[docs]</a><span class="k">def</span> <span class="nf">combine_ons</span><span class="p">(</span><span class="n">ons_0</span><span class="p">:</span> <span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">ons_1</span><span class="p">:</span> <span class="n">OrthogonalSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrthogonalSystem</span><span class="p">:</span>
+<div class="viewcode-block" id="combine_ons"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.combine_ons">[docs]</a><span class="k">def</span> <span class="nf">combine_ons</span><span class="p">(</span>
+    <span class="n">ons_0</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OrthogonalSystem</span><span class="p">],</span> <span class="n">ons_1</span><span class="p">:</span> <span class="n">OrthogonalSystem</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrthogonalSystem</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    二つのOrthogonalSystemを要素順にを結合し、その結果を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        ons_0 (OrthogonalSystem): 結合される側のOrthogonalSystem</span>
+<span class="sd">        ons_0 (Optional[OrthogonalSystem]): 結合される側のOrthogonalSystem</span>
 <span class="sd">        ons_1 (OrthogonalSystem): 結合する側のOrthogonalSystem</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        OrthogonalSystem: 結合後のOrthogonalSystem</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ons_0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ons_1</span>
+
     <span class="n">new_qubits</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">combine</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">,</span> <span class="n">qubits_1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">qubits_0</span> <span class="ow">in</span> <span class="n">ons_0</span><span class="o">.</span><span class="n">qubits_list</span>
@@ -330,11 +339,17 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        PureQubits: 結合後のPureQubits。qubits_list[0] ⊗ ... ⊗ qubits_list[n]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">combined_qubits</span> <span class="o">=</span> <span class="n">qubits_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">qubits_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">combined_qubits</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_qubits</span><span class="p">,</span> <span class="n">qubits_list</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">qubits_list</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;空のリストが与えられました&quot;</span>
+        <span class="k">raise</span> <span class="n">NotMatchCountError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">combined_qubits</span></div>
+    <span class="n">combined_qubits</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">qubits</span> <span class="ow">in</span> <span class="n">qubits_list</span><span class="p">:</span>
+        <span class="n">combined_qubits</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">combined_qubits</span><span class="p">,</span> <span class="n">qubits</span><span class="p">)</span>
+
+    <span class="c1"># リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする</span>
+    <span class="n">casted_qubits</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">PureQubits</span><span class="p">,</span> <span class="n">combined_qubits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">casted_qubits</span></div>
 
 
 <div class="viewcode-block" id="multiple_combine_ons"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.multiple_combine_ons">[docs]</a><span class="k">def</span> <span class="nf">multiple_combine_ons</span><span class="p">(</span><span class="n">ons_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OrthogonalSystem</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">OrthogonalSystem</span><span class="p">:</span>
@@ -342,16 +357,22 @@
 <span class="sd">    与えられたOrthogonalSystemのリストを前方から順にを結合し、その結果を返す。</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        ons_lit (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト</span>
+<span class="sd">        ons_list (List[OrthogonalSystem]): 結合対象のOrthogonalSystemのリスト</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        OrthogonalSystem: 結合後のOrthogonalSystem</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">combined_ons</span> <span class="o">=</span> <span class="n">ons_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ons_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">combined_ons</span> <span class="o">=</span> <span class="n">combine_ons</span><span class="p">(</span><span class="n">combined_ons</span><span class="p">,</span> <span class="n">ons_list</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ons_list</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;空のリストが与えられました&quot;</span>
+        <span class="k">raise</span> <span class="n">NotMatchCountError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">combined_ons</span></div>
+    <span class="n">combined_ons</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">ons</span> <span class="ow">in</span> <span class="n">ons_list</span><span class="p">:</span>
+        <span class="n">combined_ons</span> <span class="o">=</span> <span class="n">combine_ons</span><span class="p">(</span><span class="n">combined_ons</span><span class="p">,</span> <span class="n">ons</span><span class="p">)</span>
+
+    <span class="c1"># リストは空ではないかつ、combineは必ず値を返すことが保証されているのでキャストする</span>
+    <span class="n">casted_ons</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">OrthogonalSystem</span><span class="p">,</span> <span class="n">combined_ons</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">casted_ons</span></div>
 
 
 <div class="viewcode-block" id="inner"><a class="viewcode-back" href="../../../quantum_simulator.base.html#quantum_simulator.base.pure_qubits.inner">[docs]</a><span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">qubits_0</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">,</span> <span class="n">qubits_1</span><span class="p">:</span> <span class="n">PureQubits</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
@@ -367,7 +388,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># 内積をとるQubit群同士のQubit数が一致してなければエラー</span>
     <span class="k">if</span> <span class="n">qubits_0</span><span class="o">.</span><span class="n">qubit_count</span> <span class="o">!=</span> <span class="n">qubits_1</span><span class="o">.</span><span class="n">qubit_count</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 対象PureQubits同士のQubit数が一致しません&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;対象PureQubits同士のQubit数が一致しません&quot;</span>
         <span class="k">raise</span> <span class="n">QubitCountNotMatchError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vdot</span><span class="p">(</span><span class="n">qubits_0</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span> <span class="n">qubits_1</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span></div>
@@ -402,7 +423,7 @@
 
     <span class="c1"># PureQubitsが一つも入力されない時はエラー</span>
     <span class="k">if</span> <span class="n">len_qubits_list</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;[ERROR]: 与えられたリストにPureQubitsが見つかりません&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;与えられたリストにPureQubitsが見つかりません&quot;</span>
         <span class="k">raise</span> <span class="n">NoQubitsInputError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="c1"># PureQubitsが一つだけ与えられた時は明らかに互いに直交</span>
