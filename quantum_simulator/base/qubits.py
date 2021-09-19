@@ -6,21 +6,16 @@ from typing import List, Optional, cast
 
 import numpy
 
-from quantum_simulator.base.error import (
+from .error import (
     InitializeError,
     InvalidProbabilitiesError,
     NotMatchCountError,
     NotPureError,
     ReductionError,
 )
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
-from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import (
-    count_bits,
-    is_pow2,
-    is_probabilities,
-    is_real_close,
-)
+from .pure_qubits import OrthogonalSystem, PureQubits
+from .switch_cupy import xp_factory
+from .utils import count_bits, is_pow2, is_probabilities, is_real_close
 
 np = xp_factory()  # typing: numpy
 

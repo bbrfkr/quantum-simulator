@@ -6,10 +6,10 @@ from typing import List, Tuple
 
 import numpy as np
 
-from quantum_simulator.base.error import OutOfRangeIndexError
-from quantum_simulator.base.observable import Observable, observe
-from quantum_simulator.base.utils import around
-from quantum_simulator.channel.state import State
+from ..base.error import OutOfRangeIndexError
+from ..base.observable import Observable, observe
+from ..base.utils import around
+from .state import State
 
 
 class Finalizer:

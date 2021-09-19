@@ -1,5 +1,5 @@
-from quantum_simulator.base.utils import allclose
-from quantum_simulator.channel.channel import Channel
+from ...base.utils import allclose
+from ..channel import Channel
 
 
 class TestChannel:

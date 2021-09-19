@@ -2,12 +2,12 @@
 チャネル通過時の初期化するクラス群
 """
 
-from quantum_simulator.base import qubits
-from quantum_simulator.base.error import InitializeError
-from quantum_simulator.channel.registers import Registers
-from quantum_simulator.channel.state import State
-from quantum_simulator.channel.transformer import Transformer
-from quantum_simulator.major.qubits import ZERO
+from ..base import qubits
+from ..base.error import InitializeError
+from ..major.qubits import ZERO
+from .registers import Registers
+from .state import State
+from .transformer import Transformer
 
 
 class Allocator:

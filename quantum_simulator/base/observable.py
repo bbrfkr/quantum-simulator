@@ -7,15 +7,11 @@ from typing import List, Optional, Tuple, cast
 
 import numpy
 
-from quantum_simulator.base.error import (
-    InitializeError,
-    NotMatchCountError,
-    NotMatchDimensionError,
-)
-from quantum_simulator.base.pure_qubits import OrthogonalSystem
-from quantum_simulator.base.qubits import Qubits, is_qubits_dim
-from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose, count_bits, is_real_close
+from .error import InitializeError, NotMatchCountError, NotMatchDimensionError
+from .pure_qubits import OrthogonalSystem
+from .qubits import Qubits, is_qubits_dim
+from .switch_cupy import xp_factory
+from .utils import allclose, count_bits, is_real_close
 
 np = xp_factory()  # typing: numpy
 

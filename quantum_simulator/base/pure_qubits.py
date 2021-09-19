@@ -7,14 +7,14 @@ from typing import List, Optional, cast
 
 import numpy
 
-from quantum_simulator.base.error import (
+from .error import (
     InitializeError,
     NoQubitsInputError,
     NotMatchCountError,
     QubitCountNotMatchError,
 )
-from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose, count_bits, is_pow2, isclose
+from .switch_cupy import xp_factory
+from .utils import allclose, count_bits, is_pow2, isclose
 
 np = xp_factory()  # typing: numpy
 

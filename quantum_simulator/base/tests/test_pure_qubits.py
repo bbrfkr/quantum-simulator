@@ -3,12 +3,8 @@ from test.support import captured_stdout
 import numpy
 import pytest
 
-from quantum_simulator.base.error import (
-    InitializeError,
-    NoQubitsInputError,
-    QubitCountNotMatchError,
-)
-from quantum_simulator.base.pure_qubits import (
+from ..error import InitializeError, NoQubitsInputError, QubitCountNotMatchError
+from ..pure_qubits import (
     OrthogonalSystem,
     PureQubits,
     _is_pure_qubits,
@@ -20,7 +16,7 @@ from quantum_simulator.base.pure_qubits import (
     multiple_combine,
     multiple_combine_ons,
 )
-from quantum_simulator.base.utils import allclose
+from ..utils import allclose
 
 
 class TestPureQubits:

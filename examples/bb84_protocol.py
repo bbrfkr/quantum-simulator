@@ -6,9 +6,6 @@ qubit列を送って、偏光有無の古典情報から共有ビット列を作
 
 import random
 
-from quantum_simulator.base import observable, time_evolution
-from quantum_simulator.base.observable import Observable
-from quantum_simulator.base.qubits import specialize
 from quantum_simulator.channel.channel import Channel
 from quantum_simulator.channel.transformer import (
     ObserveTransformer,
@@ -21,6 +18,10 @@ from quantum_simulator.major.time_evolution import (
     IDENT_EVOLUTION,
     NOT_GATE,
 )
+
+from ..base import observable, time_evolution
+from ..base.observable import Observable
+from ..base.qubits import specialize
 
 # 設定
 BITS_COUNT = 2

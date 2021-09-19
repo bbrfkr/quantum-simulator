@@ -2,9 +2,9 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.observable import Observable
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
-from quantum_simulator.base.qubits import Qubits
+from ...observable import Observable
+from ...pure_qubits import OrthogonalSystem, PureQubits
+from ...qubits import Qubits
 
 
 @pytest.fixture(

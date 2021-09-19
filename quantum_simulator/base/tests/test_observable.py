@@ -2,7 +2,7 @@ import random
 
 import numpy
 
-from quantum_simulator.base.observable import (
+from ..observable import (
     Observable,
     _resolve_observed_results,
     combine,
@@ -10,8 +10,8 @@ from quantum_simulator.base.observable import (
     multiple_combine,
     observe,
 )
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.base.utils import allclose
+from ..qubits import Qubits
+from ..utils import allclose
 
 
 class TestObservable:

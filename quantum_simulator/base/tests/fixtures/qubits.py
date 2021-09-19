@@ -2,8 +2,8 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
-from quantum_simulator.base.qubits import Qubits, combine, generalize, multiple_combine
+from ...pure_qubits import OrthogonalSystem, PureQubits
+from ...qubits import Qubits, combine, generalize, multiple_combine
 
 
 @pytest.fixture(

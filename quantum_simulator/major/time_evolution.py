@@ -4,7 +4,7 @@ quantum_simulator.base.time_evolutionモジュール内クラスのよく知ら�
 
 from math import sqrt
 
-from quantum_simulator.base.time_evolution import TimeEvolution
+from ..base.time_evolution import TimeEvolution
 
 IDENT_EVOLUTION = TimeEvolution([[1.0 + 0j, 0j], [0j, 1.0 + 0j]])
 """TimeEvolution: 恒等作用素(時間発展)"""

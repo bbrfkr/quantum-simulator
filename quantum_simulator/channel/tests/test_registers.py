@@ -1,4 +1,4 @@
-from quantum_simulator.channel.registers import Registers
+from ..registers import Registers
 
 
 class TestRegisters:
