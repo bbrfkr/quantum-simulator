@@ -1,12 +1,9 @@
 import numpy
 import pytest
 
-from quantum_simulator.base.error import (
-    InvalidProbabilitiesError,
-    NotMatchCountError,
-    ReductionError,
-)
-from quantum_simulator.base.qubits import (
+from ...base.utils import allclose
+from ..error import InvalidProbabilitiesError, NotMatchCountError, ReductionError
+from ..qubits import (
     Qubits,
     combine,
     convex_combination,
@@ -18,7 +15,6 @@ from quantum_simulator.base.qubits import (
     reduction,
     specialize,
 )
-from quantum_simulator.base.utils import allclose
 
 
 class TestQubits:

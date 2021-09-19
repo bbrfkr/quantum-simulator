@@ -2,11 +2,11 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.observable import Observable
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.base.time_evolution import TimeEvolution
-from quantum_simulator.channel.registers import Registers
-from quantum_simulator.channel.state import State
+from ....base.observable import Observable
+from ....base.qubits import Qubits
+from ....base.time_evolution import TimeEvolution
+from ...registers import Registers
+from ...state import State
 
 
 @pytest.fixture(

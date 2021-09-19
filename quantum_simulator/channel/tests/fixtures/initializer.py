@@ -2,7 +2,7 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.qubits import Qubits
+from ....base.qubits import Qubits
 
 
 @pytest.fixture(

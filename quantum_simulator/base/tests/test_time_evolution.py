@@ -1,8 +1,8 @@
 import numpy
 import pytest
 
-from quantum_simulator.base.error import InitializeError
-from quantum_simulator.base.time_evolution import (
+from ..error import InitializeError
+from ..time_evolution import (
     TimeEvolution,
     combine,
     compose,
@@ -10,7 +10,7 @@ from quantum_simulator.base.time_evolution import (
     multiple_combine,
     multiple_compose,
 )
-from quantum_simulator.base.utils import allclose
+from ..utils import allclose
 
 
 class TestTimeEvolution:

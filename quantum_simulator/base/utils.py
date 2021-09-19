@@ -7,8 +7,8 @@ from typing import List
 
 import numpy
 
-from quantum_simulator.base.error import NegativeValueError
-from quantum_simulator.base.switch_cupy import xp_factory
+from .error import NegativeValueError
+from .switch_cupy import xp_factory
 
 # 計算時の近似桁数
 RELATIVE_TOLERANCE = 1.0e-5

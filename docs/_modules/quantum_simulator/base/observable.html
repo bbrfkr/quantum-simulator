@@ -152,15 +152,11 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.error</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">InitializeError</span><span class="p">,</span>
-    <span class="n">NotMatchCountError</span><span class="p">,</span>
-    <span class="n">NotMatchDimensionError</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.qubits</span> <span class="kn">import</span> <span class="n">Qubits</span><span class="p">,</span> <span class="n">is_qubits_dim</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.switch_cupy</span> <span class="kn">import</span> <span class="n">xp_factory</span>
-<span class="kn">from</span> <span class="nn">quantum_simulator.base.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">count_bits</span><span class="p">,</span> <span class="n">is_real_close</span>
+<span class="kn">from</span> <span class="nn">.error</span> <span class="kn">import</span> <span class="n">InitializeError</span><span class="p">,</span> <span class="n">NotMatchCountError</span><span class="p">,</span> <span class="n">NotMatchDimensionError</span>
+<span class="kn">from</span> <span class="nn">.pure_qubits</span> <span class="kn">import</span> <span class="n">OrthogonalSystem</span>
+<span class="kn">from</span> <span class="nn">.qubits</span> <span class="kn">import</span> <span class="n">Qubits</span><span class="p">,</span> <span class="n">is_qubits_dim</span>
+<span class="kn">from</span> <span class="nn">.switch_cupy</span> <span class="kn">import</span> <span class="n">xp_factory</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">allclose</span><span class="p">,</span> <span class="n">count_bits</span><span class="p">,</span> <span class="n">is_real_close</span>
 
 <span class="n">np</span> <span class="o">=</span> <span class="n">xp_factory</span><span class="p">()</span>  <span class="c1"># typing: numpy</span>
 

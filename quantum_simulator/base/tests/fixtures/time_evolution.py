@@ -2,10 +2,10 @@ from math import sqrt
 
 import pytest
 
-from quantum_simulator.base.observable import OrthogonalSystem
-from quantum_simulator.base.pure_qubits import PureQubits
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.base.time_evolution import TimeEvolution
+from ...observable import OrthogonalSystem
+from ...pure_qubits import PureQubits
+from ...qubits import Qubits
+from ...time_evolution import TimeEvolution
 
 
 @pytest.fixture(

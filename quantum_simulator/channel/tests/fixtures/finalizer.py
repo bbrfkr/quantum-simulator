@@ -1,9 +1,9 @@
 import pytest
 
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.channel.finalizer import Finalizer
-from quantum_simulator.channel.registers import Registers
-from quantum_simulator.channel.state import State
+from ....base.qubits import Qubits
+from ...finalizer import Finalizer
+from ...registers import Registers
+from ...state import State
 
 
 @pytest.fixture(

@@ -1,10 +1,7 @@
 import random
 
-from quantum_simulator.base.utils import allclose
-from quantum_simulator.channel.transformer import (
-    ObserveTransformer,
-    TimeEvolveTransformer,
-)
+from ...base.utils import allclose
+from ..transformer import ObserveTransformer, TimeEvolveTransformer
 
 
 class TestObserveTransformer:

@@ -2,8 +2,8 @@
 QPU状態を表現するクラス群
 """
 
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.channel.registers import Registers
+from ..base.qubits import Qubits
+from .registers import Registers
 
 
 class State:

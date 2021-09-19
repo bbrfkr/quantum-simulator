@@ -4,15 +4,11 @@
 
 from typing import List, Optional
 
-from quantum_simulator.channel.error import (
-    AlreadyFinalizedError,
-    AlreadyInitializedError,
-    NotInitializedError,
-)
-from quantum_simulator.channel.finalizer import Finalizer
-from quantum_simulator.channel.initializer import Allocator, Initializer
-from quantum_simulator.channel.state import State
-from quantum_simulator.channel.transformer import Transformer
+from .error import AlreadyFinalizedError, AlreadyInitializedError, NotInitializedError
+from .finalizer import Finalizer
+from .initializer import Allocator, Initializer
+from .state import State
+from .transformer import Transformer
 
 
 class Channel:

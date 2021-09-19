@@ -1,7 +1,7 @@
 import pytest
 
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.channel.registers import Registers
+from ....base.qubits import Qubits
+from ...registers import Registers
 
 
 @pytest.fixture(

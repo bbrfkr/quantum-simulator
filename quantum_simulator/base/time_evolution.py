@@ -4,16 +4,16 @@
 
 from typing import List, Optional, cast
 
-from quantum_simulator.base.error import (
+from .error import (
     IncompatibleDimensionError,
     InitializeError,
     NotCompleteError,
     NotMatchCountError,
 )
-from quantum_simulator.base.pure_qubits import OrthogonalSystem
-from quantum_simulator.base.qubits import Qubits, is_qubits_dim
-from quantum_simulator.base.switch_cupy import xp_factory
-from quantum_simulator.base.utils import allclose
+from .pure_qubits import OrthogonalSystem
+from .qubits import Qubits, is_qubits_dim
+from .switch_cupy import xp_factory
+from .utils import allclose
 
 np = xp_factory()  # typing: numpy
 

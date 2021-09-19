@@ -1,16 +1,12 @@
 import pytest
 
-import quantum_simulator.base.observable as observable
-import quantum_simulator.base.time_evolution as time_evolution
-from quantum_simulator.base.qubits import Qubits
-from quantum_simulator.channel.registers import Registers
-from quantum_simulator.channel.state import State
-from quantum_simulator.channel.transformer import (
-    ObserveTransformer,
-    TimeEvolveTransformer,
-)
-from quantum_simulator.major.observable import IDENT_OBSERVABLE, ZERO_PROJECTION
-from quantum_simulator.major.time_evolution import IDENT_EVOLUTION, NOT_GATE
+from ....base import observable, time_evolution
+from ....base.qubits import Qubits
+from ....major.observable import IDENT_OBSERVABLE, ZERO_PROJECTION
+from ....major.time_evolution import IDENT_EVOLUTION, NOT_GATE
+from ...registers import Registers
+from ...state import State
+from ...transformer import ObserveTransformer, TimeEvolveTransformer
 
 
 @pytest.fixture(

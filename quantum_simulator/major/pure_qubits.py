@@ -4,7 +4,7 @@ quantum_simulator.base.pure_qubitsモジュール内クラスのよく知られ�
 
 from math import sqrt
 
-from quantum_simulator.base.pure_qubits import OrthogonalSystem, PureQubits
+from ..base.pure_qubits import OrthogonalSystem, PureQubits
 
 ZERO = PureQubits([1.0 + 0j, 0j])
 """PureQubits: 0状態にあるQubit。｜0＞"""

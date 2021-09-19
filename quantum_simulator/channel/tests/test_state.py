@@ -1,4 +1,4 @@
-from quantum_simulator.channel.state import State
+from ..state import State
 
 
 class TestState:

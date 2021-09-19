@@ -4,9 +4,9 @@
 
 from abc import ABC, abstractmethod
 
-from quantum_simulator.base.observable import Observable, observe
-from quantum_simulator.base.time_evolution import TimeEvolution
-from quantum_simulator.channel.state import State
+from ..base.observable import Observable, observe
+from ..base.time_evolution import TimeEvolution
+from .state import State
 
 
 class Transformer(ABC):
